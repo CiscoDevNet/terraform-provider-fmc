@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -86,14 +87,16 @@ func (data StandardAccessList) toBody(ctx context.Context, state StandardAccessL
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []any{})
+		var entriesBody strings.Builder
+		entriesBody.WriteString("[")
 		for _, item := range data.Entries {
 			itemBody := ""
 			if !item.Action.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
 			}
 			if len(item.Objects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "networks.objects", []any{})
+				var objectsChildBody strings.Builder
+				objectsChildBody.WriteString("[")
 				for _, childItem := range item.Objects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -102,22 +105,44 @@ func (data StandardAccessList) toBody(ctx context.Context, state StandardAccessL
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "networks.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if objectsChildBody.Len() > 1 {
+							objectsChildBody.WriteString(",")
+						}
+						objectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				objectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "networks.objects", objectsChildBody.String())
 			}
 			if len(item.Literals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "networks.literals", []any{})
+				var literalsChildBody strings.Builder
+				literalsChildBody.WriteString("[")
 				for _, childItem := range item.Literals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "value", childItem.Value.ValueString())
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
-					itemBody, _ = sjson.SetRaw(itemBody, "networks.literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if literalsChildBody.Len() > 1 {
+							literalsChildBody.WriteString(",")
+						}
+						literalsChildBody.WriteString(itemChildBody)
+					}
 				}
+				literalsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "networks.literals", literalsChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
+			if itemBody != "" {
+				if entriesBody.Len() > 1 {
+					entriesBody.WriteString(",")
+				}
+				entriesBody.WriteString(itemBody)
+			}
 		}
+		entriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "entries", entriesBody.String())
 	}
 	return body
 }
@@ -143,7 +168,7 @@ func (data *StandardAccessList) fromBody(ctx context.Context, res gjson.Result) 
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("entries"); value.Exists() {
-		data.Entries = make([]StandardAccessListEntries, 0)
+		data.Entries = make([]StandardAccessListEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := StandardAccessListEntries{}
@@ -153,7 +178,7 @@ func (data *StandardAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				data.Action = types.StringNull()
 			}
 			if value := res.Get("networks.objects"); value.Exists() {
-				data.Objects = make([]StandardAccessListEntriesObjects, 0)
+				data.Objects = make([]StandardAccessListEntriesObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := StandardAccessListEntriesObjects{}
@@ -172,7 +197,7 @@ func (data *StandardAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				})
 			}
 			if value := res.Get("networks.literals"); value.Exists() {
-				data.Literals = make([]StandardAccessListEntriesLiterals, 0)
+				data.Literals = make([]StandardAccessListEntriesLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := StandardAccessListEntriesLiterals{}
@@ -219,8 +244,9 @@ func (data *StandardAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Type = types.StringNull()
 	}
+	entriesArray := res.Get("entries").Array()
 	{
-		l := len(res.Get("entries").Array())
+		l := len(entriesArray)
 		tflog.Debug(ctx, fmt.Sprintf("entries array resizing from %d to %d", len(data.Entries), l))
 		for i := len(data.Entries); i < l; i++ {
 			data.Entries = append(data.Entries, StandardAccessListEntries{})
@@ -232,23 +258,22 @@ func (data *StandardAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 	for i := range data.Entries {
 		parent := &data
 		data := (*parent).Entries[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("entries.%d", i))
+		res := entriesArray[i]
 		if value := res.Get("action"); value.Exists() && !data.Action.IsNull() {
 			data.Action = types.StringValue(value.String())
 		} else {
 			data.Action = types.StringNull()
 		}
+		objectsArray := res.Get("networks.objects")
 		for i := 0; i < len(data.Objects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Objects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Objects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("networks.objects").ForEach(
+			objectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -287,16 +312,16 @@ func (data *StandardAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 			}
 			(*parent).Objects[i] = data
 		}
+		literalsArray := res.Get("networks.literals")
 		for i := 0; i < len(data.Literals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.Literals[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).Literals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("networks.literals").ForEach(
+			literalsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -78,7 +79,8 @@ func (data VPNRACertificateMap) toBody(ctx context.Context, state VPNRACertifica
 		body, _ = sjson.Set(body, "enableCertificateToConnectionProfileMapping", data.UseCertificateToConnectionProfileMappings.ValueBool())
 	}
 	if len(data.CertificateToConnectionProfileMappings) > 0 {
-		body, _ = sjson.Set(body, "certificateToConnectionProfileMap", []any{})
+		var certificateToConnectionProfileMappingsBody strings.Builder
+		certificateToConnectionProfileMappingsBody.WriteString("[")
 		for _, item := range data.CertificateToConnectionProfileMappings {
 			itemBody := ""
 			if !item.CertificateMapId.IsNull() {
@@ -87,8 +89,15 @@ func (data VPNRACertificateMap) toBody(ctx context.Context, state VPNRACertifica
 			if !item.ConnectionProfileId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "connectionProfile.id", item.ConnectionProfileId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "certificateToConnectionProfileMap.-1", itemBody)
+			if itemBody != "" {
+				if certificateToConnectionProfileMappingsBody.Len() > 1 {
+					certificateToConnectionProfileMappingsBody.WriteString(",")
+				}
+				certificateToConnectionProfileMappingsBody.WriteString(itemBody)
+			}
 		}
+		certificateToConnectionProfileMappingsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "certificateToConnectionProfileMap", certificateToConnectionProfileMappingsBody.String())
 	}
 	return body
 }
@@ -114,7 +123,7 @@ func (data *VPNRACertificateMap) fromBody(ctx context.Context, res gjson.Result)
 		data.UseCertificateToConnectionProfileMappings = types.BoolNull()
 	}
 	if value := res.Get("certificateToConnectionProfileMap"); value.Exists() {
-		data.CertificateToConnectionProfileMappings = make([]VPNRACertificateMapCertificateToConnectionProfileMappings, 0)
+		data.CertificateToConnectionProfileMappings = make([]VPNRACertificateMapCertificateToConnectionProfileMappings, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRACertificateMapCertificateToConnectionProfileMappings{}
@@ -158,16 +167,16 @@ func (data *VPNRACertificateMap) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.UseCertificateToConnectionProfileMappings = types.BoolNull()
 	}
+	certificateToConnectionProfileMappingsArray := res.Get("certificateToConnectionProfileMap")
 	for i := 0; i < len(data.CertificateToConnectionProfileMappings); i++ {
 		keys := [...]string{"certificateMap.id"}
 		keyValues := [...]string{data.CertificateToConnectionProfileMappings[i].CertificateMapId.ValueString()}
 
 		parent := &data
 		data := (*parent).CertificateToConnectionProfileMappings[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("certificateToConnectionProfileMap").ForEach(
+		certificateToConnectionProfileMappingsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

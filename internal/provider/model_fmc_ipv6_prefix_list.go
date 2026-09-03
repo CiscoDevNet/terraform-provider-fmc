@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -72,7 +73,8 @@ func (data IPv6PrefixList) toBody(ctx context.Context, state IPv6PrefixList) str
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []any{})
+		var entriesBody strings.Builder
+		entriesBody.WriteString("[")
 		for _, item := range data.Entries {
 			itemBody := ""
 			if !item.Action.IsNull() {
@@ -87,8 +89,15 @@ func (data IPv6PrefixList) toBody(ctx context.Context, state IPv6PrefixList) str
 			if !item.MaxPrefixLength.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "maxPrefixLength", item.MaxPrefixLength.ValueInt64())
 			}
-			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
+			if itemBody != "" {
+				if entriesBody.Len() > 1 {
+					entriesBody.WriteString(",")
+				}
+				entriesBody.WriteString(itemBody)
+			}
 		}
+		entriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "entries", entriesBody.String())
 	}
 	return body
 }
@@ -109,7 +118,7 @@ func (data *IPv6PrefixList) fromBody(ctx context.Context, res gjson.Result) {
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("entries"); value.Exists() {
-		data.Entries = make([]IPv6PrefixListEntries, 0)
+		data.Entries = make([]IPv6PrefixListEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := IPv6PrefixListEntries{}
@@ -158,8 +167,9 @@ func (data *IPv6PrefixList) fromBodyPartial(ctx context.Context, res gjson.Resul
 	} else {
 		data.Type = types.StringNull()
 	}
+	entriesArray := res.Get("entries").Array()
 	{
-		l := len(res.Get("entries").Array())
+		l := len(entriesArray)
 		tflog.Debug(ctx, fmt.Sprintf("entries array resizing from %d to %d", len(data.Entries), l))
 		for i := len(data.Entries); i < l; i++ {
 			data.Entries = append(data.Entries, IPv6PrefixListEntries{})
@@ -171,8 +181,7 @@ func (data *IPv6PrefixList) fromBodyPartial(ctx context.Context, res gjson.Resul
 	for i := range data.Entries {
 		parent := &data
 		data := (*parent).Entries[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("entries.%d", i))
+		res := entriesArray[i]
 		if value := res.Get("action"); value.Exists() && !data.Action.IsNull() {
 			data.Action = types.StringValue(value.String())
 		} else {

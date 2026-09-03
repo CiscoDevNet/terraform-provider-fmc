@@ -779,9 +779,7 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 
 	// Create object
 	body := planBody
-	body, _ = sjson.Delete(body, "dummy_manage_categories")
 	body, _ = sjson.Delete(body, "dummy_categories")
-	body, _ = sjson.Delete(body, "dummy_manage_rules")
 	body, _ = sjson.Delete(body, "dummy_rules")
 
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
@@ -979,9 +977,7 @@ func (r *AccessControlPolicyResource) Update(ctx context.Context, req resource.U
 
 	planBody := plan.toBody(ctx, state)
 	body := planBody
-	body, _ = sjson.Delete(body, "dummy_manage_categories")
 	body, _ = sjson.Delete(body, "dummy_categories")
-	body, _ = sjson.Delete(body, "dummy_manage_rules")
 	body, _ = sjson.Delete(body, "dummy_rules")
 
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
@@ -1072,13 +1068,9 @@ func (r *AccessControlPolicyResource) updateSubresources(ctx context.Context, tf
 }
 
 // countKept compares the state with the plan starting from index 0, and returns:
-//
 // how many categories to keep: they remain identical as to content and order
-//
 // how many rules to keep:
-//
 // - kept rules must belong to some category that is itself kept,
-//
 // - and must themselves remain identical as to id, content, and order
 func (r *AccessControlPolicyResource) countKept(ctx context.Context, state, plan AccessControlPolicy) (int, int) {
 	return 0, 0 // TODO
@@ -1143,6 +1135,7 @@ func (r *AccessControlPolicyResource) truncateCatsAt(ctx context.Context, state 
 }
 
 func (r *AccessControlPolicyResource) createCatsAt(ctx context.Context, plan AccessControlPolicy, body []gjson.Result, startIndex int, state *AccessControlPolicy, reqMods ...func(*fmc.Req)) error {
+	urlPath := plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString()) + "/categories"
 	for i := startIndex; i < len(plan.Categories); i++ {
 		cat := body[i].String()
 		cat, _ = sjson.Delete(cat, "id")
@@ -1151,8 +1144,7 @@ func (r *AccessControlPolicyResource) createCatsAt(ctx context.Context, plan Acc
 		if s := plan.Categories[i].Section.ValueString(); s != "" {
 			params = "?section=" + url.QueryEscape(s)
 		}
-		res, err := r.client.Post(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString())+
-			"/categories"+params, cat, reqMods...)
+		res, err := r.client.Post(urlPath+params, cat, reqMods...)
 		if err != nil {
 			return fmt.Errorf("Failed to create a category (POST), got error: %v, %s", err, res)
 		}
@@ -1175,6 +1167,7 @@ func (r *AccessControlPolicyResource) createCatsAt(ctx context.Context, plan Acc
 // Whether it succeeds fully or partially, it takes whatever has been really created and saves in the `state`.
 // The `state` and `&plan` might be either the same value or different.
 func (r *AccessControlPolicyResource) createRulesAt(ctx context.Context, plan AccessControlPolicy, body []gjson.Result, startIndex int, state *AccessControlPolicy, reqMods ...func(*fmc.Req)) error {
+	urlPath := plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString()) + "/accessrules"
 	for i := startIndex; i < len(body); i++ {
 		bulk := `{"dummy_rules":[]}`
 		j := i
@@ -1213,7 +1206,7 @@ func (r *AccessControlPolicyResource) createRulesAt(ctx context.Context, plan Ac
 		} else if s := head.GetSection(); s != "default" {
 			param += "&section=" + url.QueryEscape(s)
 		}
-		res, err := r.client.Post(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString())+"/accessrules"+param,
+		res, err := r.client.Post(urlPath+param,
 			gjson.Parse(bulk).Get("dummy_rules").String(),
 			reqMods...)
 		if err != nil {

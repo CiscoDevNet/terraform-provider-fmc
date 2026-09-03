@@ -24,6 +24,7 @@ import (
 	"maps"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -80,34 +81,58 @@ func (data Geolocations) toBody(ctx context.Context, state Geolocations) string 
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			if len(item.Continents) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "continents", []any{})
+				var continentsChildBody strings.Builder
+				continentsChildBody.WriteString("[")
 				for _, childItem := range item.Continents {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueInt64())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "continents.-1", itemChildBody)
+					if itemChildBody != "" {
+						if continentsChildBody.Len() > 1 {
+							continentsChildBody.WriteString(",")
+						}
+						continentsChildBody.WriteString(itemChildBody)
+					}
 				}
+				continentsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "continents", continentsChildBody.String())
 			}
 			if len(item.Countries) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "countries", []any{})
+				var countriesChildBody strings.Builder
+				countriesChildBody.WriteString("[")
 				for _, childItem := range item.Countries {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueInt64())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "countries.-1", itemChildBody)
+					if itemChildBody != "" {
+						if countriesChildBody.Len() > 1 {
+							countriesChildBody.WriteString(",")
+						}
+						countriesChildBody.WriteString(itemChildBody)
+					}
 				}
+				countriesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "countries", countriesChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }
@@ -145,7 +170,7 @@ func (data *Geolocations) fromBody(ctx context.Context, res gjson.Result) {
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("continents"); value.Exists() {
-			data.Continents = make([]GeolocationsItemsContinents, 0)
+			data.Continents = make([]GeolocationsItemsContinents, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := GeolocationsItemsContinents{}
@@ -159,7 +184,7 @@ func (data *Geolocations) fromBody(ctx context.Context, res gjson.Result) {
 			})
 		}
 		if value := res.Get("countries"); value.Exists() {
-			data.Countries = make([]GeolocationsItemsCountries, 0)
+			data.Countries = make([]GeolocationsItemsCountries, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := GeolocationsItemsCountries{}
@@ -210,16 +235,16 @@ func (data *Geolocations) fromBodyPartial(ctx context.Context, res gjson.Result)
 		} else {
 			data.Type = types.StringNull()
 		}
+		continentsArray := res.Get("continents")
 		for i := 0; i < len(data.Continents); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{strconv.FormatInt(data.Continents[i].Id.ValueInt64(), 10)}
 
 			parent := &data
 			data := (*parent).Continents[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("continents").ForEach(
+			continentsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -253,16 +278,16 @@ func (data *Geolocations) fromBodyPartial(ctx context.Context, res gjson.Result)
 			}
 			(*parent).Continents[i] = data
 		}
+		countriesArray := res.Get("countries")
 		for i := 0; i < len(data.Countries); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{strconv.FormatInt(data.Countries[i].Id.ValueInt64(), 10)}
 
 			parent := &data
 			data := (*parent).Countries[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("countries").ForEach(
+			countriesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

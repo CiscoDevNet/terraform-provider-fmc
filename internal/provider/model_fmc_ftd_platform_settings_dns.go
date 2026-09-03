@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -82,7 +83,8 @@ func (data FTDPlatformSettingsDNS) toBody(ctx context.Context, state FTDPlatform
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.DnsServerGroups) > 0 {
-		body, _ = sjson.Set(body, "dnsServerGroups", []any{})
+		var dnsServerGroupsBody strings.Builder
+		dnsServerGroupsBody.WriteString("[")
 		for _, item := range data.DnsServerGroups {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -96,8 +98,15 @@ func (data FTDPlatformSettingsDNS) toBody(ctx context.Context, state FTDPlatform
 				item.FilterDomains.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "bypassDomains", values)
 			}
-			body, _ = sjson.SetRaw(body, "dnsServerGroups.-1", itemBody)
+			if itemBody != "" {
+				if dnsServerGroupsBody.Len() > 1 {
+					dnsServerGroupsBody.WriteString(",")
+				}
+				dnsServerGroupsBody.WriteString(itemBody)
+			}
 		}
+		dnsServerGroupsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dnsServerGroups", dnsServerGroupsBody.String())
 	}
 	if !data.ExpireEntryTimer.IsNull() {
 		body, _ = sjson.Set(body, "expiryTimerInMins", data.ExpireEntryTimer.ValueInt64())
@@ -106,7 +115,8 @@ func (data FTDPlatformSettingsDNS) toBody(ctx context.Context, state FTDPlatform
 		body, _ = sjson.Set(body, "pollTimerInMins", data.PollTimer.ValueInt64())
 	}
 	if len(data.InterfaceObjects) > 0 {
-		body, _ = sjson.Set(body, "interfaceObjects", []any{})
+		var interfaceObjectsBody strings.Builder
+		interfaceObjectsBody.WriteString("[")
 		for _, item := range data.InterfaceObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -115,8 +125,15 @@ func (data FTDPlatformSettingsDNS) toBody(ctx context.Context, state FTDPlatform
 			if !item.Type.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "interfaceObjects.-1", itemBody)
+			if itemBody != "" {
+				if interfaceObjectsBody.Len() > 1 {
+					interfaceObjectsBody.WriteString(",")
+				}
+				interfaceObjectsBody.WriteString(itemBody)
+			}
 		}
+		interfaceObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "interfaceObjects", interfaceObjectsBody.String())
 	}
 	if !data.UseManagementInterface.IsNull() {
 		body, _ = sjson.Set(body, "enableLookupViaMgmt", data.UseManagementInterface.ValueBool())
@@ -135,7 +152,7 @@ func (data *FTDPlatformSettingsDNS) fromBody(ctx context.Context, res gjson.Resu
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("dnsServerGroups"); value.Exists() {
-		data.DnsServerGroups = make([]FTDPlatformSettingsDNSDnsServerGroups, 0)
+		data.DnsServerGroups = make([]FTDPlatformSettingsDNSDnsServerGroups, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsDNSDnsServerGroups{}
@@ -169,7 +186,7 @@ func (data *FTDPlatformSettingsDNS) fromBody(ctx context.Context, res gjson.Resu
 		data.PollTimer = types.Int64Null()
 	}
 	if value := res.Get("interfaceObjects"); value.Exists() {
-		data.InterfaceObjects = make([]FTDPlatformSettingsDNSInterfaceObjects, 0)
+		data.InterfaceObjects = make([]FTDPlatformSettingsDNSInterfaceObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsDNSInterfaceObjects{}
@@ -208,16 +225,16 @@ func (data *FTDPlatformSettingsDNS) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.Type = types.StringNull()
 	}
+	dnsServerGroupsArray := res.Get("dnsServerGroups")
 	for i := 0; i < len(data.DnsServerGroups); i++ {
 		keys := [...]string{"dnsServerGroup.id"}
 		keyValues := [...]string{data.DnsServerGroups[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).DnsServerGroups[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dnsServerGroups").ForEach(
+		dnsServerGroupsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -271,16 +288,16 @@ func (data *FTDPlatformSettingsDNS) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.PollTimer = types.Int64Null()
 	}
+	interfaceObjectsArray := res.Get("interfaceObjects")
 	for i := 0; i < len(data.InterfaceObjects); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.InterfaceObjects[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).InterfaceObjects[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("interfaceObjects").ForEach(
+		interfaceObjectsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

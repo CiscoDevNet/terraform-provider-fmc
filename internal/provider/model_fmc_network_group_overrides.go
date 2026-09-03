@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -85,7 +86,8 @@ func (data NetworkGroupOverrides) toBody(ctx context.Context, state NetworkGroup
 		body, _ = sjson.Set(body, "overrides.parent.id", data.ParentId.ValueString())
 	}
 	if len(data.Overrides) > 0 {
-		body, _ = sjson.Set(body, "dummy_overrides", []any{})
+		var overridesBody strings.Builder
+		overridesBody.WriteString("[")
 		for _, item := range data.Overrides {
 			itemBody := ""
 			if !item.TargetId.IsNull() {
@@ -98,7 +100,8 @@ func (data NetworkGroupOverrides) toBody(ctx context.Context, state NetworkGroup
 				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
 			}
 			if len(item.Objects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "objects", []any{})
+				var objectsChildBody strings.Builder
+				objectsChildBody.WriteString("[")
 				for _, childItem := range item.Objects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -108,22 +111,44 @@ func (data NetworkGroupOverrides) toBody(ctx context.Context, state NetworkGroup
 						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
-					itemBody, _ = sjson.SetRaw(itemBody, "objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if objectsChildBody.Len() > 1 {
+							objectsChildBody.WriteString(",")
+						}
+						objectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				objectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "objects", objectsChildBody.String())
 			}
 			if len(item.Literals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "literals", []any{})
+				var literalsChildBody strings.Builder
+				literalsChildBody.WriteString("[")
 				for _, childItem := range item.Literals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "value", childItem.Value.ValueString())
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
-					itemBody, _ = sjson.SetRaw(itemBody, "literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if literalsChildBody.Len() > 1 {
+							literalsChildBody.WriteString(",")
+						}
+						literalsChildBody.WriteString(itemChildBody)
+					}
 				}
+				literalsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "literals", literalsChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "dummy_overrides.-1", itemBody)
+			if itemBody != "" {
+				if overridesBody.Len() > 1 {
+					overridesBody.WriteString(",")
+				}
+				overridesBody.WriteString(itemBody)
+			}
 		}
+		overridesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_overrides", overridesBody.String())
 	}
 	return body
 }
@@ -144,7 +169,7 @@ func (data *NetworkGroupOverrides) fromBody(ctx context.Context, res gjson.Resul
 		data.ParentId = types.StringNull()
 	}
 	if value := res.Get("dummy_overrides"); value.Exists() {
-		data.Overrides = make([]NetworkGroupOverridesOverrides, 0)
+		data.Overrides = make([]NetworkGroupOverridesOverrides, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := NetworkGroupOverridesOverrides{}
@@ -164,7 +189,7 @@ func (data *NetworkGroupOverrides) fromBody(ctx context.Context, res gjson.Resul
 				data.Description = types.StringNull()
 			}
 			if value := res.Get("objects"); value.Exists() {
-				data.Objects = make([]NetworkGroupOverridesOverridesObjects, 0)
+				data.Objects = make([]NetworkGroupOverridesOverridesObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := NetworkGroupOverridesOverridesObjects{}
@@ -183,7 +208,7 @@ func (data *NetworkGroupOverrides) fromBody(ctx context.Context, res gjson.Resul
 				})
 			}
 			if value := res.Get("literals"); value.Exists() {
-				data.Literals = make([]NetworkGroupOverridesOverridesLiterals, 0)
+				data.Literals = make([]NetworkGroupOverridesOverridesLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := NetworkGroupOverridesOverridesLiterals{}
@@ -221,16 +246,16 @@ func (data *NetworkGroupOverrides) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.ParentId = types.StringNull()
 	}
+	overridesArray := res.Get("dummy_overrides")
 	for i := 0; i < len(data.Overrides); i++ {
 		keys := [...]string{"overrides.target.id"}
 		keyValues := [...]string{data.Overrides[i].TargetId.ValueString()}
 
 		parent := &data
 		data := (*parent).Overrides[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dummy_overrides").ForEach(
+		overridesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -272,16 +297,16 @@ func (data *NetworkGroupOverrides) fromBodyPartial(ctx context.Context, res gjso
 		} else {
 			data.Description = types.StringNull()
 		}
+		objectsArray := res.Get("objects")
 		for i := 0; i < len(data.Objects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Objects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Objects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("objects").ForEach(
+			objectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -320,16 +345,16 @@ func (data *NetworkGroupOverrides) fromBodyPartial(ctx context.Context, res gjso
 			}
 			(*parent).Objects[i] = data
 		}
+		literalsArray := res.Get("literals")
 		for i := 0; i < len(data.Literals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.Literals[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).Literals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("literals").ForEach(
+			literalsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -106,7 +107,8 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 		body, _ = sjson.Set(body, "bridgeGroupId", data.BridgeGroupId.ValueInt64())
 	}
 	if len(data.SelectedInterfaces) > 0 {
-		body, _ = sjson.Set(body, "selectedInterfaces", []any{})
+		var selectedInterfacesBody strings.Builder
+		selectedInterfacesBody.WriteString("[")
 		for _, item := range data.SelectedInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -115,8 +117,15 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "selectedInterfaces.-1", itemBody)
+			if itemBody != "" {
+				if selectedInterfacesBody.Len() > 1 {
+					selectedInterfacesBody.WriteString(",")
+				}
+				selectedInterfacesBody.WriteString(itemBody)
+			}
 		}
+		selectedInterfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "selectedInterfaces", selectedInterfacesBody.String())
 	}
 	if !data.Ipv4StaticAddress.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.static.address", data.Ipv4StaticAddress.ValueString())
@@ -128,7 +137,8 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 		body, _ = sjson.Set(body, "ipv4.dhcp.enableDefaultRouteDHCP", data.Ipv4DhcpObtainDefaultRoute.ValueBool())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
+		var ipv6AddressesBody strings.Builder
+		ipv6AddressesBody.WriteString("[")
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -137,8 +147,15 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 			if !item.Prefix.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "prefix", item.Prefix.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ipv6.addresses.-1", itemBody)
+			if itemBody != "" {
+				if ipv6AddressesBody.Len() > 1 {
+					ipv6AddressesBody.WriteString(",")
+				}
+				ipv6AddressesBody.WriteString(itemBody)
+			}
 		}
+		ipv6AddressesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv6.addresses", ipv6AddressesBody.String())
 	}
 	if !data.Ipv6Dad.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.enableDADLoopback", data.Ipv6Dad.ValueBool())
@@ -153,7 +170,8 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 		body, _ = sjson.Set(body, "ipv6.reachableTime", data.Ipv6ReachableTime.ValueInt64())
 	}
 	if len(data.ArpTableEntries) > 0 {
-		body, _ = sjson.Set(body, "arpConfig", []any{})
+		var arpTableEntriesBody strings.Builder
+		arpTableEntriesBody.WriteString("[")
 		for _, item := range data.ArpTableEntries {
 			itemBody := ""
 			if !item.MacAddress.IsNull() {
@@ -165,8 +183,15 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 			if !item.EnableAlias.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableAlias", item.EnableAlias.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "arpConfig.-1", itemBody)
+			if itemBody != "" {
+				if arpTableEntriesBody.Len() > 1 {
+					arpTableEntriesBody.WriteString(",")
+				}
+				arpTableEntriesBody.WriteString(itemBody)
+			}
 		}
+		arpTableEntriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "arpConfig", arpTableEntriesBody.String())
 	}
 	return body
 }
@@ -202,7 +227,7 @@ func (data *DeviceBridgeGroupInterface) fromBody(ctx context.Context, res gjson.
 		data.BridgeGroupId = types.Int64Null()
 	}
 	if value := res.Get("selectedInterfaces"); value.Exists() {
-		data.SelectedInterfaces = make([]DeviceBridgeGroupInterfaceSelectedInterfaces, 0)
+		data.SelectedInterfaces = make([]DeviceBridgeGroupInterfaceSelectedInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBridgeGroupInterfaceSelectedInterfaces{}
@@ -236,7 +261,7 @@ func (data *DeviceBridgeGroupInterface) fromBody(ctx context.Context, res gjson.
 		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DeviceBridgeGroupInterfaceIpv6Addresses, 0)
+		data.Ipv6Addresses = make([]DeviceBridgeGroupInterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBridgeGroupInterfaceIpv6Addresses{}
@@ -275,7 +300,7 @@ func (data *DeviceBridgeGroupInterface) fromBody(ctx context.Context, res gjson.
 		data.Ipv6ReachableTime = types.Int64Null()
 	}
 	if value := res.Get("arpConfig"); value.Exists() {
-		data.ArpTableEntries = make([]DeviceBridgeGroupInterfaceArpTableEntries, 0)
+		data.ArpTableEntries = make([]DeviceBridgeGroupInterfaceArpTableEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBridgeGroupInterfaceArpTableEntries{}
@@ -334,16 +359,16 @@ func (data *DeviceBridgeGroupInterface) fromBodyPartial(ctx context.Context, res
 	} else {
 		data.BridgeGroupId = types.Int64Null()
 	}
+	selectedInterfacesArray := res.Get("selectedInterfaces")
 	for i := 0; i < len(data.SelectedInterfaces); i++ {
 		keys := [...]string{"id", "name"}
 		keyValues := [...]string{data.SelectedInterfaces[i].Id.ValueString(), data.SelectedInterfaces[i].Name.ValueString()}
 
 		parent := &data
 		data := (*parent).SelectedInterfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("selectedInterfaces").ForEach(
+		selectedInterfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -397,16 +422,16 @@ func (data *DeviceBridgeGroupInterface) fromBodyPartial(ctx context.Context, res
 	} else {
 		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
 	}
+	ipv6AddressesArray := res.Get("ipv6.addresses")
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"address"}
 		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Addresses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6.addresses").ForEach(
+		ipv6AddressesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -465,16 +490,16 @@ func (data *DeviceBridgeGroupInterface) fromBodyPartial(ctx context.Context, res
 	} else {
 		data.Ipv6ReachableTime = types.Int64Null()
 	}
+	arpTableEntriesArray := res.Get("arpConfig")
 	for i := 0; i < len(data.ArpTableEntries); i++ {
 		keys := [...]string{"macAddress", "ipAddress", "enableAlias"}
 		keyValues := [...]string{data.ArpTableEntries[i].MacAddress.ValueString(), data.ArpTableEntries[i].IpAddress.ValueString(), strconv.FormatBool(data.ArpTableEntries[i].EnableAlias.ValueBool())}
 
 		parent := &data
 		data := (*parent).ArpTableEntries[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("arpConfig").ForEach(
+		arpTableEntriesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -124,7 +125,8 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 		body, _ = sjson.Set(body, "dapPolicy.id", data.DynamicAccessPolicyId.ValueString())
 	}
 	if len(data.AccessInterfaces) > 0 {
-		body, _ = sjson.Set(body, "accessInterfaceSettings.interfaceSettings", []any{})
+		var accessInterfacesBody strings.Builder
+		accessInterfacesBody.WriteString("[")
 		for _, item := range data.AccessInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -142,8 +144,15 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 			if !item.InterfaceSpecificCertificateId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "idCertificate.id", item.InterfaceSpecificCertificateId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "accessInterfaceSettings.interfaceSettings.-1", itemBody)
+			if itemBody != "" {
+				if accessInterfacesBody.Len() > 1 {
+					accessInterfacesBody.WriteString(",")
+				}
+				accessInterfacesBody.WriteString(itemBody)
+			}
 		}
+		accessInterfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "accessInterfaceSettings.interfaceSettings", accessInterfacesBody.String())
 	}
 	if !data.AllowUsersToSelectConnectionProfile.IsNull() {
 		body, _ = sjson.Set(body, "accessInterfaceSettings.allowConnectionProfileSelection", data.AllowUsersToSelectConnectionProfile.ValueBool())
@@ -167,7 +176,8 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 		body, _ = sjson.Set(body, "accessInterfaceSettings.bypassACPolicyForDecryptTraffic", data.BypassAccessControlPolicyForDecryptedTraffic.ValueBool())
 	}
 	if len(data.SecureClientImages) > 0 {
-		body, _ = sjson.Set(body, "anyConnectClientImages", []any{})
+		var secureClientImagesBody strings.Builder
+		secureClientImagesBody.WriteString("[")
 		for _, item := range data.SecureClientImages {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -176,31 +186,54 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 			if !item.OperatingSystem.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "operatingSystem", item.OperatingSystem.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "anyConnectClientImages.-1", itemBody)
+			if itemBody != "" {
+				if secureClientImagesBody.Len() > 1 {
+					secureClientImagesBody.WriteString(",")
+				}
+				secureClientImagesBody.WriteString(itemBody)
+			}
 		}
+		secureClientImagesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "anyConnectClientImages", secureClientImagesBody.String())
 	}
 	if !data.ExternalBrowserPackageId.IsNull() {
 		body, _ = sjson.Set(body, "externalBrowserPackage.id", data.ExternalBrowserPackageId.ValueString())
 	}
 	if len(data.GroupPolicies) > 0 {
-		body, _ = sjson.Set(body, "groupPolicies", []any{})
+		var groupPoliciesBody strings.Builder
+		groupPoliciesBody.WriteString("[")
 		for _, item := range data.GroupPolicies {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "groupPolicies.-1", itemBody)
+			if itemBody != "" {
+				if groupPoliciesBody.Len() > 1 {
+					groupPoliciesBody.WriteString(",")
+				}
+				groupPoliciesBody.WriteString(itemBody)
+			}
 		}
+		groupPoliciesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "groupPolicies", groupPoliciesBody.String())
 	}
 	if len(data.Ikev2Policies) > 0 {
-		body, _ = sjson.Set(body, "ikev2Policies", []any{})
+		var ikev2PoliciesBody strings.Builder
+		ikev2PoliciesBody.WriteString("[")
 		for _, item := range data.Ikev2Policies {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ikev2Policies.-1", itemBody)
+			if itemBody != "" {
+				if ikev2PoliciesBody.Len() > 1 {
+					ikev2PoliciesBody.WriteString(",")
+				}
+				ikev2PoliciesBody.WriteString(itemBody)
+			}
 		}
+		ikev2PoliciesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ikev2Policies", ikev2PoliciesBody.String())
 	}
 	return body
 }
@@ -246,7 +279,7 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.DynamicAccessPolicyId = types.StringNull()
 	}
 	if value := res.Get("accessInterfaceSettings.interfaceSettings"); value.Exists() {
-		data.AccessInterfaces = make([]VPNRAAccessInterfaces, 0)
+		data.AccessInterfaces = make([]VPNRAAccessInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRAAccessInterfaces{}
@@ -315,7 +348,7 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolValue(false)
 	}
 	if value := res.Get("anyConnectClientImages"); value.Exists() {
-		data.SecureClientImages = make([]VPNRASecureClientImages, 0)
+		data.SecureClientImages = make([]VPNRASecureClientImages, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientImages{}
@@ -354,7 +387,7 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.CertificateMapId = types.StringNull()
 	}
 	if value := res.Get("groupPolicies"); value.Exists() {
-		data.GroupPolicies = make([]VPNRAGroupPolicies, 0)
+		data.GroupPolicies = make([]VPNRAGroupPolicies, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRAGroupPolicies{}
@@ -378,7 +411,7 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.LoadBalancingId = types.StringNull()
 	}
 	if value := res.Get("ikev2Policies"); value.Exists() {
-		data.Ikev2Policies = make([]VPNRAIkev2Policies, 0)
+		data.Ikev2Policies = make([]VPNRAIkev2Policies, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRAIkev2Policies{}
@@ -442,16 +475,16 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.DynamicAccessPolicyId = types.StringNull()
 	}
+	accessInterfacesArray := res.Get("accessInterfaceSettings.interfaceSettings")
 	for i := 0; i < len(data.AccessInterfaces); i++ {
 		keys := [...]string{"accessInterface.id"}
 		keyValues := [...]string{data.AccessInterfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).AccessInterfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("accessInterfaceSettings.interfaceSettings").ForEach(
+		accessInterfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -540,8 +573,9 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else if data.BypassAccessControlPolicyForDecryptedTraffic.ValueBool() != false {
 		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolNull()
 	}
+	secureClientImagesArray := res.Get("anyConnectClientImages").Array()
 	{
-		l := len(res.Get("anyConnectClientImages").Array())
+		l := len(secureClientImagesArray)
 		tflog.Debug(ctx, fmt.Sprintf("anyConnectClientImages array resizing from %d to %d", len(data.SecureClientImages), l))
 		for i := len(data.SecureClientImages); i < l; i++ {
 			data.SecureClientImages = append(data.SecureClientImages, VPNRASecureClientImages{})
@@ -553,8 +587,7 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	for i := range data.SecureClientImages {
 		parent := &data
 		data := (*parent).SecureClientImages[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("anyConnectClientImages.%d", i))
+		res := secureClientImagesArray[i]
 		if value := res.Get("anyconnectImage.id"); value.Exists() && !data.Id.IsNull() {
 			data.Id = types.StringValue(value.String())
 		} else {
@@ -587,16 +620,16 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.CertificateMapId = types.StringNull()
 	}
+	groupPoliciesArray := res.Get("groupPolicies")
 	for i := 0; i < len(data.GroupPolicies); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.GroupPolicies[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).GroupPolicies[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("groupPolicies").ForEach(
+		groupPoliciesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -640,16 +673,16 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.LoadBalancingId = types.StringNull()
 	}
+	ikev2PoliciesArray := res.Get("ikev2Policies")
 	for i := 0; i < len(data.Ikev2Policies); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev2Policies[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev2Policies[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikev2Policies").ForEach(
+		ikev2PoliciesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

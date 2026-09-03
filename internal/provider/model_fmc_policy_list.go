@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -124,14 +125,22 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		body, _ = sjson.Set(body, "action", data.Action.ValueString())
 	}
 	if len(data.Interfaces) > 0 {
-		body, _ = sjson.Set(body, "interfaces", []any{})
+		var interfacesBody strings.Builder
+		interfacesBody.WriteString("[")
 		for _, item := range data.Interfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "interfaces.-1", itemBody)
+			if itemBody != "" {
+				if interfacesBody.Len() > 1 {
+					interfacesBody.WriteString(",")
+				}
+				interfacesBody.WriteString(itemBody)
+			}
 		}
+		interfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "interfaces", interfacesBody.String())
 	}
 	if !data.InterfaceNames.IsNull() {
 		var values []string
@@ -139,94 +148,166 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		body, _ = sjson.Set(body, "interfaceNames", values)
 	}
 	if len(data.AddressStandardAccessLists) > 0 {
-		body, _ = sjson.Set(body, "standardAccessListAddresses", []any{})
+		var addressStandardAccessListsBody strings.Builder
+		addressStandardAccessListsBody.WriteString("[")
 		for _, item := range data.AddressStandardAccessLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "standardAccessListAddresses.-1", itemBody)
+			if itemBody != "" {
+				if addressStandardAccessListsBody.Len() > 1 {
+					addressStandardAccessListsBody.WriteString(",")
+				}
+				addressStandardAccessListsBody.WriteString(itemBody)
+			}
 		}
+		addressStandardAccessListsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "standardAccessListAddresses", addressStandardAccessListsBody.String())
 	}
 	if len(data.AddressIpv4PrefixLists) > 0 {
-		body, _ = sjson.Set(body, "ipv4PrefixListAddresses", []any{})
+		var addressIpv4PrefixListsBody strings.Builder
+		addressIpv4PrefixListsBody.WriteString("[")
 		for _, item := range data.AddressIpv4PrefixLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ipv4PrefixListAddresses.-1", itemBody)
+			if itemBody != "" {
+				if addressIpv4PrefixListsBody.Len() > 1 {
+					addressIpv4PrefixListsBody.WriteString(",")
+				}
+				addressIpv4PrefixListsBody.WriteString(itemBody)
+			}
 		}
+		addressIpv4PrefixListsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv4PrefixListAddresses", addressIpv4PrefixListsBody.String())
 	}
 	if len(data.NextHopStandardAccessLists) > 0 {
-		body, _ = sjson.Set(body, "standardAccessListNextHops", []any{})
+		var nextHopStandardAccessListsBody strings.Builder
+		nextHopStandardAccessListsBody.WriteString("[")
 		for _, item := range data.NextHopStandardAccessLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "standardAccessListNextHops.-1", itemBody)
+			if itemBody != "" {
+				if nextHopStandardAccessListsBody.Len() > 1 {
+					nextHopStandardAccessListsBody.WriteString(",")
+				}
+				nextHopStandardAccessListsBody.WriteString(itemBody)
+			}
 		}
+		nextHopStandardAccessListsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "standardAccessListNextHops", nextHopStandardAccessListsBody.String())
 	}
 	if len(data.NextHopIpv4PrefixLists) > 0 {
-		body, _ = sjson.Set(body, "ipv4PrefixListNexthops", []any{})
+		var nextHopIpv4PrefixListsBody strings.Builder
+		nextHopIpv4PrefixListsBody.WriteString("[")
 		for _, item := range data.NextHopIpv4PrefixLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ipv4PrefixListNexthops.-1", itemBody)
+			if itemBody != "" {
+				if nextHopIpv4PrefixListsBody.Len() > 1 {
+					nextHopIpv4PrefixListsBody.WriteString(",")
+				}
+				nextHopIpv4PrefixListsBody.WriteString(itemBody)
+			}
 		}
+		nextHopIpv4PrefixListsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv4PrefixListNexthops", nextHopIpv4PrefixListsBody.String())
 	}
 	if len(data.RouteSourceStandardAccessLists) > 0 {
-		body, _ = sjson.Set(body, "standardAccessListRouteSources", []any{})
+		var routeSourceStandardAccessListsBody strings.Builder
+		routeSourceStandardAccessListsBody.WriteString("[")
 		for _, item := range data.RouteSourceStandardAccessLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "standardAccessListRouteSources.-1", itemBody)
+			if itemBody != "" {
+				if routeSourceStandardAccessListsBody.Len() > 1 {
+					routeSourceStandardAccessListsBody.WriteString(",")
+				}
+				routeSourceStandardAccessListsBody.WriteString(itemBody)
+			}
 		}
+		routeSourceStandardAccessListsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "standardAccessListRouteSources", routeSourceStandardAccessListsBody.String())
 	}
 	if len(data.RouteSourceIpv4PrefixLists) > 0 {
-		body, _ = sjson.Set(body, "ipv4PrefixListRouteSources", []any{})
+		var routeSourceIpv4PrefixListsBody strings.Builder
+		routeSourceIpv4PrefixListsBody.WriteString("[")
 		for _, item := range data.RouteSourceIpv4PrefixLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ipv4PrefixListRouteSources.-1", itemBody)
+			if itemBody != "" {
+				if routeSourceIpv4PrefixListsBody.Len() > 1 {
+					routeSourceIpv4PrefixListsBody.WriteString(",")
+				}
+				routeSourceIpv4PrefixListsBody.WriteString(itemBody)
+			}
 		}
+		routeSourceIpv4PrefixListsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv4PrefixListRouteSources", routeSourceIpv4PrefixListsBody.String())
 	}
 	if len(data.AsPaths) > 0 {
-		body, _ = sjson.Set(body, "asPathLists", []any{})
+		var asPathsBody strings.Builder
+		asPathsBody.WriteString("[")
 		for _, item := range data.AsPaths {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "asPathLists.-1", itemBody)
+			if itemBody != "" {
+				if asPathsBody.Len() > 1 {
+					asPathsBody.WriteString(",")
+				}
+				asPathsBody.WriteString(itemBody)
+			}
 		}
+		asPathsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "asPathLists", asPathsBody.String())
 	}
 	if len(data.CommunityLists) > 0 {
-		body, _ = sjson.Set(body, "communityLists", []any{})
+		var communityListsBody strings.Builder
+		communityListsBody.WriteString("[")
 		for _, item := range data.CommunityLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "communityLists.-1", itemBody)
+			if itemBody != "" {
+				if communityListsBody.Len() > 1 {
+					communityListsBody.WriteString(",")
+				}
+				communityListsBody.WriteString(itemBody)
+			}
 		}
+		communityListsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "communityLists", communityListsBody.String())
 	}
 	if len(data.ExtendedCommunityLists) > 0 {
-		body, _ = sjson.Set(body, "extendedCommunityLists", []any{})
+		var extendedCommunityListsBody strings.Builder
+		extendedCommunityListsBody.WriteString("[")
 		for _, item := range data.ExtendedCommunityLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "extendedCommunityLists.-1", itemBody)
+			if itemBody != "" {
+				if extendedCommunityListsBody.Len() > 1 {
+					extendedCommunityListsBody.WriteString(",")
+				}
+				extendedCommunityListsBody.WriteString(itemBody)
+			}
 		}
+		extendedCommunityListsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "extendedCommunityLists", extendedCommunityListsBody.String())
 	}
 	if !data.MatchCommunityExactly.IsNull() {
 		body, _ = sjson.Set(body, "matchCommunityExactly", data.MatchCommunityExactly.ValueBool())
@@ -261,7 +342,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		data.Action = types.StringNull()
 	}
 	if value := res.Get("interfaces"); value.Exists() {
-		data.Interfaces = make([]PolicyListInterfaces, 0)
+		data.Interfaces = make([]PolicyListInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListInterfaces{}
@@ -280,7 +361,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		data.InterfaceNames = types.SetNull(types.StringType)
 	}
 	if value := res.Get("standardAccessListAddresses"); value.Exists() {
-		data.AddressStandardAccessLists = make([]PolicyListAddressStandardAccessLists, 0)
+		data.AddressStandardAccessLists = make([]PolicyListAddressStandardAccessLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListAddressStandardAccessLists{}
@@ -294,7 +375,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("ipv4PrefixListAddresses"); value.Exists() {
-		data.AddressIpv4PrefixLists = make([]PolicyListAddressIpv4PrefixLists, 0)
+		data.AddressIpv4PrefixLists = make([]PolicyListAddressIpv4PrefixLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListAddressIpv4PrefixLists{}
@@ -308,7 +389,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("standardAccessListNextHops"); value.Exists() {
-		data.NextHopStandardAccessLists = make([]PolicyListNextHopStandardAccessLists, 0)
+		data.NextHopStandardAccessLists = make([]PolicyListNextHopStandardAccessLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListNextHopStandardAccessLists{}
@@ -322,7 +403,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("ipv4PrefixListNexthops"); value.Exists() {
-		data.NextHopIpv4PrefixLists = make([]PolicyListNextHopIpv4PrefixLists, 0)
+		data.NextHopIpv4PrefixLists = make([]PolicyListNextHopIpv4PrefixLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListNextHopIpv4PrefixLists{}
@@ -336,7 +417,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("standardAccessListRouteSources"); value.Exists() {
-		data.RouteSourceStandardAccessLists = make([]PolicyListRouteSourceStandardAccessLists, 0)
+		data.RouteSourceStandardAccessLists = make([]PolicyListRouteSourceStandardAccessLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListRouteSourceStandardAccessLists{}
@@ -350,7 +431,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("ipv4PrefixListRouteSources"); value.Exists() {
-		data.RouteSourceIpv4PrefixLists = make([]PolicyListRouteSourceIpv4PrefixLists, 0)
+		data.RouteSourceIpv4PrefixLists = make([]PolicyListRouteSourceIpv4PrefixLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListRouteSourceIpv4PrefixLists{}
@@ -364,7 +445,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("asPathLists"); value.Exists() {
-		data.AsPaths = make([]PolicyListAsPaths, 0)
+		data.AsPaths = make([]PolicyListAsPaths, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListAsPaths{}
@@ -378,7 +459,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("communityLists"); value.Exists() {
-		data.CommunityLists = make([]PolicyListCommunityLists, 0)
+		data.CommunityLists = make([]PolicyListCommunityLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListCommunityLists{}
@@ -392,7 +473,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("extendedCommunityLists"); value.Exists() {
-		data.ExtendedCommunityLists = make([]PolicyListExtendedCommunityLists, 0)
+		data.ExtendedCommunityLists = make([]PolicyListExtendedCommunityLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListExtendedCommunityLists{}
@@ -446,16 +527,16 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Action = types.StringNull()
 	}
+	interfacesArray := res.Get("interfaces")
 	for i := 0; i < len(data.Interfaces); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Interfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Interfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("interfaces").ForEach(
+		interfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -494,16 +575,16 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.InterfaceNames = types.SetNull(types.StringType)
 	}
+	addressStandardAccessListsArray := res.Get("standardAccessListAddresses")
 	for i := 0; i < len(data.AddressStandardAccessLists); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.AddressStandardAccessLists[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).AddressStandardAccessLists[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("standardAccessListAddresses").ForEach(
+		addressStandardAccessListsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -537,16 +618,16 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).AddressStandardAccessLists[i] = data
 	}
+	addressIpv4PrefixListsArray := res.Get("ipv4PrefixListAddresses")
 	for i := 0; i < len(data.AddressIpv4PrefixLists); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.AddressIpv4PrefixLists[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).AddressIpv4PrefixLists[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv4PrefixListAddresses").ForEach(
+		addressIpv4PrefixListsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -580,16 +661,16 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).AddressIpv4PrefixLists[i] = data
 	}
+	nextHopStandardAccessListsArray := res.Get("standardAccessListNextHops")
 	for i := 0; i < len(data.NextHopStandardAccessLists); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.NextHopStandardAccessLists[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).NextHopStandardAccessLists[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("standardAccessListNextHops").ForEach(
+		nextHopStandardAccessListsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -623,16 +704,16 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).NextHopStandardAccessLists[i] = data
 	}
+	nextHopIpv4PrefixListsArray := res.Get("ipv4PrefixListNexthops")
 	for i := 0; i < len(data.NextHopIpv4PrefixLists); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.NextHopIpv4PrefixLists[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).NextHopIpv4PrefixLists[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv4PrefixListNexthops").ForEach(
+		nextHopIpv4PrefixListsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -666,16 +747,16 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).NextHopIpv4PrefixLists[i] = data
 	}
+	routeSourceStandardAccessListsArray := res.Get("standardAccessListRouteSources")
 	for i := 0; i < len(data.RouteSourceStandardAccessLists); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.RouteSourceStandardAccessLists[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).RouteSourceStandardAccessLists[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("standardAccessListRouteSources").ForEach(
+		routeSourceStandardAccessListsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -709,16 +790,16 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).RouteSourceStandardAccessLists[i] = data
 	}
+	routeSourceIpv4PrefixListsArray := res.Get("ipv4PrefixListRouteSources")
 	for i := 0; i < len(data.RouteSourceIpv4PrefixLists); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.RouteSourceIpv4PrefixLists[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).RouteSourceIpv4PrefixLists[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv4PrefixListRouteSources").ForEach(
+		routeSourceIpv4PrefixListsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -752,16 +833,16 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).RouteSourceIpv4PrefixLists[i] = data
 	}
+	asPathsArray := res.Get("asPathLists")
 	for i := 0; i < len(data.AsPaths); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.AsPaths[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).AsPaths[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("asPathLists").ForEach(
+		asPathsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -795,16 +876,16 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).AsPaths[i] = data
 	}
+	communityListsArray := res.Get("communityLists")
 	for i := 0; i < len(data.CommunityLists); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.CommunityLists[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).CommunityLists[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("communityLists").ForEach(
+		communityListsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -838,16 +919,16 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).CommunityLists[i] = data
 	}
+	extendedCommunityListsArray := res.Get("extendedCommunityLists")
 	for i := 0; i < len(data.ExtendedCommunityLists); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.ExtendedCommunityLists[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).ExtendedCommunityLists[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("extendedCommunityLists").ForEach(
+		extendedCommunityListsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

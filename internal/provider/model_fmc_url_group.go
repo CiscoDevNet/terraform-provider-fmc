@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -83,24 +84,40 @@ func (data URLGroup) toBody(ctx context.Context, state URLGroup) string {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.Urls) > 0 {
-		body, _ = sjson.Set(body, "objects", []any{})
+		var urlsBody strings.Builder
+		urlsBody.WriteString("[")
 		for _, item := range data.Urls {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "objects.-1", itemBody)
+			if itemBody != "" {
+				if urlsBody.Len() > 1 {
+					urlsBody.WriteString(",")
+				}
+				urlsBody.WriteString(itemBody)
+			}
 		}
+		urlsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "objects", urlsBody.String())
 	}
 	if len(data.Literals) > 0 {
-		body, _ = sjson.Set(body, "literals", []any{})
+		var literalsBody strings.Builder
+		literalsBody.WriteString("[")
 		for _, item := range data.Literals {
 			itemBody := ""
 			if !item.Url.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "url", item.Url.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "literals.-1", itemBody)
+			if itemBody != "" {
+				if literalsBody.Len() > 1 {
+					literalsBody.WriteString(",")
+				}
+				literalsBody.WriteString(itemBody)
+			}
 		}
+		literalsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "literals", literalsBody.String())
 	}
 	return body
 }
@@ -131,7 +148,7 @@ func (data *URLGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolNull()
 	}
 	if value := res.Get("objects"); value.Exists() {
-		data.Urls = make([]URLGroupUrls, 0)
+		data.Urls = make([]URLGroupUrls, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := URLGroupUrls{}
@@ -145,7 +162,7 @@ func (data *URLGroup) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("literals"); value.Exists() {
-		data.Literals = make([]URLGroupLiterals, 0)
+		data.Literals = make([]URLGroupLiterals, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := URLGroupLiterals{}
@@ -193,16 +210,16 @@ func (data *URLGroup) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Overridable = types.BoolNull()
 	}
+	urlsArray := res.Get("objects")
 	for i := 0; i < len(data.Urls); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Urls[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Urls[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("objects").ForEach(
+		urlsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -236,16 +253,16 @@ func (data *URLGroup) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).Urls[i] = data
 	}
+	literalsArray := res.Get("literals")
 	for i := 0; i < len(data.Literals); i++ {
 		keys := [...]string{"url"}
 		keyValues := [...]string{data.Literals[i].Url.ValueString()}
 
 		parent := &data
 		data := (*parent).Literals[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("literals").ForEach(
+		literalsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

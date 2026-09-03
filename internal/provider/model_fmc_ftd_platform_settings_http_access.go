@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -87,7 +88,8 @@ func (data FTDPlatformSettingsHTTPAccess) toBody(ctx context.Context, state FTDP
 		body, _ = sjson.Set(body, "port", data.ServerPort.ValueInt64())
 	}
 	if len(data.Configurations) > 0 {
-		body, _ = sjson.Set(body, "httpConfiguration", []any{})
+		var configurationsBody strings.Builder
+		configurationsBody.WriteString("[")
 		for _, item := range data.Configurations {
 			itemBody := ""
 			if !item.SourceNetworkObjectId.IsNull() {
@@ -99,7 +101,8 @@ func (data FTDPlatformSettingsHTTPAccess) toBody(ctx context.Context, state FTDP
 				itemBody, _ = sjson.Set(itemBody, "interfaces.literals", values)
 			}
 			if len(item.InterfaceObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "interfaces.objects", []any{})
+				var interfaceObjectsChildBody strings.Builder
+				interfaceObjectsChildBody.WriteString("[")
 				for _, childItem := range item.InterfaceObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -111,11 +114,25 @@ func (data FTDPlatformSettingsHTTPAccess) toBody(ctx context.Context, state FTDP
 					if !childItem.Name.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "interfaces.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if interfaceObjectsChildBody.Len() > 1 {
+							interfaceObjectsChildBody.WriteString(",")
+						}
+						interfaceObjectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				interfaceObjectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "interfaces.objects", interfaceObjectsChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "httpConfiguration.-1", itemBody)
+			if itemBody != "" {
+				if configurationsBody.Len() > 1 {
+					configurationsBody.WriteString(",")
+				}
+				configurationsBody.WriteString(itemBody)
+			}
 		}
+		configurationsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "httpConfiguration", configurationsBody.String())
 	}
 	return body
 }
@@ -141,7 +158,7 @@ func (data *FTDPlatformSettingsHTTPAccess) fromBody(ctx context.Context, res gjs
 		data.ServerPort = types.Int64Value(443)
 	}
 	if value := res.Get("httpConfiguration"); value.Exists() {
-		data.Configurations = make([]FTDPlatformSettingsHTTPAccessConfigurations, 0)
+		data.Configurations = make([]FTDPlatformSettingsHTTPAccessConfigurations, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsHTTPAccessConfigurations{}
@@ -156,7 +173,7 @@ func (data *FTDPlatformSettingsHTTPAccess) fromBody(ctx context.Context, res gjs
 				data.InterfaceLiterals = types.SetNull(types.StringType)
 			}
 			if value := res.Get("interfaces.objects"); value.Exists() {
-				data.InterfaceObjects = make([]FTDPlatformSettingsHTTPAccessConfigurationsInterfaceObjects, 0)
+				data.InterfaceObjects = make([]FTDPlatformSettingsHTTPAccessConfigurationsInterfaceObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := FTDPlatformSettingsHTTPAccessConfigurationsInterfaceObjects{}
@@ -209,16 +226,16 @@ func (data *FTDPlatformSettingsHTTPAccess) fromBodyPartial(ctx context.Context, 
 	} else if data.ServerPort.ValueInt64() != 443 {
 		data.ServerPort = types.Int64Null()
 	}
+	configurationsArray := res.Get("httpConfiguration")
 	for i := 0; i < len(data.Configurations); i++ {
 		keys := [...]string{"ipAddress.id"}
 		keyValues := [...]string{data.Configurations[i].SourceNetworkObjectId.ValueString()}
 
 		parent := &data
 		data := (*parent).Configurations[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("httpConfiguration").ForEach(
+		configurationsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -255,16 +272,16 @@ func (data *FTDPlatformSettingsHTTPAccess) fromBodyPartial(ctx context.Context, 
 		} else {
 			data.InterfaceLiterals = types.SetNull(types.StringType)
 		}
+		interfaceObjectsArray := res.Get("interfaces.objects")
 		for i := 0; i < len(data.InterfaceObjects); i++ {
 			keys := [...]string{"id", "type", "name"}
 			keyValues := [...]string{data.InterfaceObjects[i].Id.ValueString(), data.InterfaceObjects[i].Type.ValueString(), data.InterfaceObjects[i].Name.ValueString()}
 
 			parent := &data
 			data := (*parent).InterfaceObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("interfaces.objects").ForEach(
+			interfaceObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

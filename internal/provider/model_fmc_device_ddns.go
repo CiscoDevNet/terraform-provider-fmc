@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -113,7 +114,8 @@ func (data DeviceDDNS) toBody(ctx context.Context, state DeviceDDNS) string {
 		body, _ = sjson.Set(body, "overrideDHCPClientRequest", data.DhcpClientRequestOverride.ValueBool())
 	}
 	if len(data.DhcpClientIdInterfaces) > 0 {
-		body, _ = sjson.Set(body, "dhcpClientIdInterfaces", []any{})
+		var dhcpClientIdInterfacesBody strings.Builder
+		dhcpClientIdInterfacesBody.WriteString("[")
 		for _, item := range data.DhcpClientIdInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -125,11 +127,19 @@ func (data DeviceDDNS) toBody(ctx context.Context, state DeviceDDNS) string {
 			if !item.Type.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dhcpClientIdInterfaces.-1", itemBody)
+			if itemBody != "" {
+				if dhcpClientIdInterfacesBody.Len() > 1 {
+					dhcpClientIdInterfacesBody.WriteString(",")
+				}
+				dhcpClientIdInterfacesBody.WriteString(itemBody)
+			}
 		}
+		dhcpClientIdInterfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dhcpClientIdInterfaces", dhcpClientIdInterfacesBody.String())
 	}
 	if len(data.DdnsUpdateMethods) > 0 {
-		body, _ = sjson.Set(body, "ddnsUpdateMethods", []any{})
+		var ddnsUpdateMethodsBody strings.Builder
+		ddnsUpdateMethodsBody.WriteString("[")
 		for _, item := range data.DdnsUpdateMethods {
 			itemBody := ""
 			if !item.Name.IsNull() {
@@ -159,11 +169,19 @@ func (data DeviceDDNS) toBody(ctx context.Context, state DeviceDDNS) string {
 			if !item.UpdateRecords.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "updateRecords", item.UpdateRecords.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ddnsUpdateMethods.-1", itemBody)
+			if itemBody != "" {
+				if ddnsUpdateMethodsBody.Len() > 1 {
+					ddnsUpdateMethodsBody.WriteString(",")
+				}
+				ddnsUpdateMethodsBody.WriteString(itemBody)
+			}
 		}
+		ddnsUpdateMethodsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ddnsUpdateMethods", ddnsUpdateMethodsBody.String())
 	}
 	if len(data.DdnsInterfaceSettings) > 0 {
-		body, _ = sjson.Set(body, "ddnsInterfaceSettings", []any{})
+		var ddnsInterfaceSettingsBody strings.Builder
+		ddnsInterfaceSettingsBody.WriteString("[")
 		for _, item := range data.DdnsInterfaceSettings {
 			itemBody := ""
 			if !item.InterfaceId.IsNull() {
@@ -190,8 +208,15 @@ func (data DeviceDDNS) toBody(ctx context.Context, state DeviceDDNS) string {
 			if !item.DhcpClientRequestOverride.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "overrideDHCPClientRequest", item.DhcpClientRequestOverride.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "ddnsInterfaceSettings.-1", itemBody)
+			if itemBody != "" {
+				if ddnsInterfaceSettingsBody.Len() > 1 {
+					ddnsInterfaceSettingsBody.WriteString(",")
+				}
+				ddnsInterfaceSettingsBody.WriteString(itemBody)
+			}
 		}
+		ddnsInterfaceSettingsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ddnsInterfaceSettings", ddnsInterfaceSettingsBody.String())
 	}
 	return body
 }
@@ -227,7 +252,7 @@ func (data *DeviceDDNS) fromBody(ctx context.Context, res gjson.Result) {
 		data.DhcpClientRequestOverride = types.BoolNull()
 	}
 	if value := res.Get("dhcpClientIdInterfaces"); value.Exists() {
-		data.DhcpClientIdInterfaces = make([]DeviceDDNSDhcpClientIdInterfaces, 0)
+		data.DhcpClientIdInterfaces = make([]DeviceDDNSDhcpClientIdInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceDDNSDhcpClientIdInterfaces{}
@@ -251,7 +276,7 @@ func (data *DeviceDDNS) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("ddnsUpdateMethods"); value.Exists() {
-		data.DdnsUpdateMethods = make([]DeviceDDNSDdnsUpdateMethods, 0)
+		data.DdnsUpdateMethods = make([]DeviceDDNSDdnsUpdateMethods, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceDDNSDdnsUpdateMethods{}
@@ -305,7 +330,7 @@ func (data *DeviceDDNS) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("ddnsInterfaceSettings"); value.Exists() {
-		data.DdnsInterfaceSettings = make([]DeviceDDNSDdnsInterfaceSettings, 0)
+		data.DdnsInterfaceSettings = make([]DeviceDDNSDdnsInterfaceSettings, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceDDNSDdnsInterfaceSettings{}
@@ -389,16 +414,16 @@ func (data *DeviceDDNS) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.DhcpClientRequestOverride = types.BoolNull()
 	}
+	dhcpClientIdInterfacesArray := res.Get("dhcpClientIdInterfaces")
 	for i := 0; i < len(data.DhcpClientIdInterfaces); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.DhcpClientIdInterfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).DhcpClientIdInterfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dhcpClientIdInterfaces").ForEach(
+		dhcpClientIdInterfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -442,16 +467,16 @@ func (data *DeviceDDNS) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).DhcpClientIdInterfaces[i] = data
 	}
+	ddnsUpdateMethodsArray := res.Get("ddnsUpdateMethods")
 	for i := 0; i < len(data.DdnsUpdateMethods); i++ {
 		keys := [...]string{"name"}
 		keyValues := [...]string{data.DdnsUpdateMethods[i].Name.ValueString()}
 
 		parent := &data
 		data := (*parent).DdnsUpdateMethods[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ddnsUpdateMethods").ForEach(
+		ddnsUpdateMethodsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -525,16 +550,16 @@ func (data *DeviceDDNS) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).DdnsUpdateMethods[i] = data
 	}
+	ddnsInterfaceSettingsArray := res.Get("ddnsInterfaceSettings")
 	for i := 0; i < len(data.DdnsInterfaceSettings); i++ {
 		keys := [...]string{"interface.id"}
 		keyValues := [...]string{data.DdnsInterfaceSettings[i].InterfaceId.ValueString()}
 
 		parent := &data
 		data := (*parent).DdnsInterfaceSettings[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ddnsInterfaceSettings").ForEach(
+		ddnsInterfaceSettingsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

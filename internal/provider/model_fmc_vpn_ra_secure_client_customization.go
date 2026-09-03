@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -94,64 +95,112 @@ func (data VPNRASecureClientCustomization) toBody(ctx context.Context, state VPN
 	}
 	body, _ = sjson.Set(body, "type", "RaVpnSecureClientCustomization")
 	if len(data.GuiAndTextMessages) > 0 {
-		body, _ = sjson.Set(body, "languageTranslations", []any{})
+		var guiAndTextMessagesBody strings.Builder
+		guiAndTextMessagesBody.WriteString("[")
 		for _, item := range data.GuiAndTextMessages {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "languageTranslations.-1", itemBody)
+			if itemBody != "" {
+				if guiAndTextMessagesBody.Len() > 1 {
+					guiAndTextMessagesBody.WriteString(",")
+				}
+				guiAndTextMessagesBody.WriteString(itemBody)
+			}
 		}
+		guiAndTextMessagesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "languageTranslations", guiAndTextMessagesBody.String())
 	}
 	if len(data.IconsAndImages) > 0 {
-		body, _ = sjson.Set(body, "imagesAndIcons", []any{})
+		var iconsAndImagesBody strings.Builder
+		iconsAndImagesBody.WriteString("[")
 		for _, item := range data.IconsAndImages {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "imagesAndIcons.-1", itemBody)
+			if itemBody != "" {
+				if iconsAndImagesBody.Len() > 1 {
+					iconsAndImagesBody.WriteString(",")
+				}
+				iconsAndImagesBody.WriteString(itemBody)
+			}
 		}
+		iconsAndImagesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "imagesAndIcons", iconsAndImagesBody.String())
 	}
 	if len(data.Scripts) > 0 {
-		body, _ = sjson.Set(body, "scripts", []any{})
+		var scriptsBody strings.Builder
+		scriptsBody.WriteString("[")
 		for _, item := range data.Scripts {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "scripts.-1", itemBody)
+			if itemBody != "" {
+				if scriptsBody.Len() > 1 {
+					scriptsBody.WriteString(",")
+				}
+				scriptsBody.WriteString(itemBody)
+			}
 		}
+		scriptsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "scripts", scriptsBody.String())
 	}
 	if len(data.Binaries) > 0 {
-		body, _ = sjson.Set(body, "binaries", []any{})
+		var binariesBody strings.Builder
+		binariesBody.WriteString("[")
 		for _, item := range data.Binaries {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "binaries.-1", itemBody)
+			if itemBody != "" {
+				if binariesBody.Len() > 1 {
+					binariesBody.WriteString(",")
+				}
+				binariesBody.WriteString(itemBody)
+			}
 		}
+		binariesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "binaries", binariesBody.String())
 	}
 	if len(data.CustomInstallerTransforms) > 0 {
-		body, _ = sjson.Set(body, "customizedInstallerTransforms", []any{})
+		var customInstallerTransformsBody strings.Builder
+		customInstallerTransformsBody.WriteString("[")
 		for _, item := range data.CustomInstallerTransforms {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "customizedInstallerTransforms.-1", itemBody)
+			if itemBody != "" {
+				if customInstallerTransformsBody.Len() > 1 {
+					customInstallerTransformsBody.WriteString(",")
+				}
+				customInstallerTransformsBody.WriteString(itemBody)
+			}
 		}
+		customInstallerTransformsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "customizedInstallerTransforms", customInstallerTransformsBody.String())
 	}
 	if len(data.LocalizedInstallerTransforms) > 0 {
-		body, _ = sjson.Set(body, "localizedInstallerTransforms", []any{})
+		var localizedInstallerTransformsBody strings.Builder
+		localizedInstallerTransformsBody.WriteString("[")
 		for _, item := range data.LocalizedInstallerTransforms {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "localizedInstallerTransforms.-1", itemBody)
+			if itemBody != "" {
+				if localizedInstallerTransformsBody.Len() > 1 {
+					localizedInstallerTransformsBody.WriteString(",")
+				}
+				localizedInstallerTransformsBody.WriteString(itemBody)
+			}
 		}
+		localizedInstallerTransformsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "localizedInstallerTransforms", localizedInstallerTransformsBody.String())
 	}
 	return body
 }
@@ -167,7 +216,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("languageTranslations"); value.Exists() {
-		data.GuiAndTextMessages = make([]VPNRASecureClientCustomizationGuiAndTextMessages, 0)
+		data.GuiAndTextMessages = make([]VPNRASecureClientCustomizationGuiAndTextMessages, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationGuiAndTextMessages{}
@@ -181,7 +230,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		})
 	}
 	if value := res.Get("imagesAndIcons"); value.Exists() {
-		data.IconsAndImages = make([]VPNRASecureClientCustomizationIconsAndImages, 0)
+		data.IconsAndImages = make([]VPNRASecureClientCustomizationIconsAndImages, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationIconsAndImages{}
@@ -195,7 +244,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		})
 	}
 	if value := res.Get("scripts"); value.Exists() {
-		data.Scripts = make([]VPNRASecureClientCustomizationScripts, 0)
+		data.Scripts = make([]VPNRASecureClientCustomizationScripts, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationScripts{}
@@ -209,7 +258,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		})
 	}
 	if value := res.Get("binaries"); value.Exists() {
-		data.Binaries = make([]VPNRASecureClientCustomizationBinaries, 0)
+		data.Binaries = make([]VPNRASecureClientCustomizationBinaries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationBinaries{}
@@ -223,7 +272,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		})
 	}
 	if value := res.Get("customizedInstallerTransforms"); value.Exists() {
-		data.CustomInstallerTransforms = make([]VPNRASecureClientCustomizationCustomInstallerTransforms, 0)
+		data.CustomInstallerTransforms = make([]VPNRASecureClientCustomizationCustomInstallerTransforms, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationCustomInstallerTransforms{}
@@ -237,7 +286,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		})
 	}
 	if value := res.Get("localizedInstallerTransforms"); value.Exists() {
-		data.LocalizedInstallerTransforms = make([]VPNRASecureClientCustomizationLocalizedInstallerTransforms, 0)
+		data.LocalizedInstallerTransforms = make([]VPNRASecureClientCustomizationLocalizedInstallerTransforms, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationLocalizedInstallerTransforms{}
@@ -266,16 +315,16 @@ func (data *VPNRASecureClientCustomization) fromBodyPartial(ctx context.Context,
 	} else {
 		data.Type = types.StringNull()
 	}
+	guiAndTextMessagesArray := res.Get("languageTranslations")
 	for i := 0; i < len(data.GuiAndTextMessages); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.GuiAndTextMessages[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).GuiAndTextMessages[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("languageTranslations").ForEach(
+		guiAndTextMessagesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -309,16 +358,16 @@ func (data *VPNRASecureClientCustomization) fromBodyPartial(ctx context.Context,
 		}
 		(*parent).GuiAndTextMessages[i] = data
 	}
+	iconsAndImagesArray := res.Get("imagesAndIcons")
 	for i := 0; i < len(data.IconsAndImages); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.IconsAndImages[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).IconsAndImages[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("imagesAndIcons").ForEach(
+		iconsAndImagesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -352,16 +401,16 @@ func (data *VPNRASecureClientCustomization) fromBodyPartial(ctx context.Context,
 		}
 		(*parent).IconsAndImages[i] = data
 	}
+	scriptsArray := res.Get("scripts")
 	for i := 0; i < len(data.Scripts); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Scripts[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Scripts[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("scripts").ForEach(
+		scriptsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -395,16 +444,16 @@ func (data *VPNRASecureClientCustomization) fromBodyPartial(ctx context.Context,
 		}
 		(*parent).Scripts[i] = data
 	}
+	binariesArray := res.Get("binaries")
 	for i := 0; i < len(data.Binaries); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Binaries[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Binaries[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("binaries").ForEach(
+		binariesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -438,16 +487,16 @@ func (data *VPNRASecureClientCustomization) fromBodyPartial(ctx context.Context,
 		}
 		(*parent).Binaries[i] = data
 	}
+	customInstallerTransformsArray := res.Get("customizedInstallerTransforms")
 	for i := 0; i < len(data.CustomInstallerTransforms); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.CustomInstallerTransforms[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).CustomInstallerTransforms[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("customizedInstallerTransforms").ForEach(
+		customInstallerTransformsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -481,16 +530,16 @@ func (data *VPNRASecureClientCustomization) fromBodyPartial(ctx context.Context,
 		}
 		(*parent).CustomInstallerTransforms[i] = data
 	}
+	localizedInstallerTransformsArray := res.Get("localizedInstallerTransforms")
 	for i := 0; i < len(data.LocalizedInstallerTransforms); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.LocalizedInstallerTransforms[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).LocalizedInstallerTransforms[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("localizedInstallerTransforms").ForEach(
+		localizedInstallerTransformsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

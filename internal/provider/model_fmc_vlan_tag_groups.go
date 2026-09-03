@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"maps"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -81,7 +82,8 @@ func (data VLANTagGroups) toBody(ctx context.Context, state VLANTagGroups) strin
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -94,17 +96,26 @@ func (data VLANTagGroups) toBody(ctx context.Context, state VLANTagGroups) strin
 				itemBody, _ = sjson.Set(itemBody, "overridable", item.Overridable.ValueBool())
 			}
 			if len(item.VlanTags) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "objects", []any{})
+				var vlanTagsChildBody strings.Builder
+				vlanTagsChildBody.WriteString("[")
 				for _, childItem := range item.VlanTags {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if vlanTagsChildBody.Len() > 1 {
+							vlanTagsChildBody.WriteString(",")
+						}
+						vlanTagsChildBody.WriteString(itemChildBody)
+					}
 				}
+				vlanTagsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "objects", vlanTagsChildBody.String())
 			}
 			if len(item.Literals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "literals", []any{})
+				var literalsChildBody strings.Builder
+				literalsChildBody.WriteString("[")
 				for _, childItem := range item.Literals {
 					itemChildBody := ""
 					if !childItem.StartTag.IsNull() {
@@ -113,11 +124,25 @@ func (data VLANTagGroups) toBody(ctx context.Context, state VLANTagGroups) strin
 					if !childItem.EndTag.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "endTag", childItem.EndTag.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if literalsChildBody.Len() > 1 {
+							literalsChildBody.WriteString(",")
+						}
+						literalsChildBody.WriteString(itemChildBody)
+					}
 				}
+				literalsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "literals", literalsChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }
@@ -165,7 +190,7 @@ func (data *VLANTagGroups) fromBody(ctx context.Context, res gjson.Result) {
 			data.Overridable = types.BoolNull()
 		}
 		if value := res.Get("objects"); value.Exists() {
-			data.VlanTags = make([]VLANTagGroupsItemsVlanTags, 0)
+			data.VlanTags = make([]VLANTagGroupsItemsVlanTags, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VLANTagGroupsItemsVlanTags{}
@@ -179,7 +204,7 @@ func (data *VLANTagGroups) fromBody(ctx context.Context, res gjson.Result) {
 			})
 		}
 		if value := res.Get("literals"); value.Exists() {
-			data.Literals = make([]VLANTagGroupsItemsLiterals, 0)
+			data.Literals = make([]VLANTagGroupsItemsLiterals, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VLANTagGroupsItemsLiterals{}
@@ -249,16 +274,16 @@ func (data *VLANTagGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 		} else {
 			data.Overridable = types.BoolNull()
 		}
+		vlanTagsArray := res.Get("objects")
 		for i := 0; i < len(data.VlanTags); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.VlanTags[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).VlanTags[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("objects").ForEach(
+			vlanTagsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -292,16 +317,16 @@ func (data *VLANTagGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 			}
 			(*parent).VlanTags[i] = data
 		}
+		literalsArray := res.Get("literals")
 		for i := 0; i < len(data.Literals); i++ {
 			keys := [...]string{"startTag", "endTag"}
 			keyValues := [...]string{data.Literals[i].StartTag.ValueString(), data.Literals[i].EndTag.ValueString()}
 
 			parent := &data
 			data := (*parent).Literals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("literals").ForEach(
+			literalsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

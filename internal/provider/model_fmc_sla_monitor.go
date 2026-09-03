@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -107,14 +108,22 @@ func (data SLAMonitor) toBody(ctx context.Context, state SLAMonitor) string {
 		body, _ = sjson.Set(body, "monitorAddress", data.MonitorAddress.ValueString())
 	}
 	if len(data.SelectedInterfaces) > 0 {
-		body, _ = sjson.Set(body, "interfaceObjects", []any{})
+		var selectedInterfacesBody strings.Builder
+		selectedInterfacesBody.WriteString("[")
 		for _, item := range data.SelectedInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "interfaceObjects.-1", itemBody)
+			if itemBody != "" {
+				if selectedInterfacesBody.Len() > 1 {
+					selectedInterfacesBody.WriteString(",")
+				}
+				selectedInterfacesBody.WriteString(itemBody)
+			}
 		}
+		selectedInterfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "interfaceObjects", selectedInterfacesBody.String())
 	}
 	return body
 }
@@ -180,7 +189,7 @@ func (data *SLAMonitor) fromBody(ctx context.Context, res gjson.Result) {
 		data.MonitorAddress = types.StringNull()
 	}
 	if value := res.Get("interfaceObjects"); value.Exists() {
-		data.SelectedInterfaces = make([]SLAMonitorSelectedInterfaces, 0)
+		data.SelectedInterfaces = make([]SLAMonitorSelectedInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := SLAMonitorSelectedInterfaces{}
@@ -259,16 +268,16 @@ func (data *SLAMonitor) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.MonitorAddress = types.StringNull()
 	}
+	selectedInterfacesArray := res.Get("interfaceObjects")
 	for i := 0; i < len(data.SelectedInterfaces); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.SelectedInterfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).SelectedInterfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("interfaceObjects").ForEach(
+		selectedInterfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

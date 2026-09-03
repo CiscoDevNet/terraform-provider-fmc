@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -108,7 +109,8 @@ func (data DeviceCluster) toBody(ctx context.Context, state DeviceCluster) strin
 		body, _ = sjson.Set(body, "controlDevice.clusterNodeBootstrap.priority", data.ControlNodePriority.ValueInt64())
 	}
 	if len(data.DataNodes) > 0 {
-		body, _ = sjson.Set(body, "dataDevices", []any{})
+		var dataNodesBody strings.Builder
+		dataNodesBody.WriteString("[")
 		for _, item := range data.DataNodes {
 			itemBody := ""
 			if !item.DeviceId.IsNull() {
@@ -120,8 +122,15 @@ func (data DeviceCluster) toBody(ctx context.Context, state DeviceCluster) strin
 			if !item.Priority.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "clusterNodeBootstrap.priority", item.Priority.ValueInt64())
 			}
-			body, _ = sjson.SetRaw(body, "dataDevices.-1", itemBody)
+			if itemBody != "" {
+				if dataNodesBody.Len() > 1 {
+					dataNodesBody.WriteString(",")
+				}
+				dataNodesBody.WriteString(itemBody)
+			}
 		}
+		dataNodesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dataDevices", dataNodesBody.String())
 	}
 	return body
 }
@@ -182,7 +191,7 @@ func (data *DeviceCluster) fromBody(ctx context.Context, res gjson.Result) {
 		data.ControlNodePriority = types.Int64Null()
 	}
 	if value := res.Get("dataDevices"); value.Exists() {
-		data.DataNodes = make([]DeviceClusterDataNodes, 0)
+		data.DataNodes = make([]DeviceClusterDataNodes, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceClusterDataNodes{}
@@ -266,16 +275,16 @@ func (data *DeviceCluster) fromBodyPartial(ctx context.Context, res gjson.Result
 	} else {
 		data.ControlNodePriority = types.Int64Null()
 	}
+	dataNodesArray := res.Get("dataDevices")
 	for i := 0; i < len(data.DataNodes); i++ {
 		keys := [...]string{"deviceDetails.id"}
 		keyValues := [...]string{data.DataNodes[i].DeviceId.ValueString()}
 
 		parent := &data
 		data := (*parent).DataNodes[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dataDevices").ForEach(
+		dataNodesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

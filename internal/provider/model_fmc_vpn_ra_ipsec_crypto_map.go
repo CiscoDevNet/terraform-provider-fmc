@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -86,14 +87,22 @@ func (data VPNRAIPSecCryptoMap) toBody(ctx context.Context, state VPNRAIPSecCryp
 		body, _ = sjson.Set(body, "interfaceObject.id", data.InterfaceId.ValueString())
 	}
 	if len(data.Ikev2IpsecProposals) > 0 {
-		body, _ = sjson.Set(body, "ikev2IpsecProposals", []any{})
+		var ikev2IpsecProposalsBody strings.Builder
+		ikev2IpsecProposalsBody.WriteString("[")
 		for _, item := range data.Ikev2IpsecProposals {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ikev2IpsecProposals.-1", itemBody)
+			if itemBody != "" {
+				if ikev2IpsecProposalsBody.Len() > 1 {
+					ikev2IpsecProposalsBody.WriteString(",")
+				}
+				ikev2IpsecProposalsBody.WriteString(itemBody)
+			}
 		}
+		ikev2IpsecProposalsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ikev2IpsecProposals", ikev2IpsecProposalsBody.String())
 	}
 	if !data.ReverseRouteInjection.IsNull() {
 		body, _ = sjson.Set(body, "enableRRI", data.ReverseRouteInjection.ValueBool())
@@ -153,7 +162,7 @@ func (data *VPNRAIPSecCryptoMap) fromBody(ctx context.Context, res gjson.Result)
 		data.InterfaceId = types.StringNull()
 	}
 	if value := res.Get("ikev2IpsecProposals"); value.Exists() {
-		data.Ikev2IpsecProposals = make([]VPNRAIPSecCryptoMapIkev2IpsecProposals, 0)
+		data.Ikev2IpsecProposals = make([]VPNRAIPSecCryptoMapIkev2IpsecProposals, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRAIPSecCryptoMapIkev2IpsecProposals{}
@@ -252,16 +261,16 @@ func (data *VPNRAIPSecCryptoMap) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.InterfaceId = types.StringNull()
 	}
+	ikev2IpsecProposalsArray := res.Get("ikev2IpsecProposals")
 	for i := 0; i < len(data.Ikev2IpsecProposals); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev2IpsecProposals[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev2IpsecProposals[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikev2IpsecProposals").ForEach(
+		ikev2IpsecProposalsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

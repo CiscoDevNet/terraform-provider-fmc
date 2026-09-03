@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -221,7 +222,8 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 		body, _ = sjson.Set(body, "ipv6.enableAutoConfig", data.Ipv6AutoConfig.ValueBool())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
+		var ipv6AddressesBody strings.Builder
+		ipv6AddressesBody.WriteString("[")
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -233,14 +235,22 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 			if !item.EnforceEui.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enforceEUI64", item.EnforceEui.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "ipv6.addresses.-1", itemBody)
+			if itemBody != "" {
+				if ipv6AddressesBody.Len() > 1 {
+					ipv6AddressesBody.WriteString(",")
+				}
+				ipv6AddressesBody.WriteString(itemBody)
+			}
 		}
+		ipv6AddressesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv6.addresses", ipv6AddressesBody.String())
 	}
 	if !data.Ipv6AddressPoolId.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.pool.id", data.Ipv6AddressPoolId.ValueString())
 	}
 	if len(data.Ipv6Prefixes) > 0 {
-		body, _ = sjson.Set(body, "ipv6.prefixes", []any{})
+		var ipv6PrefixesBody strings.Builder
+		ipv6PrefixesBody.WriteString("[")
 		for _, item := range data.Ipv6Prefixes {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -249,8 +259,15 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 			if !item.Default.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "default", item.Default.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "ipv6.prefixes.-1", itemBody)
+			if itemBody != "" {
+				if ipv6PrefixesBody.Len() > 1 {
+					ipv6PrefixesBody.WriteString(",")
+				}
+				ipv6PrefixesBody.WriteString(itemBody)
+			}
 		}
+		ipv6PrefixesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv6.prefixes", ipv6PrefixesBody.String())
 	}
 	if !data.Ipv6Dad.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.enableDADLoopback", data.Ipv6Dad.ValueBool())
@@ -313,7 +330,8 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 		body, _ = sjson.Set(body, "standbyMACAddress", data.StandbyMacAddress.ValueString())
 	}
 	if len(data.ArpTableEntries) > 0 {
-		body, _ = sjson.Set(body, "arpConfig", []any{})
+		var arpTableEntriesBody strings.Builder
+		arpTableEntriesBody.WriteString("[")
 		for _, item := range data.ArpTableEntries {
 			itemBody := ""
 			if !item.MacAddress.IsNull() {
@@ -325,8 +343,15 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 			if !item.Enabled.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableAlias", item.Enabled.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "arpConfig.-1", itemBody)
+			if itemBody != "" {
+				if arpTableEntriesBody.Len() > 1 {
+					arpTableEntriesBody.WriteString(",")
+				}
+				arpTableEntriesBody.WriteString(itemBody)
+			}
 		}
+		arpTableEntriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "arpConfig", arpTableEntriesBody.String())
 	}
 	if !data.AntiSpoofing.IsNull() {
 		body, _ = sjson.Set(body, "enableAntiSpoofing", data.AntiSpoofing.ValueBool())
@@ -502,7 +527,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv6AutoConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DeviceSubinterfaceIpv6Addresses, 0)
+		data.Ipv6Addresses = make([]DeviceSubinterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceSubinterfaceIpv6Addresses{}
@@ -531,7 +556,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv6AddressPoolId = types.StringNull()
 	}
 	if value := res.Get("ipv6.prefixes"); value.Exists() {
-		data.Ipv6Prefixes = make([]DeviceSubinterfaceIpv6Prefixes, 0)
+		data.Ipv6Prefixes = make([]DeviceSubinterfaceIpv6Prefixes, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceSubinterfaceIpv6Prefixes{}
@@ -650,7 +675,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.StandbyMacAddress = types.StringNull()
 	}
 	if value := res.Get("arpConfig"); value.Exists() {
-		data.ArpTableEntries = make([]DeviceSubinterfaceArpTableEntries, 0)
+		data.ArpTableEntries = make([]DeviceSubinterfaceArpTableEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceSubinterfaceArpTableEntries{}
@@ -859,16 +884,16 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv6AutoConfig = types.BoolNull()
 	}
+	ipv6AddressesArray := res.Get("ipv6.addresses")
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"address", "prefix"}
 		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString(), data.Ipv6Addresses[i].Prefix.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Addresses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6.addresses").ForEach(
+		ipv6AddressesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -917,16 +942,16 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv6AddressPoolId = types.StringNull()
 	}
+	ipv6PrefixesArray := res.Get("ipv6.prefixes")
 	for i := 0; i < len(data.Ipv6Prefixes); i++ {
 		keys := [...]string{"address"}
 		keyValues := [...]string{data.Ipv6Prefixes[i].Address.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Prefixes[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6.prefixes").ForEach(
+		ipv6PrefixesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1065,16 +1090,16 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.StandbyMacAddress = types.StringNull()
 	}
+	arpTableEntriesArray := res.Get("arpConfig")
 	for i := 0; i < len(data.ArpTableEntries); i++ {
 		keys := [...]string{"macAddress", "ipAddress", "enableAlias"}
 		keyValues := [...]string{data.ArpTableEntries[i].MacAddress.ValueString(), data.ArpTableEntries[i].IpAddress.ValueString(), strconv.FormatBool(data.ArpTableEntries[i].Enabled.ValueBool())}
 
 		parent := &data
 		data := (*parent).ArpTableEntries[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("arpConfig").ForEach(
+		arpTableEntriesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

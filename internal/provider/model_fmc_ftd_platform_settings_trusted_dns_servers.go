@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -97,14 +98,22 @@ func (data FTDPlatformSettingsTrustedDNSServers) toBody(ctx context.Context, sta
 		body, _ = sjson.Set(body, "dnsServers.literals", values)
 	}
 	if len(data.TrustedDnsServersObjects) > 0 {
-		body, _ = sjson.Set(body, "dnsServers.objects", []any{})
+		var trustedDnsServersObjectsBody strings.Builder
+		trustedDnsServersObjectsBody.WriteString("[")
 		for _, item := range data.TrustedDnsServersObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dnsServers.objects.-1", itemBody)
+			if itemBody != "" {
+				if trustedDnsServersObjectsBody.Len() > 1 {
+					trustedDnsServersObjectsBody.WriteString(",")
+				}
+				trustedDnsServersObjectsBody.WriteString(itemBody)
+			}
 		}
+		trustedDnsServersObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dnsServers.objects", trustedDnsServersObjectsBody.String())
 	}
 	return body
 }
@@ -150,7 +159,7 @@ func (data *FTDPlatformSettingsTrustedDNSServers) fromBody(ctx context.Context, 
 		data.TrustedDnsServersLiterals = types.SetNull(types.StringType)
 	}
 	if value := res.Get("dnsServers.objects"); value.Exists() {
-		data.TrustedDnsServersObjects = make([]FTDPlatformSettingsTrustedDNSServersTrustedDnsServersObjects, 0)
+		data.TrustedDnsServersObjects = make([]FTDPlatformSettingsTrustedDNSServersTrustedDnsServersObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsTrustedDNSServersTrustedDnsServersObjects{}
@@ -209,16 +218,16 @@ func (data *FTDPlatformSettingsTrustedDNSServers) fromBodyPartial(ctx context.Co
 	} else {
 		data.TrustedDnsServersLiterals = types.SetNull(types.StringType)
 	}
+	trustedDnsServersObjectsArray := res.Get("dnsServers.objects")
 	for i := 0; i < len(data.TrustedDnsServersObjects); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.TrustedDnsServersObjects[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).TrustedDnsServersObjects[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dnsServers.objects").ForEach(
+		trustedDnsServersObjectsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

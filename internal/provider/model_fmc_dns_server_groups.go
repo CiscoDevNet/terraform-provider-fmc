@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"maps"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -79,7 +80,8 @@ func (data DNSServerGroups) toBody(ctx context.Context, state DNSServerGroups) s
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -96,17 +98,32 @@ func (data DNSServerGroups) toBody(ctx context.Context, state DNSServerGroups) s
 				itemBody, _ = sjson.Set(itemBody, "retries", item.Retries.ValueInt64())
 			}
 			if len(item.DnsServers) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "dnsservers", []any{})
+				var dnsServersChildBody strings.Builder
+				dnsServersChildBody.WriteString("[")
 				for _, childItem := range item.DnsServers {
 					itemChildBody := ""
 					if !childItem.Ip.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "name-server", childItem.Ip.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "dnsservers.-1", itemChildBody)
+					if itemChildBody != "" {
+						if dnsServersChildBody.Len() > 1 {
+							dnsServersChildBody.WriteString(",")
+						}
+						dnsServersChildBody.WriteString(itemChildBody)
+					}
 				}
+				dnsServersChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "dnsservers", dnsServersChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }
@@ -159,7 +176,7 @@ func (data *DNSServerGroups) fromBody(ctx context.Context, res gjson.Result) {
 			data.Retries = types.Int64Value(2)
 		}
 		if value := res.Get("dnsservers"); value.Exists() {
-			data.DnsServers = make([]DNSServerGroupsItemsDnsServers, 0)
+			data.DnsServers = make([]DNSServerGroupsItemsDnsServers, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := DNSServerGroupsItemsDnsServers{}
@@ -225,16 +242,16 @@ func (data *DNSServerGroups) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else if data.Retries.ValueInt64() != 2 {
 			data.Retries = types.Int64Null()
 		}
+		dnsServersArray := res.Get("dnsservers")
 		for i := 0; i < len(data.DnsServers); i++ {
 			keys := [...]string{"name-server"}
 			keyValues := [...]string{data.DnsServers[i].Ip.ValueString()}
 
 			parent := &data
 			data := (*parent).DnsServers[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("dnsservers").ForEach(
+			dnsServersArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

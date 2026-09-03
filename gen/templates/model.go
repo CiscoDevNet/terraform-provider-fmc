@@ -201,8 +201,10 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 		body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", values)
 	}
 	{{- else if isNestedListMapSet .}}
+	{{- $listBld := printf "%sBody" (lowerFirst (toGoName .TfName))}}
 	if len(data.{{toGoName .TfName}}) > 0 {
-		body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", []any{})
+		var {{$listBld}} strings.Builder
+		{{$listBld}}.WriteString("[")
 		{{- if isNestedMap .}}
 		for key, item := range data.{{toGoName .TfName}} {
 			itemBody, _ := sjson.Set("{}", "name", key)
@@ -227,8 +229,10 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 				itemBody, _ = sjson.Set(itemBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", values)
 			}
 			{{- else if isNestedListSet .}}
+			{{- $childBld := printf "%sChildBody" (lowerFirst (toGoName .TfName))}}
 			if len(item.{{toGoName .TfName}}) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", []any{})
+				var {{$childBld}} strings.Builder
+				{{$childBld}}.WriteString("[")
 				for _, childItem := range item.{{toGoName .TfName}} {
 					itemChildBody := ""
 					{{- range .Attributes}}
@@ -248,8 +252,10 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 						itemChildBody, _ = sjson.Set(itemChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", values)
 					}
 					{{- else if isNestedListSet .}}
+					{{- $childChildBld := printf "%sChildChildBody" (lowerFirst (toGoName .TfName))}}
 					if len(childItem.{{toGoName .TfName}}) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", []any{})
+						var {{$childChildBld}} strings.Builder
+						{{$childChildBld}}.WriteString("[")
 						for _, childChildItem := range childItem.{{toGoName .TfName}} {
 							itemChildChildBody := ""
 							{{- range .Attributes}}
@@ -271,20 +277,41 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 							{{- end}}
 							{{- end}}
 							{{- end}}
-							itemChildBody, _ = sjson.SetRaw(itemChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}.-1", itemChildChildBody)
+							if itemChildChildBody != "" {
+								if {{$childChildBld}}.Len() > 1 {
+									{{$childChildBld}}.WriteString(",")
+								}
+								{{$childChildBld}}.WriteString(itemChildChildBody)
+							}
 						}
+						{{$childChildBld}}.WriteString("]")
+						itemChildBody, _ = sjson.SetRaw(itemChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{$childChildBld}}.String())
 					}
 					{{- end}}
 					{{- end}}
 					{{- end}}
-					itemBody, _ = sjson.SetRaw(itemBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}.-1", itemChildBody)
+					if itemChildBody != "" {
+						if {{$childBld}}.Len() > 1 {
+							{{$childBld}}.WriteString(",")
+						}
+						{{$childBld}}.WriteString(itemChildBody)
+					}
 				}
+				{{$childBld}}.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{$childBld}}.String())
 			}
 			{{- end}}
 			{{- end}}
 			{{- end}}
-			body, _ = sjson.SetRaw(body, "{{range .DataPath}}{{.}}.{{end}}{{if .ModelName}}{{.ModelName}}.{{end}}-1", itemBody)
+			if itemBody != "" {
+				if {{$listBld}}.Len() > 1 {
+					{{$listBld}}.WriteString(",")
+				}
+				{{$listBld}}.WriteString(itemBody)
+			}
 		}
+		{{$listBld}}.WriteString("]")
+		body, _ = sjson.SetRaw(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{$listBld}}.String())
 	}
 	{{- end}}
 	{{- end}}
@@ -303,7 +330,12 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result) {
 {{- define "fromBodyTemplate"}}
 	{{- range .Attributes}}
-	{{- if .TfOnly}}{{- continue}}{{- end}}
+	{{- if .TfOnly}}
+	{{- if .DefaultValue}}
+	data.{{toGoName .TfName}} = types.{{.Type}}Value({{.DefaultValue}})
+	{{- end}}
+	{{- continue}}
+	{{- end}}
 	{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 	if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
@@ -323,7 +355,7 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	}
 	{{- else if isNestedListSet .}}
 	if value := res{{if .ModelName}}.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}; value.Exists() {
-		data.{{toGoName .TfName}} = make([]{{.GoTypeName}}, 0)
+		data.{{toGoName .TfName}} = make([]{{.GoTypeName}}, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := {{.GoTypeName}}{}
@@ -425,8 +457,10 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 		}
 		res, _ := itemsById[data.Id.ValueString()]
 	{{- else if .OrderedList }}
+	{{- $arrayVar := printf "%sArray" (lowerFirst (toGoName .TfName))}}
+	{{$arrayVar}} := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").Array()
 	{
-		l := len(res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").Array())
+		l := len({{$arrayVar}})
 		tflog.Debug(ctx, fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}} array resizing from %d to %d", len(data.{{toGoName .TfName}}), l))
 		for i := len(data.{{toGoName .TfName}}); i < l; i++ {
 			data.{{toGoName .TfName}} = append(data.{{toGoName .TfName}}, {{.GoTypeName}}{})
@@ -438,19 +472,19 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	for i := range data.{{toGoName .TfName}} {
 		parent := &data
 		data := (*parent).{{toGoName .TfName}}[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}.%d", i))
+		res := {{$arrayVar}}[i]
 	{{- else }}
+	{{- $arrayVar := printf "%sArray" (lowerFirst (toGoName .TfName))}}
+	{{if .ModelName}}{{$arrayVar}} := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}
 	for i := 0; i < len(data.{{toGoName .TfName}}); i++ {
 		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
 		keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}(), {{end}}{{end}}{{end}} }
 
 		parent := &data
 		data := (*parent).{{toGoName .TfName}}[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(
+		{{if .ModelName}}{{$arrayVar}}{{else}}res{{end}}.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -525,15 +559,22 @@ func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson
 	{{- if hasResourceId .Attributes}}
 	{{- $list := (toGoName .TfName)}}
 	{{- if .OrderedList }}
+	{{- $arrayVar := printf "%sArray" (lowerFirst (toGoName .TfName))}}
+	{{$arrayVar}} := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").Array()
 	for i := range data.{{toGoName .TfName}} {
-		r := res.Get(fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}.%d", i))
+		var r gjson.Result
+		if i < len({{$arrayVar}}) {
+			r = {{$arrayVar}}[i]
+		}
 	{{- else if isNestedListSet .}}
+	{{- $arrayVar := printf "%sArray" (lowerFirst (toGoName .TfName))}}
+	{{if .ModelName}}{{$arrayVar}} := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}
 	for i := range data.{{toGoName .TfName}} {
 		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
 		keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}(), {{end}}{{end}}{{end}} }
 
 		var r gjson.Result
-		res.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(
+		{{if .ModelName}}{{$arrayVar}}{{else}}res{{end}}.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
