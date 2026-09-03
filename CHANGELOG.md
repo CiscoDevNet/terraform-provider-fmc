@@ -1,6 +1,7 @@
 ## Unreleased
 
 - (Enhancement) Performance improvements
+- (Enhancement) Add support for `fmc_device_vlan_interface`
 - (Enhancement) `fmc_device_physical_interface`: Add `switchport_*` attributes
 - (Enhancement) `fmc_device_physical_interface`: Increase the maximum MTU from `9000` to `9198`
 - (Enhancement) `fmc_device_etherchannel_interface`: Increase the maximum MTU from `9000` to `9198`
