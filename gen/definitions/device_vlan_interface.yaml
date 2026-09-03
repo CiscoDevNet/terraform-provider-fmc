@@ -1,9 +1,8 @@
 ---
-name: Device Physical Interface
-rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/physicalinterfaces
-put_create: true
+name: Device VLAN Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/vlaninterfaces
 doc_category: Devices
-test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+test_tags: [TF_VAR_device_id, FMC_DEVICE_VLAN_INTERFACE]
 attributes:
   - tf_name: device_id
     type: String
@@ -14,51 +13,44 @@ attributes:
   - model_name: type
     type: String
     computed: true
-    description: Type of the object.
+    description: Type of the object, this value is always 'VlanInterface'.
+  - model_name: name
+    type: String
+    computed: true
+    computed_body_param: true
+    description: Name of the VLAN interface in format `Vlan<vlan_id>` (eg. Vlan7).
+    data_source_query: true
 # General
   - model_name: ifname
     tf_name: logical_name
     type: String
     description: >-
-      Logical name of the interface, unique on the device. Should not contain whitespace or slash
-      characters.
-    example: myinterface-0-1
-    minimum_test_value: '"iface_minimum"'
+      Logical name of the interface, unique on the device.
+    example: myvlaninterface-7
     data_source_query: true
+    minimum_test_value: '"iface_minimum"'
   - model_name: enabled
     type: Bool
     description: Enable the interface.
     default_value: true
     test_value: "true"
     exclude_example: true
-  - model_name: managementOnly
-    type: Bool
-    description: >-
-      Whether this interface limits traffic to management traffic; when true, through-the-box traffic is
-      disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
-    minimum_test_value: "true"
-    test_value: "false"
-    exclude_example: true
   - model_name: description
     type: String
-    description: Description of the object.
+    description: Description of the interface.
     example: my description
   - model_name: mode
     type: String
     mandatory: true
-    description: >-
-      Mode of the interface. Use INLINE if, and only if, the interface is part of fmc_inline_set with
-      tap_mode=false or tap_mode unset.
-      Use TAP if, and only if, the interface is part of fmc_inline_set with tap_mode = true.
-      Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.
-    enum_values: [INLINE, PASSIVE, TAP, ERSPAN, NONE, SWITCHPORT]
+    description: Mode of the interface.
+    enum_values: [NONE]
     example: NONE
   - model_name: id
     data_path: [securityZone]
     tf_name: security_zone_id
     type: String
     description: >-
-      Id of the assigned Security Zone. Can only be used when `logical_name`
+      Id of the assigned Security Zone. Can only be used when the interface's `logical_name`
       is set.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
@@ -67,21 +59,13 @@ attributes:
     data_path: [securityZone]
     type: String
     value: SecurityZone
-    # test_value: SecurityZone
-  - model_name: name
-    type: String
-    description: Name of the interface; it must already be present on the device.
-    mandatory: true
-    example: GigabitEthernet0/1
-    test_value: var.interface_name
-    data_source_query: true
   - model_name: MTU
     tf_name: mtu
     type: Int64
     description: Maximum transmission unit. Can only be used when `logical_name` is set.
     min_int: 64
     max_int: 9198
-    example: 1400
+    example: 9000
   - model_name: priority
     type: Int64
     description: Priority. Can only be set for routed interfaces.
@@ -89,63 +73,34 @@ attributes:
     max_int: 65535
     exclude_example: true
     exclude_test: true
-  - model_name: enableSGTPropagate
-    tf_name: sgt_propagate
-    type: Bool
-    description: Whether to propagate SGT.
-    example: "false"
-    exclude_test: true
-  - model_name: nveOnly
-    type: Bool
-    description: >-
-      Used for VTEP's source interface to restrict it to NVE only.
-      For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic.
-      For transparent firewall modes, the `nve_only` is automatically enabled.
-    exclude_test: true
-    exclude_example: true
-  # Switch Port
-  - model_name: portMode
-    data_path: [switchPortConfig]
-    tf_name: switchport_mode
-    type: String
-    description: >-
-      Switch port mode. Can only be used when `mode` is SWITCHPORT.
-    enum_values: [ACCESS, TRUNK]
-    exclude_example: true
-    exclude_test: true
-  - model_name: accessModeVlanId
-    data_path: [switchPortConfig]
-    tf_name: switchport_access_vlan_id
+  - model_name: vlanId
     type: Int64
-    description: VLAN Id assigned to the switch port in ACCESS mode.
+    description: VLAN identifier, unique on the device.
+    mandatory: true
+    requires_replace: true
+    example: 7
     min_int: 1
-    max_int: 4070
-    exclude_example: true
-    exclude_test: true
-  - model_name: trunkModeNativeVlanId
-    data_path: [switchPortConfig]
-    tf_name: switchport_trunk_native_vlan_id
-    type: Int64
-    description: Native VLAN Id of the switch port in TRUNK mode.
-    min_int: 1
-    max_int: 4070
-    exclude_example: true
-    exclude_test: true
-  - model_name: trunkModeAllowedVlanIds
-    data_path: [switchPortConfig]
-    tf_name: switchport_trunk_allowed_vlan_ids
+    max_int: 4094
+  - model_name: id
+    data_path: [disablePortForwardOnVlan]
+    tf_name: disable_forwarding_on_interface_id
     type: String
-    description: >-
-      Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode,
-      for example `2,4-6`.
+    description: Id of the VLAN interface that this interface is blocked from forwarding traffic to.
     exclude_example: true
     exclude_test: true
-  - model_name: protectedEnabled
-    data_path: [switchPortConfig]
-    tf_name: switchport_protected
-    type: Bool
-    description: >-
-      Prevent the switch port from communicating with other protected switch ports on the same VLAN.
+  - model_name: name
+    data_path: [disablePortForwardOnVlan]
+    tf_name: disable_forwarding_on_interface_name
+    type: String
+    description: Name of the VLAN interface that this interface is blocked from forwarding traffic to.
+    exclude_example: true
+    exclude_test: true
+  - model_name: type
+    data_path: [disablePortForwardOnVlan]
+    tf_name: disable_forwarding_on_interface_type
+    type: String
+    description:  Type of the VLAN interface that this interface is blocked from forwarding traffic to.
+    enum_values: ["VlanInterface"]
     exclude_example: true
     exclude_test: true
   # IPv4 - Static
@@ -153,19 +108,19 @@ attributes:
     data_path: [ipv4, static]
     tf_name: ipv4_static_address
     type: String
-    description: Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
+    description: Static IPv4 address.
     example: "10.1.1.1"
   - model_name: netmask
     data_path: [ipv4, static]
     tf_name: ipv4_static_netmask
     type: String
-    description: Netmask (width) for ipv4_static_address.
+    description: Netmask (width) for `ipv4_static_address`.
     example: "24"
   - model_name: id
     data_path: [ipv4, static, pool]
     tf_name: ipv4_address_pool_id
     type: String
-    description: Id of the assigned IPv4 Address Pool.
+    description: Id of the assigned IPv4 address pool.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
     exclude_example: true
@@ -219,7 +174,7 @@ attributes:
     data_path: [ipv4, pppoe]
     tf_name: ipv4_pppoe_authentication
     type: String
-    description: PPPoE Configuration - PPPoE Authentication, can be one of PAP, CHAP, MSCHAP.
+    description: PPPoE Configuration - PPPoE Authentication.
     enum_values: [PAP, CHAP, MSCHAP]
     exclude_example: true
     exclude_test: true
@@ -229,7 +184,7 @@ attributes:
     type: Int64
     min_int: 1
     max_int: 255
-    description: PPPoE Configuration - PPPoE route metric, can be value between 1 - 255.
+    description: PPPoE Configuration - PPPoE route metric.
     exclude_example: true
     exclude_test: true
   - model_name: enableRouteSettings
@@ -282,7 +237,7 @@ attributes:
     exclude_example: true
     exclude_test: true
     type: List
-    description: Assigned IPv6 addresses.
+    description: List of IPv6 addresses.
     attributes:
       - model_name: address
         type: String
@@ -318,7 +273,7 @@ attributes:
     exclude_example: true
     exclude_test: true
     type: List
-    description: Assigned IPv6 prefixes.
+    description: List of IPv6 prefixes.
     attributes:
       - model_name: address
         type: String
@@ -329,7 +284,7 @@ attributes:
         type: Bool
         description: Use default prefix.
         example: "false"
-  # IPv6 Settings:
+  # IPv6 Settings
   - model_name: enableDADLoopback
     data_path: [ipv6]
     tf_name: ipv6_dad
@@ -378,7 +333,6 @@ attributes:
     description: Router Advertisement (RA) lifetime.
     min_int: 0
     max_int: 9000
-    example: 0
     exclude_example: true
     exclude_test: true
   - model_name: raInterval
@@ -401,7 +355,7 @@ attributes:
   - model_name: obtainIPV6DefaultRouteDHCP
     data_path: [ipv6, DHCP]
     tf_name: ipv6_dhcp_obtain_default_route
-    description: Whether to obtain default route from DHCPv6.
+    description: Obtain default route from DHCPv6.
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -437,118 +391,16 @@ attributes:
     data_path: [ipv6, DHCP, clientPd]
     tf_name: ipv6_dhcp_client_pd_prefix_name
     type: String
-    description: Prefix Name for Prefix Delegation (PD)
+    description: Prefix Name for Prefix Delegation (PD).
     exclude_example: true
     exclude_test: true
   - model_name: hintPrefixes
     tf_name: ipv6_dhcp_client_pd_hint_prefixes
     data_path: [ipv6, DHCP, clientPd]
     type: String
-    description: Hint Prefixes for Prefix Delegation (PD)
+    description: Hint Prefixes for Prefix Delegation (PD).
     exclude_example: true
     exclude_test: true
-  # Path Monitoring
-  - model_name: enable
-    data_path: [pathMonitoring]
-    tf_name: ip_based_monitoring
-    description: Enable IP based Monitoring.
-    type: Bool
-    exclude_example: true
-    exclude_test: true
-  - model_name: type
-    data_path: [pathMonitoring]
-    tf_name: ip_based_monitoring_type
-    type: String
-    description: IP based Monitoring - Monitoring Type.
-    enum_values: [AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6]
-    example: AUTO
-    exclude_example: true
-    exclude_test: true
-  - model_name: monitoredIp
-    data_path: [pathMonitoring]
-    tf_name: ip_based_monitoring_next_hop
-    type: String
-    description: IP address to monitor.
-    exclude_example: true
-    exclude_test: true
-  # Hardware
-  - model_name: autoNegState
-    data_path: [hardware]
-    tf_name: auto_negotiation
-    type: Bool
-    description: Enables auto negotiation of duplex and speed.
-    exclude_example: true
-    exclude_test: true
-  - model_name: duplex
-    data_path: [hardware]
-    type: String
-    description: Duplex configuration.
-    enum_values: [AUTO, FULL, HALF]
-    exclude_example: true
-    exclude_test: true
-  - model_name: speed
-    data_path: [hardware]
-    type: String
-    description: Speed configuration.
-    enum_values: [AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP]
-    exclude_example: true
-    exclude_test: true
-  - model_name: receive
-    tf_name: lldp_receive
-    data_path: [LLDP]
-    type: Bool
-    description: LLDP receive configuration.
-    exclude_example: true
-    exclude_test: true
-  - model_name: transmit
-    tf_name: lldp_transmit
-    data_path: [LLDP]
-    type: Bool
-    description: LLDP transmit configuration.
-    exclude_example: true
-    exclude_test: true
-  - model_name: flowControlSend
-    data_path: [hardware]
-    type: String
-    description: Flow Control Send configuration.
-    enum_values: ["ON", "OFF"]
-    exclude_example: true
-    exclude_test: true
-  - model_name: fecMode
-    data_path: [hardware]
-    type: String
-    description: Forward Error Correction (FEC) mode.
-    enum_values: [AUTO, CL108RS, CL74FC, CL91RS, DISABLE]
-    exclude_example: true
-    exclude_test: true
-  # Manager Access
-  - model_name: enableAccess
-    data_path: [fmcAccessConfig]
-    tf_name: management_access
-    description: Enable Management Access.
-    type: Bool
-    exclude_example: true
-    exclude_test: true
-  - model_name: allowedNetworks
-    data_path: [fmcAccessConfig]
-    tf_name: management_access_network_objects
-    exclude_example: true
-    exclude_test: true
-    type: Set
-    description: Allowed networks for Management Access.
-    attributes:
-      - model_name: id
-        id: true
-        type: String
-        description: ID of the network object (Host, Network or Range).
-        exclude_example: true
-        exclude_test: true
-      - model_name: type
-        tf_name: type
-        type: String
-        description: Type of the object.
-        exclude_example: true
-        exclude_test: true
   # Advanced - Information
   - model_name: activeMACAddress
     tf_name: active_mac_address
@@ -626,4 +478,3 @@ attributes:
 
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
-  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name

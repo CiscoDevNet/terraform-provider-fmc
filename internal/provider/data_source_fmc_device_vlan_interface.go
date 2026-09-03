@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &DevicePhysicalInterfaceDataSource{}
-	_ datasource.DataSourceWithConfigure = &DevicePhysicalInterfaceDataSource{}
+	_ datasource.DataSource              = &DeviceVLANInterfaceDataSource{}
+	_ datasource.DataSourceWithConfigure = &DeviceVLANInterfaceDataSource{}
 )
 
-func NewDevicePhysicalInterfaceDataSource() datasource.DataSource {
-	return &DevicePhysicalInterfaceDataSource{}
+func NewDeviceVLANInterfaceDataSource() datasource.DataSource {
+	return &DeviceVLANInterfaceDataSource{}
 }
 
-type DevicePhysicalInterfaceDataSource struct {
+type DeviceVLANInterfaceDataSource struct {
 	client *fmc.Client
 }
 
-func (d *DevicePhysicalInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_physical_interface"
+func (d *DeviceVLANInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_vlan_interface"
 }
 
-func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *DeviceVLANInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device Physical Interface.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device VLAN Interface.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -76,11 +76,16 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object.",
+				MarkdownDescription: "Type of the object, this value is always 'VlanInterface'.",
+				Computed:            true,
+			},
+			"name": schema.StringAttribute{
+				MarkdownDescription: "Name of the VLAN interface in format `Vlan<vlan_id>` (eg. Vlan7).",
+				Optional:            true,
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: "Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.",
+				MarkdownDescription: "Logical name of the interface, unique on the device.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -88,25 +93,16 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "Enable the interface.",
 				Computed:            true,
 			},
-			"management_only": schema.BoolAttribute{
-				MarkdownDescription: "Whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.",
-				Computed:            true,
-			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the object.",
+				MarkdownDescription: "Description of the interface.",
 				Computed:            true,
 			},
 			"mode": schema.StringAttribute{
-				MarkdownDescription: "Mode of the interface. Use INLINE if, and only if, the interface is part of fmc_inline_set with tap_mode=false or tap_mode unset. Use TAP if, and only if, the interface is part of fmc_inline_set with tap_mode = true. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.",
+				MarkdownDescription: "Mode of the interface.",
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned Security Zone. Can only be used when `logical_name` is set.",
-				Computed:            true,
-			},
-			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the interface; it must already be present on the device.",
-				Optional:            true,
+				MarkdownDescription: "Id of the assigned Security Zone. Can only be used when the interface's `logical_name` is set.",
 				Computed:            true,
 			},
 			"mtu": schema.Int64Attribute{
@@ -117,44 +113,32 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "Priority. Can only be set for routed interfaces.",
 				Computed:            true,
 			},
-			"sgt_propagate": schema.BoolAttribute{
-				MarkdownDescription: "Whether to propagate SGT.",
+			"vlan_id": schema.Int64Attribute{
+				MarkdownDescription: "VLAN identifier, unique on the device.",
 				Computed:            true,
 			},
-			"nve_only": schema.BoolAttribute{
-				MarkdownDescription: "Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.",
+			"disable_forwarding_on_interface_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the VLAN interface that this interface is blocked from forwarding traffic to.",
 				Computed:            true,
 			},
-			"switchport_mode": schema.StringAttribute{
-				MarkdownDescription: "Switch port mode. Can only be used when `mode` is SWITCHPORT.",
+			"disable_forwarding_on_interface_name": schema.StringAttribute{
+				MarkdownDescription: "Name of the VLAN interface that this interface is blocked from forwarding traffic to.",
 				Computed:            true,
 			},
-			"switchport_access_vlan_id": schema.Int64Attribute{
-				MarkdownDescription: "VLAN Id assigned to the switch port in ACCESS mode.",
-				Computed:            true,
-			},
-			"switchport_trunk_native_vlan_id": schema.Int64Attribute{
-				MarkdownDescription: "Native VLAN Id of the switch port in TRUNK mode.",
-				Computed:            true,
-			},
-			"switchport_trunk_allowed_vlan_ids": schema.StringAttribute{
-				MarkdownDescription: "Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode, for example `2,4-6`.",
-				Computed:            true,
-			},
-			"switchport_protected": schema.BoolAttribute{
-				MarkdownDescription: "Prevent the switch port from communicating with other protected switch ports on the same VLAN.",
+			"disable_forwarding_on_interface_type": schema.StringAttribute{
+				MarkdownDescription: "Type of the VLAN interface that this interface is blocked from forwarding traffic to.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
-				MarkdownDescription: "Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.",
+				MarkdownDescription: "Static IPv4 address.",
 				Computed:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: "Netmask (width) for ipv4_static_address.",
+				MarkdownDescription: "Netmask (width) for `ipv4_static_address`.",
 				Computed:            true,
 			},
 			"ipv4_address_pool_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned IPv4 Address Pool.",
+				MarkdownDescription: "Id of the assigned IPv4 address pool.",
 				Computed:            true,
 			},
 			"ipv4_dhcp_obtain_default_route": schema.BoolAttribute{
@@ -178,11 +162,11 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ipv4_pppoe_authentication": schema.StringAttribute{
-				MarkdownDescription: "PPPoE Configuration - PPPoE Authentication, can be one of PAP, CHAP, MSCHAP.",
+				MarkdownDescription: "PPPoE Configuration - PPPoE Authentication.",
 				Computed:            true,
 			},
 			"ipv4_pppoe_route_metric": schema.Int64Attribute{
-				MarkdownDescription: "PPPoE Configuration - PPPoE route metric, can be value between 1 - 255.",
+				MarkdownDescription: "PPPoE Configuration - PPPoE route metric.",
 				Computed:            true,
 			},
 			"ipv4_pppoe_route_settings": schema.BoolAttribute{
@@ -210,7 +194,7 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
-				MarkdownDescription: "Assigned IPv6 addresses.",
+				MarkdownDescription: "List of IPv6 addresses.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -234,7 +218,7 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ipv6_prefixes": schema.ListNestedAttribute{
-				MarkdownDescription: "Assigned IPv6 prefixes.",
+				MarkdownDescription: "List of IPv6 prefixes.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -282,7 +266,7 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ipv6_dhcp_obtain_default_route": schema.BoolAttribute{
-				MarkdownDescription: "Whether to obtain default route from DHCPv6.",
+				MarkdownDescription: "Obtain default route from DHCPv6.",
 				Computed:            true,
 			},
 			"ipv6_dhcp_pool_id": schema.StringAttribute{
@@ -302,72 +286,12 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ipv6_dhcp_client_pd_prefix_name": schema.StringAttribute{
-				MarkdownDescription: "Prefix Name for Prefix Delegation (PD)",
+				MarkdownDescription: "Prefix Name for Prefix Delegation (PD).",
 				Computed:            true,
 			},
 			"ipv6_dhcp_client_pd_hint_prefixes": schema.StringAttribute{
-				MarkdownDescription: "Hint Prefixes for Prefix Delegation (PD)",
+				MarkdownDescription: "Hint Prefixes for Prefix Delegation (PD).",
 				Computed:            true,
-			},
-			"ip_based_monitoring": schema.BoolAttribute{
-				MarkdownDescription: "Enable IP based Monitoring.",
-				Computed:            true,
-			},
-			"ip_based_monitoring_type": schema.StringAttribute{
-				MarkdownDescription: "IP based Monitoring - Monitoring Type.",
-				Computed:            true,
-			},
-			"ip_based_monitoring_next_hop": schema.StringAttribute{
-				MarkdownDescription: "IP address to monitor.",
-				Computed:            true,
-			},
-			"auto_negotiation": schema.BoolAttribute{
-				MarkdownDescription: "Enables auto negotiation of duplex and speed.",
-				Computed:            true,
-			},
-			"duplex": schema.StringAttribute{
-				MarkdownDescription: "Duplex configuration.",
-				Computed:            true,
-			},
-			"speed": schema.StringAttribute{
-				MarkdownDescription: "Speed configuration.",
-				Computed:            true,
-			},
-			"lldp_receive": schema.BoolAttribute{
-				MarkdownDescription: "LLDP receive configuration.",
-				Computed:            true,
-			},
-			"lldp_transmit": schema.BoolAttribute{
-				MarkdownDescription: "LLDP transmit configuration.",
-				Computed:            true,
-			},
-			"flow_control_send": schema.StringAttribute{
-				MarkdownDescription: "Flow Control Send configuration.",
-				Computed:            true,
-			},
-			"fec_mode": schema.StringAttribute{
-				MarkdownDescription: "Forward Error Correction (FEC) mode.",
-				Computed:            true,
-			},
-			"management_access": schema.BoolAttribute{
-				MarkdownDescription: "Enable Management Access.",
-				Computed:            true,
-			},
-			"management_access_network_objects": schema.SetNestedAttribute{
-				MarkdownDescription: "Allowed networks for Management Access.",
-				Computed:            true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"id": schema.StringAttribute{
-							MarkdownDescription: "ID of the network object (Host, Network or Range).",
-							Computed:            true,
-						},
-						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the object.",
-							Computed:            true,
-						},
-					},
-				},
 			},
 			"active_mac_address": schema.StringAttribute{
 				MarkdownDescription: "MAC address for active interface in format 0123.4567.89ab.",
@@ -420,17 +344,17 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 		},
 	}
 }
-func (d *DevicePhysicalInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *DeviceVLANInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
-			path.MatchRoot("logical_name"),
 			path.MatchRoot("name"),
+			path.MatchRoot("logical_name"),
 		),
 	}
 }
 
-func (d *DevicePhysicalInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *DeviceVLANInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -442,8 +366,8 @@ func (d *DevicePhysicalInterfaceDataSource) Configure(_ context.Context, req dat
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *DevicePhysicalInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config DevicePhysicalInterface
+func (d *DeviceVLANInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config DeviceVLANInterface
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
@@ -459,37 +383,6 @@ func (d *DevicePhysicalInterfaceDataSource) Read(ctx context.Context, req dataso
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
-	if config.Id.IsNull() && !config.LogicalName.IsNull() {
-		offset := 0
-		limit := 1000
-		for page := 1; ; page++ {
-			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
-			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
-			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
-				return
-			}
-			if value := res.Get("items"); len(value.Array()) > 0 {
-				value.ForEach(func(k, v gjson.Result) bool {
-					if config.LogicalName.ValueString() == v.Get("ifname").String() {
-						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%v', id: %v", config.Id.ValueString(), config.LogicalName.ValueString(), config.Id.ValueString()))
-						return false
-					}
-					return true
-				})
-			}
-			if !config.Id.IsNull() || !res.Get("paging.next.0").Exists() {
-				break
-			}
-			offset += limit
-		}
-
-		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %v", config.LogicalName.ValueString()))
-			return
-		}
-	}
 	if config.Id.IsNull() && !config.Name.IsNull() {
 		offset := 0
 		limit := 1000
@@ -518,6 +411,37 @@ func (d *DevicePhysicalInterfaceDataSource) Read(ctx context.Context, req dataso
 
 		if config.Id.IsNull() {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %v", config.Name.ValueString()))
+			return
+		}
+	}
+	if config.Id.IsNull() && !config.LogicalName.IsNull() {
+		offset := 0
+		limit := 1000
+		for page := 1; ; page++ {
+			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
+			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
+				return
+			}
+			if value := res.Get("items"); len(value.Array()) > 0 {
+				value.ForEach(func(k, v gjson.Result) bool {
+					if config.LogicalName.ValueString() == v.Get("ifname").String() {
+						config.Id = types.StringValue(v.Get("id").String())
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%v', id: %v", config.Id.ValueString(), config.LogicalName.ValueString(), config.Id.ValueString()))
+						return false
+					}
+					return true
+				})
+			}
+			if !config.Id.IsNull() || !res.Get("paging.next.0").Exists() {
+				break
+			}
+			offset += limit
+		}
+
+		if config.Id.IsNull() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %v", config.LogicalName.ValueString()))
 			return
 		}
 	}

@@ -36,100 +36,79 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type DevicePhysicalInterface struct {
-	Id                                    types.String                                            `tfsdk:"id"`
-	Domain                                types.String                                            `tfsdk:"domain"`
-	DeviceId                              types.String                                            `tfsdk:"device_id"`
-	Type                                  types.String                                            `tfsdk:"type"`
-	LogicalName                           types.String                                            `tfsdk:"logical_name"`
-	Enabled                               types.Bool                                              `tfsdk:"enabled"`
-	ManagementOnly                        types.Bool                                              `tfsdk:"management_only"`
-	Description                           types.String                                            `tfsdk:"description"`
-	Mode                                  types.String                                            `tfsdk:"mode"`
-	SecurityZoneId                        types.String                                            `tfsdk:"security_zone_id"`
-	Name                                  types.String                                            `tfsdk:"name"`
-	Mtu                                   types.Int64                                             `tfsdk:"mtu"`
-	Priority                              types.Int64                                             `tfsdk:"priority"`
-	SgtPropagate                          types.Bool                                              `tfsdk:"sgt_propagate"`
-	NveOnly                               types.Bool                                              `tfsdk:"nve_only"`
-	SwitchportMode                        types.String                                            `tfsdk:"switchport_mode"`
-	SwitchportAccessVlanId                types.Int64                                             `tfsdk:"switchport_access_vlan_id"`
-	SwitchportTrunkNativeVlanId           types.Int64                                             `tfsdk:"switchport_trunk_native_vlan_id"`
-	SwitchportTrunkAllowedVlanIds         types.String                                            `tfsdk:"switchport_trunk_allowed_vlan_ids"`
-	SwitchportProtected                   types.Bool                                              `tfsdk:"switchport_protected"`
-	Ipv4StaticAddress                     types.String                                            `tfsdk:"ipv4_static_address"`
-	Ipv4StaticNetmask                     types.String                                            `tfsdk:"ipv4_static_netmask"`
-	Ipv4AddressPoolId                     types.String                                            `tfsdk:"ipv4_address_pool_id"`
-	Ipv4DhcpObtainDefaultRoute            types.Bool                                              `tfsdk:"ipv4_dhcp_obtain_default_route"`
-	Ipv4DhcpDefaultRouteMetric            types.Int64                                             `tfsdk:"ipv4_dhcp_default_route_metric"`
-	Ipv4PppoeVpdnGroupName                types.String                                            `tfsdk:"ipv4_pppoe_vpdn_group_name"`
-	Ipv4PppoeUser                         types.String                                            `tfsdk:"ipv4_pppoe_user"`
-	Ipv4PppoePassword                     types.String                                            `tfsdk:"ipv4_pppoe_password"`
-	Ipv4PppoeAuthentication               types.String                                            `tfsdk:"ipv4_pppoe_authentication"`
-	Ipv4PppoeRouteMetric                  types.Int64                                             `tfsdk:"ipv4_pppoe_route_metric"`
-	Ipv4PppoeRouteSettings                types.Bool                                              `tfsdk:"ipv4_pppoe_route_settings"`
-	Ipv4PppoeStoreCredentialsInFlash      types.Bool                                              `tfsdk:"ipv4_pppoe_store_credentials_in_flash"`
-	Ipv6                                  types.Bool                                              `tfsdk:"ipv6"`
-	Ipv6EnforceEui                        types.Bool                                              `tfsdk:"ipv6_enforce_eui"`
-	Ipv6LinkLocalAddress                  types.String                                            `tfsdk:"ipv6_link_local_address"`
-	Ipv6AutoConfig                        types.Bool                                              `tfsdk:"ipv6_auto_config"`
-	Ipv6Addresses                         []DevicePhysicalInterfaceIpv6Addresses                  `tfsdk:"ipv6_addresses"`
-	Ipv6AddressPoolId                     types.String                                            `tfsdk:"ipv6_address_pool_id"`
-	Ipv6Prefixes                          []DevicePhysicalInterfaceIpv6Prefixes                   `tfsdk:"ipv6_prefixes"`
-	Ipv6Dad                               types.Bool                                              `tfsdk:"ipv6_dad"`
-	Ipv6DadAttempts                       types.Int64                                             `tfsdk:"ipv6_dad_attempts"`
-	Ipv6NsInterval                        types.Int64                                             `tfsdk:"ipv6_ns_interval"`
-	Ipv6ReachableTime                     types.Int64                                             `tfsdk:"ipv6_reachable_time"`
-	Ipv6Ra                                types.Bool                                              `tfsdk:"ipv6_ra"`
-	Ipv6RaLifeTime                        types.Int64                                             `tfsdk:"ipv6_ra_life_time"`
-	Ipv6RaInterval                        types.Int64                                             `tfsdk:"ipv6_ra_interval"`
-	Ipv6Dhcp                              types.Bool                                              `tfsdk:"ipv6_dhcp"`
-	Ipv6DhcpObtainDefaultRoute            types.Bool                                              `tfsdk:"ipv6_dhcp_obtain_default_route"`
-	Ipv6DhcpPoolId                        types.String                                            `tfsdk:"ipv6_dhcp_pool_id"`
-	Ipv6DhcpPoolType                      types.String                                            `tfsdk:"ipv6_dhcp_pool_type"`
-	Ipv6DhcpAddressConfig                 types.Bool                                              `tfsdk:"ipv6_dhcp_address_config"`
-	Ipv6DhcpNonaddressConfig              types.Bool                                              `tfsdk:"ipv6_dhcp_nonaddress_config"`
-	Ipv6DhcpClientPdPrefixName            types.String                                            `tfsdk:"ipv6_dhcp_client_pd_prefix_name"`
-	Ipv6DhcpClientPdHintPrefixes          types.String                                            `tfsdk:"ipv6_dhcp_client_pd_hint_prefixes"`
-	IpBasedMonitoring                     types.Bool                                              `tfsdk:"ip_based_monitoring"`
-	IpBasedMonitoringType                 types.String                                            `tfsdk:"ip_based_monitoring_type"`
-	IpBasedMonitoringNextHop              types.String                                            `tfsdk:"ip_based_monitoring_next_hop"`
-	AutoNegotiation                       types.Bool                                              `tfsdk:"auto_negotiation"`
-	Duplex                                types.String                                            `tfsdk:"duplex"`
-	Speed                                 types.String                                            `tfsdk:"speed"`
-	LldpReceive                           types.Bool                                              `tfsdk:"lldp_receive"`
-	LldpTransmit                          types.Bool                                              `tfsdk:"lldp_transmit"`
-	FlowControlSend                       types.String                                            `tfsdk:"flow_control_send"`
-	FecMode                               types.String                                            `tfsdk:"fec_mode"`
-	ManagementAccess                      types.Bool                                              `tfsdk:"management_access"`
-	ManagementAccessNetworkObjects        []DevicePhysicalInterfaceManagementAccessNetworkObjects `tfsdk:"management_access_network_objects"`
-	ActiveMacAddress                      types.String                                            `tfsdk:"active_mac_address"`
-	StandbyMacAddress                     types.String                                            `tfsdk:"standby_mac_address"`
-	ArpTableEntries                       []DevicePhysicalInterfaceArpTableEntries                `tfsdk:"arp_table_entries"`
-	AntiSpoofing                          types.Bool                                              `tfsdk:"anti_spoofing"`
-	AllowFullFragmentReassembly           types.Bool                                              `tfsdk:"allow_full_fragment_reassembly"`
-	OverrideDefaultFragmentSettingChain   types.Int64                                             `tfsdk:"override_default_fragment_setting_chain"`
-	OverrideDefaultFragmentSettingSize    types.Int64                                             `tfsdk:"override_default_fragment_setting_size"`
-	OverrideDefaultFragmentSettingTimeout types.Int64                                             `tfsdk:"override_default_fragment_setting_timeout"`
+type DeviceVLANInterface struct {
+	Id                                    types.String                         `tfsdk:"id"`
+	Domain                                types.String                         `tfsdk:"domain"`
+	DeviceId                              types.String                         `tfsdk:"device_id"`
+	Type                                  types.String                         `tfsdk:"type"`
+	Name                                  types.String                         `tfsdk:"name"`
+	LogicalName                           types.String                         `tfsdk:"logical_name"`
+	Enabled                               types.Bool                           `tfsdk:"enabled"`
+	Description                           types.String                         `tfsdk:"description"`
+	Mode                                  types.String                         `tfsdk:"mode"`
+	SecurityZoneId                        types.String                         `tfsdk:"security_zone_id"`
+	Mtu                                   types.Int64                          `tfsdk:"mtu"`
+	Priority                              types.Int64                          `tfsdk:"priority"`
+	VlanId                                types.Int64                          `tfsdk:"vlan_id"`
+	DisableForwardingOnInterfaceId        types.String                         `tfsdk:"disable_forwarding_on_interface_id"`
+	DisableForwardingOnInterfaceName      types.String                         `tfsdk:"disable_forwarding_on_interface_name"`
+	DisableForwardingOnInterfaceType      types.String                         `tfsdk:"disable_forwarding_on_interface_type"`
+	Ipv4StaticAddress                     types.String                         `tfsdk:"ipv4_static_address"`
+	Ipv4StaticNetmask                     types.String                         `tfsdk:"ipv4_static_netmask"`
+	Ipv4AddressPoolId                     types.String                         `tfsdk:"ipv4_address_pool_id"`
+	Ipv4DhcpObtainDefaultRoute            types.Bool                           `tfsdk:"ipv4_dhcp_obtain_default_route"`
+	Ipv4DhcpDefaultRouteMetric            types.Int64                          `tfsdk:"ipv4_dhcp_default_route_metric"`
+	Ipv4PppoeVpdnGroupName                types.String                         `tfsdk:"ipv4_pppoe_vpdn_group_name"`
+	Ipv4PppoeUser                         types.String                         `tfsdk:"ipv4_pppoe_user"`
+	Ipv4PppoePassword                     types.String                         `tfsdk:"ipv4_pppoe_password"`
+	Ipv4PppoeAuthentication               types.String                         `tfsdk:"ipv4_pppoe_authentication"`
+	Ipv4PppoeRouteMetric                  types.Int64                          `tfsdk:"ipv4_pppoe_route_metric"`
+	Ipv4PppoeRouteSettings                types.Bool                           `tfsdk:"ipv4_pppoe_route_settings"`
+	Ipv4PppoeStoreCredentialsInFlash      types.Bool                           `tfsdk:"ipv4_pppoe_store_credentials_in_flash"`
+	Ipv6                                  types.Bool                           `tfsdk:"ipv6"`
+	Ipv6EnforceEui                        types.Bool                           `tfsdk:"ipv6_enforce_eui"`
+	Ipv6LinkLocalAddress                  types.String                         `tfsdk:"ipv6_link_local_address"`
+	Ipv6AutoConfig                        types.Bool                           `tfsdk:"ipv6_auto_config"`
+	Ipv6Addresses                         []DeviceVLANInterfaceIpv6Addresses   `tfsdk:"ipv6_addresses"`
+	Ipv6AddressPoolId                     types.String                         `tfsdk:"ipv6_address_pool_id"`
+	Ipv6Prefixes                          []DeviceVLANInterfaceIpv6Prefixes    `tfsdk:"ipv6_prefixes"`
+	Ipv6Dad                               types.Bool                           `tfsdk:"ipv6_dad"`
+	Ipv6DadAttempts                       types.Int64                          `tfsdk:"ipv6_dad_attempts"`
+	Ipv6NsInterval                        types.Int64                          `tfsdk:"ipv6_ns_interval"`
+	Ipv6ReachableTime                     types.Int64                          `tfsdk:"ipv6_reachable_time"`
+	Ipv6Ra                                types.Bool                           `tfsdk:"ipv6_ra"`
+	Ipv6RaLifeTime                        types.Int64                          `tfsdk:"ipv6_ra_life_time"`
+	Ipv6RaInterval                        types.Int64                          `tfsdk:"ipv6_ra_interval"`
+	Ipv6Dhcp                              types.Bool                           `tfsdk:"ipv6_dhcp"`
+	Ipv6DhcpObtainDefaultRoute            types.Bool                           `tfsdk:"ipv6_dhcp_obtain_default_route"`
+	Ipv6DhcpPoolId                        types.String                         `tfsdk:"ipv6_dhcp_pool_id"`
+	Ipv6DhcpPoolType                      types.String                         `tfsdk:"ipv6_dhcp_pool_type"`
+	Ipv6DhcpAddressConfig                 types.Bool                           `tfsdk:"ipv6_dhcp_address_config"`
+	Ipv6DhcpNonaddressConfig              types.Bool                           `tfsdk:"ipv6_dhcp_nonaddress_config"`
+	Ipv6DhcpClientPdPrefixName            types.String                         `tfsdk:"ipv6_dhcp_client_pd_prefix_name"`
+	Ipv6DhcpClientPdHintPrefixes          types.String                         `tfsdk:"ipv6_dhcp_client_pd_hint_prefixes"`
+	ActiveMacAddress                      types.String                         `tfsdk:"active_mac_address"`
+	StandbyMacAddress                     types.String                         `tfsdk:"standby_mac_address"`
+	ArpTableEntries                       []DeviceVLANInterfaceArpTableEntries `tfsdk:"arp_table_entries"`
+	AntiSpoofing                          types.Bool                           `tfsdk:"anti_spoofing"`
+	AllowFullFragmentReassembly           types.Bool                           `tfsdk:"allow_full_fragment_reassembly"`
+	OverrideDefaultFragmentSettingChain   types.Int64                          `tfsdk:"override_default_fragment_setting_chain"`
+	OverrideDefaultFragmentSettingSize    types.Int64                          `tfsdk:"override_default_fragment_setting_size"`
+	OverrideDefaultFragmentSettingTimeout types.Int64                          `tfsdk:"override_default_fragment_setting_timeout"`
 }
 
-type DevicePhysicalInterfaceIpv6Addresses struct {
+type DeviceVLANInterfaceIpv6Addresses struct {
 	Address    types.String `tfsdk:"address"`
 	Prefix     types.String `tfsdk:"prefix"`
 	EnforceEui types.Bool   `tfsdk:"enforce_eui"`
 }
 
-type DevicePhysicalInterfaceIpv6Prefixes struct {
+type DeviceVLANInterfaceIpv6Prefixes struct {
 	Address types.String `tfsdk:"address"`
 	Default types.Bool   `tfsdk:"default"`
 }
 
-type DevicePhysicalInterfaceManagementAccessNetworkObjects struct {
-	Id   types.String `tfsdk:"id"`
-	Type types.String `tfsdk:"type"`
-}
-
-type DevicePhysicalInterfaceArpTableEntries struct {
+type DeviceVLANInterfaceArpTableEntries struct {
 	MacAddress types.String `tfsdk:"mac_address"`
 	IpAddress  types.String `tfsdk:"ip_address"`
 	Enabled    types.Bool   `tfsdk:"enabled"`
@@ -143,27 +122,27 @@ type DevicePhysicalInterfaceArpTableEntries struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data DevicePhysicalInterface) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/physicalinterfaces", url.QueryEscape(data.DeviceId.ValueString()))
+func (data DeviceVLANInterface) getPath() string {
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/vlaninterfaces", url.QueryEscape(data.DeviceId.ValueString()))
 }
 
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
 
-func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhysicalInterface) string {
+func (data DeviceVLANInterface) toBody(ctx context.Context, state DeviceVLANInterface) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	if !data.Name.IsNull() && !data.Name.IsUnknown() {
+		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if !data.LogicalName.IsNull() {
 		body, _ = sjson.Set(body, "ifname", data.LogicalName.ValueString())
 	}
 	if !data.Enabled.IsNull() {
 		body, _ = sjson.Set(body, "enabled", data.Enabled.ValueBool())
-	}
-	if !data.ManagementOnly.IsNull() {
-		body, _ = sjson.Set(body, "managementOnly", data.ManagementOnly.ValueBool())
 	}
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
@@ -175,35 +154,23 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 		body, _ = sjson.Set(body, "securityZone.id", data.SecurityZoneId.ValueString())
 	}
 	body, _ = sjson.Set(body, "securityZone.type", "SecurityZone")
-	if !data.Name.IsNull() {
-		body, _ = sjson.Set(body, "name", data.Name.ValueString())
-	}
 	if !data.Mtu.IsNull() {
 		body, _ = sjson.Set(body, "MTU", data.Mtu.ValueInt64())
 	}
 	if !data.Priority.IsNull() {
 		body, _ = sjson.Set(body, "priority", data.Priority.ValueInt64())
 	}
-	if !data.SgtPropagate.IsNull() {
-		body, _ = sjson.Set(body, "enableSGTPropagate", data.SgtPropagate.ValueBool())
+	if !data.VlanId.IsNull() {
+		body, _ = sjson.Set(body, "vlanId", data.VlanId.ValueInt64())
 	}
-	if !data.NveOnly.IsNull() {
-		body, _ = sjson.Set(body, "nveOnly", data.NveOnly.ValueBool())
+	if !data.DisableForwardingOnInterfaceId.IsNull() {
+		body, _ = sjson.Set(body, "disablePortForwardOnVlan.id", data.DisableForwardingOnInterfaceId.ValueString())
 	}
-	if !data.SwitchportMode.IsNull() {
-		body, _ = sjson.Set(body, "switchPortConfig.portMode", data.SwitchportMode.ValueString())
+	if !data.DisableForwardingOnInterfaceName.IsNull() {
+		body, _ = sjson.Set(body, "disablePortForwardOnVlan.name", data.DisableForwardingOnInterfaceName.ValueString())
 	}
-	if !data.SwitchportAccessVlanId.IsNull() {
-		body, _ = sjson.Set(body, "switchPortConfig.accessModeVlanId", data.SwitchportAccessVlanId.ValueInt64())
-	}
-	if !data.SwitchportTrunkNativeVlanId.IsNull() {
-		body, _ = sjson.Set(body, "switchPortConfig.trunkModeNativeVlanId", data.SwitchportTrunkNativeVlanId.ValueInt64())
-	}
-	if !data.SwitchportTrunkAllowedVlanIds.IsNull() {
-		body, _ = sjson.Set(body, "switchPortConfig.trunkModeAllowedVlanIds", data.SwitchportTrunkAllowedVlanIds.ValueString())
-	}
-	if !data.SwitchportProtected.IsNull() {
-		body, _ = sjson.Set(body, "switchPortConfig.protectedEnabled", data.SwitchportProtected.ValueBool())
+	if !data.DisableForwardingOnInterfaceType.IsNull() {
+		body, _ = sjson.Set(body, "disablePortForwardOnVlan.type", data.DisableForwardingOnInterfaceType.ValueString())
 	}
 	if !data.Ipv4StaticAddress.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.static.address", data.Ipv4StaticAddress.ValueString())
@@ -346,60 +313,6 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 	if !data.Ipv6DhcpClientPdHintPrefixes.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.DHCP.clientPd.hintPrefixes", data.Ipv6DhcpClientPdHintPrefixes.ValueString())
 	}
-	if !data.IpBasedMonitoring.IsNull() {
-		body, _ = sjson.Set(body, "pathMonitoring.enable", data.IpBasedMonitoring.ValueBool())
-	}
-	if !data.IpBasedMonitoringType.IsNull() {
-		body, _ = sjson.Set(body, "pathMonitoring.type", data.IpBasedMonitoringType.ValueString())
-	}
-	if !data.IpBasedMonitoringNextHop.IsNull() {
-		body, _ = sjson.Set(body, "pathMonitoring.monitoredIp", data.IpBasedMonitoringNextHop.ValueString())
-	}
-	if !data.AutoNegotiation.IsNull() {
-		body, _ = sjson.Set(body, "hardware.autoNegState", data.AutoNegotiation.ValueBool())
-	}
-	if !data.Duplex.IsNull() {
-		body, _ = sjson.Set(body, "hardware.duplex", data.Duplex.ValueString())
-	}
-	if !data.Speed.IsNull() {
-		body, _ = sjson.Set(body, "hardware.speed", data.Speed.ValueString())
-	}
-	if !data.LldpReceive.IsNull() {
-		body, _ = sjson.Set(body, "LLDP.receive", data.LldpReceive.ValueBool())
-	}
-	if !data.LldpTransmit.IsNull() {
-		body, _ = sjson.Set(body, "LLDP.transmit", data.LldpTransmit.ValueBool())
-	}
-	if !data.FlowControlSend.IsNull() {
-		body, _ = sjson.Set(body, "hardware.flowControlSend", data.FlowControlSend.ValueString())
-	}
-	if !data.FecMode.IsNull() {
-		body, _ = sjson.Set(body, "hardware.fecMode", data.FecMode.ValueString())
-	}
-	if !data.ManagementAccess.IsNull() {
-		body, _ = sjson.Set(body, "fmcAccessConfig.enableAccess", data.ManagementAccess.ValueBool())
-	}
-	if len(data.ManagementAccessNetworkObjects) > 0 {
-		var managementAccessNetworkObjectsBody strings.Builder
-		managementAccessNetworkObjectsBody.WriteString("[")
-		for _, item := range data.ManagementAccessNetworkObjects {
-			itemBody := ""
-			if !item.Id.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
-			}
-			if !item.Type.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
-			}
-			if itemBody != "" {
-				if managementAccessNetworkObjectsBody.Len() > 1 {
-					managementAccessNetworkObjectsBody.WriteString(",")
-				}
-				managementAccessNetworkObjectsBody.WriteString(itemBody)
-			}
-		}
-		managementAccessNetworkObjectsBody.WriteString("]")
-		body, _ = sjson.SetRaw(body, "fmcAccessConfig.allowedNetworks", managementAccessNetworkObjectsBody.String())
-	}
 	if !data.ActiveMacAddress.IsNull() {
 		body, _ = sjson.Set(body, "activeMACAddress", data.ActiveMacAddress.ValueString())
 	}
@@ -452,11 +365,16 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Result) {
+func (data *DeviceVLANInterface) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("type"); value.Exists() {
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
+	}
+	if value := res.Get("name"); value.Exists() {
+		data.Name = types.StringValue(value.String())
+	} else {
+		data.Name = types.StringNull()
 	}
 	if value := res.Get("ifname"); value.Exists() {
 		data.LogicalName = types.StringValue(value.String())
@@ -467,11 +385,6 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Enabled = types.BoolValue(value.Bool())
 	} else {
 		data.Enabled = types.BoolValue(true)
-	}
-	if value := res.Get("managementOnly"); value.Exists() {
-		data.ManagementOnly = types.BoolValue(value.Bool())
-	} else {
-		data.ManagementOnly = types.BoolNull()
 	}
 	if value := res.Get("description"); value.Exists() {
 		data.Description = types.StringValue(value.String())
@@ -488,11 +401,6 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 	} else {
 		data.SecurityZoneId = types.StringNull()
 	}
-	if value := res.Get("name"); value.Exists() {
-		data.Name = types.StringValue(value.String())
-	} else {
-		data.Name = types.StringNull()
-	}
 	if value := res.Get("MTU"); value.Exists() {
 		data.Mtu = types.Int64Value(value.Int())
 	} else {
@@ -503,40 +411,25 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 	} else {
 		data.Priority = types.Int64Null()
 	}
-	if value := res.Get("enableSGTPropagate"); value.Exists() {
-		data.SgtPropagate = types.BoolValue(value.Bool())
+	if value := res.Get("vlanId"); value.Exists() {
+		data.VlanId = types.Int64Value(value.Int())
 	} else {
-		data.SgtPropagate = types.BoolNull()
+		data.VlanId = types.Int64Null()
 	}
-	if value := res.Get("nveOnly"); value.Exists() {
-		data.NveOnly = types.BoolValue(value.Bool())
+	if value := res.Get("disablePortForwardOnVlan.id"); value.Exists() {
+		data.DisableForwardingOnInterfaceId = types.StringValue(value.String())
 	} else {
-		data.NveOnly = types.BoolNull()
+		data.DisableForwardingOnInterfaceId = types.StringNull()
 	}
-	if value := res.Get("switchPortConfig.portMode"); value.Exists() {
-		data.SwitchportMode = types.StringValue(value.String())
+	if value := res.Get("disablePortForwardOnVlan.name"); value.Exists() {
+		data.DisableForwardingOnInterfaceName = types.StringValue(value.String())
 	} else {
-		data.SwitchportMode = types.StringNull()
+		data.DisableForwardingOnInterfaceName = types.StringNull()
 	}
-	if value := res.Get("switchPortConfig.accessModeVlanId"); value.Exists() {
-		data.SwitchportAccessVlanId = types.Int64Value(value.Int())
+	if value := res.Get("disablePortForwardOnVlan.type"); value.Exists() {
+		data.DisableForwardingOnInterfaceType = types.StringValue(value.String())
 	} else {
-		data.SwitchportAccessVlanId = types.Int64Null()
-	}
-	if value := res.Get("switchPortConfig.trunkModeNativeVlanId"); value.Exists() {
-		data.SwitchportTrunkNativeVlanId = types.Int64Value(value.Int())
-	} else {
-		data.SwitchportTrunkNativeVlanId = types.Int64Null()
-	}
-	if value := res.Get("switchPortConfig.trunkModeAllowedVlanIds"); value.Exists() {
-		data.SwitchportTrunkAllowedVlanIds = types.StringValue(value.String())
-	} else {
-		data.SwitchportTrunkAllowedVlanIds = types.StringNull()
-	}
-	if value := res.Get("switchPortConfig.protectedEnabled"); value.Exists() {
-		data.SwitchportProtected = types.BoolValue(value.Bool())
-	} else {
-		data.SwitchportProtected = types.BoolNull()
+		data.DisableForwardingOnInterfaceType = types.StringNull()
 	}
 	if value := res.Get("ipv4.static.address"); value.Exists() {
 		data.Ipv4StaticAddress = types.StringValue(value.String())
@@ -619,10 +512,10 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Ipv6AutoConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DevicePhysicalInterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
+		data.Ipv6Addresses = make([]DeviceVLANInterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
-			data := DevicePhysicalInterfaceIpv6Addresses{}
+			data := DeviceVLANInterfaceIpv6Addresses{}
 			if value := res.Get("address"); value.Exists() {
 				data.Address = types.StringValue(value.String())
 			} else {
@@ -648,10 +541,10 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Ipv6AddressPoolId = types.StringNull()
 	}
 	if value := res.Get("ipv6.prefixes"); value.Exists() {
-		data.Ipv6Prefixes = make([]DevicePhysicalInterfaceIpv6Prefixes, 0, int(value.Get("#").Int()))
+		data.Ipv6Prefixes = make([]DeviceVLANInterfaceIpv6Prefixes, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
-			data := DevicePhysicalInterfaceIpv6Prefixes{}
+			data := DeviceVLANInterfaceIpv6Prefixes{}
 			if value := res.Get("address"); value.Exists() {
 				data.Address = types.StringValue(value.String())
 			} else {
@@ -741,80 +634,6 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 	} else {
 		data.Ipv6DhcpClientPdHintPrefixes = types.StringNull()
 	}
-	if value := res.Get("pathMonitoring.enable"); value.Exists() {
-		data.IpBasedMonitoring = types.BoolValue(value.Bool())
-	} else {
-		data.IpBasedMonitoring = types.BoolNull()
-	}
-	if value := res.Get("pathMonitoring.type"); value.Exists() {
-		data.IpBasedMonitoringType = types.StringValue(value.String())
-	} else {
-		data.IpBasedMonitoringType = types.StringNull()
-	}
-	if value := res.Get("pathMonitoring.monitoredIp"); value.Exists() {
-		data.IpBasedMonitoringNextHop = types.StringValue(value.String())
-	} else {
-		data.IpBasedMonitoringNextHop = types.StringNull()
-	}
-	if value := res.Get("hardware.autoNegState"); value.Exists() {
-		data.AutoNegotiation = types.BoolValue(value.Bool())
-	} else {
-		data.AutoNegotiation = types.BoolNull()
-	}
-	if value := res.Get("hardware.duplex"); value.Exists() {
-		data.Duplex = types.StringValue(value.String())
-	} else {
-		data.Duplex = types.StringNull()
-	}
-	if value := res.Get("hardware.speed"); value.Exists() {
-		data.Speed = types.StringValue(value.String())
-	} else {
-		data.Speed = types.StringNull()
-	}
-	if value := res.Get("LLDP.receive"); value.Exists() {
-		data.LldpReceive = types.BoolValue(value.Bool())
-	} else {
-		data.LldpReceive = types.BoolNull()
-	}
-	if value := res.Get("LLDP.transmit"); value.Exists() {
-		data.LldpTransmit = types.BoolValue(value.Bool())
-	} else {
-		data.LldpTransmit = types.BoolNull()
-	}
-	if value := res.Get("hardware.flowControlSend"); value.Exists() {
-		data.FlowControlSend = types.StringValue(value.String())
-	} else {
-		data.FlowControlSend = types.StringNull()
-	}
-	if value := res.Get("hardware.fecMode"); value.Exists() {
-		data.FecMode = types.StringValue(value.String())
-	} else {
-		data.FecMode = types.StringNull()
-	}
-	if value := res.Get("fmcAccessConfig.enableAccess"); value.Exists() {
-		data.ManagementAccess = types.BoolValue(value.Bool())
-	} else {
-		data.ManagementAccess = types.BoolNull()
-	}
-	if value := res.Get("fmcAccessConfig.allowedNetworks"); value.Exists() {
-		data.ManagementAccessNetworkObjects = make([]DevicePhysicalInterfaceManagementAccessNetworkObjects, 0, int(value.Get("#").Int()))
-		value.ForEach(func(k, res gjson.Result) bool {
-			parent := &data
-			data := DevicePhysicalInterfaceManagementAccessNetworkObjects{}
-			if value := res.Get("id"); value.Exists() {
-				data.Id = types.StringValue(value.String())
-			} else {
-				data.Id = types.StringNull()
-			}
-			if value := res.Get("type"); value.Exists() {
-				data.Type = types.StringValue(value.String())
-			} else {
-				data.Type = types.StringNull()
-			}
-			(*parent).ManagementAccessNetworkObjects = append((*parent).ManagementAccessNetworkObjects, data)
-			return true
-		})
-	}
 	if value := res.Get("activeMACAddress"); value.Exists() {
 		data.ActiveMacAddress = types.StringValue(value.String())
 	} else {
@@ -826,10 +645,10 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.StandbyMacAddress = types.StringNull()
 	}
 	if value := res.Get("arpConfig"); value.Exists() {
-		data.ArpTableEntries = make([]DevicePhysicalInterfaceArpTableEntries, 0, int(value.Get("#").Int()))
+		data.ArpTableEntries = make([]DeviceVLANInterfaceArpTableEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
-			data := DevicePhysicalInterfaceArpTableEntries{}
+			data := DeviceVLANInterfaceArpTableEntries{}
 			if value := res.Get("macAddress"); value.Exists() {
 				data.MacAddress = types.StringValue(value.String())
 			} else {
@@ -884,11 +703,16 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 // uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
-func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gjson.Result) {
+func (data *DeviceVLANInterface) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
+	}
+	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+		data.Name = types.StringValue(value.String())
+	} else {
+		data.Name = types.StringNull()
 	}
 	if value := res.Get("ifname"); value.Exists() && !data.LogicalName.IsNull() {
 		data.LogicalName = types.StringValue(value.String())
@@ -899,11 +723,6 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 		data.Enabled = types.BoolValue(value.Bool())
 	} else if data.Enabled.ValueBool() != true {
 		data.Enabled = types.BoolNull()
-	}
-	if value := res.Get("managementOnly"); value.Exists() && !data.ManagementOnly.IsNull() {
-		data.ManagementOnly = types.BoolValue(value.Bool())
-	} else {
-		data.ManagementOnly = types.BoolNull()
 	}
 	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 		data.Description = types.StringValue(value.String())
@@ -920,11 +739,6 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.SecurityZoneId = types.StringNull()
 	}
-	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
-		data.Name = types.StringValue(value.String())
-	} else {
-		data.Name = types.StringNull()
-	}
 	if value := res.Get("MTU"); value.Exists() && !data.Mtu.IsNull() {
 		data.Mtu = types.Int64Value(value.Int())
 	} else {
@@ -935,40 +749,25 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Priority = types.Int64Null()
 	}
-	if value := res.Get("enableSGTPropagate"); value.Exists() && !data.SgtPropagate.IsNull() {
-		data.SgtPropagate = types.BoolValue(value.Bool())
+	if value := res.Get("vlanId"); value.Exists() && !data.VlanId.IsNull() {
+		data.VlanId = types.Int64Value(value.Int())
 	} else {
-		data.SgtPropagate = types.BoolNull()
+		data.VlanId = types.Int64Null()
 	}
-	if value := res.Get("nveOnly"); value.Exists() && !data.NveOnly.IsNull() {
-		data.NveOnly = types.BoolValue(value.Bool())
+	if value := res.Get("disablePortForwardOnVlan.id"); value.Exists() && !data.DisableForwardingOnInterfaceId.IsNull() {
+		data.DisableForwardingOnInterfaceId = types.StringValue(value.String())
 	} else {
-		data.NveOnly = types.BoolNull()
+		data.DisableForwardingOnInterfaceId = types.StringNull()
 	}
-	if value := res.Get("switchPortConfig.portMode"); value.Exists() && !data.SwitchportMode.IsNull() {
-		data.SwitchportMode = types.StringValue(value.String())
+	if value := res.Get("disablePortForwardOnVlan.name"); value.Exists() && !data.DisableForwardingOnInterfaceName.IsNull() {
+		data.DisableForwardingOnInterfaceName = types.StringValue(value.String())
 	} else {
-		data.SwitchportMode = types.StringNull()
+		data.DisableForwardingOnInterfaceName = types.StringNull()
 	}
-	if value := res.Get("switchPortConfig.accessModeVlanId"); value.Exists() && !data.SwitchportAccessVlanId.IsNull() {
-		data.SwitchportAccessVlanId = types.Int64Value(value.Int())
+	if value := res.Get("disablePortForwardOnVlan.type"); value.Exists() && !data.DisableForwardingOnInterfaceType.IsNull() {
+		data.DisableForwardingOnInterfaceType = types.StringValue(value.String())
 	} else {
-		data.SwitchportAccessVlanId = types.Int64Null()
-	}
-	if value := res.Get("switchPortConfig.trunkModeNativeVlanId"); value.Exists() && !data.SwitchportTrunkNativeVlanId.IsNull() {
-		data.SwitchportTrunkNativeVlanId = types.Int64Value(value.Int())
-	} else {
-		data.SwitchportTrunkNativeVlanId = types.Int64Null()
-	}
-	if value := res.Get("switchPortConfig.trunkModeAllowedVlanIds"); value.Exists() && !data.SwitchportTrunkAllowedVlanIds.IsNull() {
-		data.SwitchportTrunkAllowedVlanIds = types.StringValue(value.String())
-	} else {
-		data.SwitchportTrunkAllowedVlanIds = types.StringNull()
-	}
-	if value := res.Get("switchPortConfig.protectedEnabled"); value.Exists() && !data.SwitchportProtected.IsNull() {
-		data.SwitchportProtected = types.BoolValue(value.Bool())
-	} else {
-		data.SwitchportProtected = types.BoolNull()
+		data.DisableForwardingOnInterfaceType = types.StringNull()
 	}
 	if value := res.Get("ipv4.static.address"); value.Exists() && !data.Ipv4StaticAddress.IsNull() {
 		data.Ipv4StaticAddress = types.StringValue(value.String())
@@ -1231,109 +1030,6 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Ipv6DhcpClientPdHintPrefixes = types.StringNull()
 	}
-	if value := res.Get("pathMonitoring.enable"); value.Exists() && !data.IpBasedMonitoring.IsNull() {
-		data.IpBasedMonitoring = types.BoolValue(value.Bool())
-	} else {
-		data.IpBasedMonitoring = types.BoolNull()
-	}
-	if value := res.Get("pathMonitoring.type"); value.Exists() && !data.IpBasedMonitoringType.IsNull() {
-		data.IpBasedMonitoringType = types.StringValue(value.String())
-	} else {
-		data.IpBasedMonitoringType = types.StringNull()
-	}
-	if value := res.Get("pathMonitoring.monitoredIp"); value.Exists() && !data.IpBasedMonitoringNextHop.IsNull() {
-		data.IpBasedMonitoringNextHop = types.StringValue(value.String())
-	} else {
-		data.IpBasedMonitoringNextHop = types.StringNull()
-	}
-	if value := res.Get("hardware.autoNegState"); value.Exists() && !data.AutoNegotiation.IsNull() {
-		data.AutoNegotiation = types.BoolValue(value.Bool())
-	} else {
-		data.AutoNegotiation = types.BoolNull()
-	}
-	if value := res.Get("hardware.duplex"); value.Exists() && !data.Duplex.IsNull() {
-		data.Duplex = types.StringValue(value.String())
-	} else {
-		data.Duplex = types.StringNull()
-	}
-	if value := res.Get("hardware.speed"); value.Exists() && !data.Speed.IsNull() {
-		data.Speed = types.StringValue(value.String())
-	} else {
-		data.Speed = types.StringNull()
-	}
-	if value := res.Get("LLDP.receive"); value.Exists() && !data.LldpReceive.IsNull() {
-		data.LldpReceive = types.BoolValue(value.Bool())
-	} else {
-		data.LldpReceive = types.BoolNull()
-	}
-	if value := res.Get("LLDP.transmit"); value.Exists() && !data.LldpTransmit.IsNull() {
-		data.LldpTransmit = types.BoolValue(value.Bool())
-	} else {
-		data.LldpTransmit = types.BoolNull()
-	}
-	if value := res.Get("hardware.flowControlSend"); value.Exists() && !data.FlowControlSend.IsNull() {
-		data.FlowControlSend = types.StringValue(value.String())
-	} else {
-		data.FlowControlSend = types.StringNull()
-	}
-	if value := res.Get("hardware.fecMode"); value.Exists() && !data.FecMode.IsNull() {
-		data.FecMode = types.StringValue(value.String())
-	} else {
-		data.FecMode = types.StringNull()
-	}
-	if value := res.Get("fmcAccessConfig.enableAccess"); value.Exists() && !data.ManagementAccess.IsNull() {
-		data.ManagementAccess = types.BoolValue(value.Bool())
-	} else {
-		data.ManagementAccess = types.BoolNull()
-	}
-	managementAccessNetworkObjectsArray := res.Get("fmcAccessConfig.allowedNetworks")
-	for i := 0; i < len(data.ManagementAccessNetworkObjects); i++ {
-		keys := [...]string{"id"}
-		keyValues := [...]string{data.ManagementAccessNetworkObjects[i].Id.ValueString()}
-
-		parent := &data
-		data := (*parent).ManagementAccessNetworkObjects[i]
-		var res gjson.Result
-
-		managementAccessNetworkObjectsArray.ForEach(
-			func(_, v gjson.Result) bool {
-				found := false
-				for ik := range keys {
-					if v.Get(keys[ik]).String() != keyValues[ik] {
-						found = false
-						break
-					}
-					found = true
-				}
-				if found {
-					res = v
-					return false
-				}
-				return true
-			},
-		)
-		if !res.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("removing ManagementAccessNetworkObjects[%d] = %+v",
-				i,
-				(*parent).ManagementAccessNetworkObjects[i],
-			))
-			(*parent).ManagementAccessNetworkObjects = slices.Delete((*parent).ManagementAccessNetworkObjects, i, i+1)
-			i--
-
-			continue
-		}
-		if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
-			data.Id = types.StringValue(value.String())
-		} else {
-			data.Id = types.StringNull()
-		}
-		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-			data.Type = types.StringValue(value.String())
-		} else {
-			data.Type = types.StringNull()
-		}
-		(*parent).ManagementAccessNetworkObjects[i] = data
-	}
 	if value := res.Get("activeMACAddress"); value.Exists() && !data.ActiveMacAddress.IsNull() {
 		data.ActiveMacAddress = types.StringValue(value.String())
 	} else {
@@ -1430,7 +1126,7 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
-func (data *DevicePhysicalInterface) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+func (data *DeviceVLANInterface) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 	if data.Type.IsUnknown() {
 		if value := res.Get("type"); value.Exists() {
 			data.Type = types.StringValue(value.String())
@@ -1438,23 +1134,49 @@ func (data *DevicePhysicalInterface) fromBodyUnknowns(ctx context.Context, res g
 			data.Type = types.StringNull()
 		}
 	}
+	if data.Name.IsUnknown() {
+		if value := res.Get("name"); value.Exists() {
+			data.Name = types.StringValue(value.String())
+		} else {
+			data.Name = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns
 
-// toBodyPutDelete generates minimal required body to reset the resource to its default state.
-func (data DevicePhysicalInterface) toBodyPutDelete(ctx context.Context) string {
-	body := ""
-	body, _ = sjson.Set(body, "mode", "NONE")
-	if data.Id.ValueString() != "" {
-		body, _ = sjson.Set(body, "id", data.Id.ValueString())
-	}
-	if !data.Name.IsNull() {
-		body, _ = sjson.Set(body, "name", data.Name.ValueString())
-	}
-	if !data.LogicalName.IsNull() {
-		body, _ = sjson.Set(body, "ifname", data.LogicalName.ValueString())
-	}
+// Section below is generated&owned by "gen/generator.go". //template:begin Clone
 
-	return body
-}
+// End of section. //template:end Clone
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
+
+// End of section. //template:end toBodyNonBulk
+
+// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
+
+// End of section. //template:end findObjectsToBeReplaced
+
+// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
+
+// End of section. //template:end clearItemIds
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
+
+// End of section. //template:end toBodyPutDelete
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
+
+// End of section. //template:end adjustBody
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
+
+// End of section. //template:end adjustBodyBulk
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyOverrides
+
+// End of section. //template:end toBodyOverrides
+
+// Section below is generated&owned by "gen/generator.go". //template:begin synthesizeOverrides
+
+// End of section. //template:end synthesizeOverrides
