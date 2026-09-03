@@ -34,7 +34,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
-	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -43,26 +42,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &FTDPlatformSettingsResource{}
-	_ resource.ResourceWithImportState = &FTDPlatformSettingsResource{}
+	_ resource.Resource                = &FTDPlatformSettingsExternalAuthenticationResource{}
+	_ resource.ResourceWithImportState = &FTDPlatformSettingsExternalAuthenticationResource{}
 )
 
-func NewFTDPlatformSettingsResource() resource.Resource {
-	return &FTDPlatformSettingsResource{}
+func NewFTDPlatformSettingsExternalAuthenticationResource() resource.Resource {
+	return &FTDPlatformSettingsExternalAuthenticationResource{}
 }
 
-type FTDPlatformSettingsResource struct {
+type FTDPlatformSettingsExternalAuthenticationResource struct {
 	client *fmc.Client
 }
 
-func (r *FTDPlatformSettingsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings"
+func (r *FTDPlatformSettingsExternalAuthenticationResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_external_authentication"
 }
 
-func (r *FTDPlatformSettingsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *FTDPlatformSettingsExternalAuthenticationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FTD Platform Settings.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.4").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - External Authentication. It enables RADIUS-based authentication for SSH/CLI access to the FTD, referencing an `fmc_radius_external_authentication_object`. You can only activate one External Authentication object per FTD Platform Settings policy.\n User privileges (Administrator vs. Basic/read-only CLI access) are derived from attributes returned by the RADIUS server for the authenticating user (commonly the RADIUS `Service-Type` attribute), which can be driven by Active Directory group membership if the RADIUS server is configured to authenticate against AD. This mapping is not configured in FMC/Terraform.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -79,26 +78,29 @@ func (r *FTDPlatformSettingsResource) Schema(ctx context.Context, req resource.S
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of FTD platform settings.").String,
+			"ftd_platform_settings_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent FTD Platform Settings.").String,
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'FTDPlatformSettingsPolicy'").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ExternalAuthSetting'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("FTD platform settings description.").String,
-				Optional:            true,
+			"external_auth_server_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the RADIUS External Authentication object (`fmc_radius_external_authentication_object`) to use for SSH/CLI authentication on this FTD.").String,
+				Required:            true,
 			},
 		},
 	}
 }
 
-func (r *FTDPlatformSettingsResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *FTDPlatformSettingsExternalAuthenticationResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -108,13 +110,16 @@ func (r *FTDPlatformSettingsResource) Configure(_ context.Context, req resource.
 
 // End of section. //template:end model
 
-func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+// Section below is generated&owned by "gen/generator.go". //template:begin create
+
+func (r *FTDPlatformSettingsExternalAuthenticationResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
 	// Check if FMC client is connected to supports this object
-	if r.client.FMCVersionParsed.LessThan(minFMCVersionCreateFTDPlatformSettings) {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings creation, minumum required version is 7.4", r.client.FMCVersion))
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionFTDPlatformSettingsExternalAuthentication) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings External Authentication creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
-	var plan FTDPlatformSettings
+	var plan FTDPlatformSettingsExternalAuthentication
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -127,55 +132,40 @@ func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.C
 	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
+	//// ID needs to be retrieved from FMC, however we are expecting exactly one object
+	// Get objects from FMC
+	resId, err := r.client.Get(plan.getPath(), reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
+		return
+	}
+
+	// Check if exactly one object is returned
+	val := resId.Get("items").Array()
+	if len(val) != 1 {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected 1 object, got %d", len(val)))
+		return
+	}
+
+	// Extract ID from the object
+	if retrievedId := val[0].Get("id"); retrievedId.Exists() {
+		plan.Id = types.StringValue(retrievedId.String())
+		tflog.Debug(ctx, fmt.Sprintf("%s: Found object", plan.Id))
+	} else {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object id from payload: %s", resId.String()))
+	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, FTDPlatformSettings{})
-	res, err := r.client.Post(plan.getPath(), body, reqMods...)
+	body := plan.toBody(ctx, FTDPlatformSettingsExternalAuthentication{})
+	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
-
-	if retrievedId := res.Get("id"); retrievedId.Exists() {
-		// FMC returned the id directly in the POST response (documented/expected behavior)
-		plan.Id = types.StringValue(retrievedId.String())
-	} else {
-		// Some FMC/cdFMC deployments (observed via the Security Cloud Control API gateway) omit
-		// the `id` field from the POST response for this endpoint. Fall back to looking up the
-		// newly created object by its (unique) name, to avoid ending up with an empty id in
-		// state (which would make subsequent Update/Delete calls target the collection endpoint
-		// instead of a specific object).
-		tflog.Debug(ctx, fmt.Sprintf("%s: id missing from POST response, looking up object by name %q", plan.Id.ValueString(), plan.Name.ValueString()))
-		resList, err := r.client.Get(plan.getPath(), reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object after create, got error: %s", err))
-			return
-		}
-		resList.Get("items").ForEach(func(k, v gjson.Result) bool {
-			if v.Get("name").String() == plan.Name.ValueString() {
-				plan.Id = types.StringValue(v.Get("id").String())
-				return false
-			}
-			return true
-		})
-		if plan.Id.ValueString() == "" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find created object with name: %s", plan.Name.ValueString()))
-			return
-		}
-
-		// Fetch the full object, since the POST response body did not include all fields either.
-		res, err = r.client.Get(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
-			return
-		}
-	}
+	plan.Id = types.StringValue(res.Get("id").String())
 	plan.fromBodyUnknowns(ctx, res)
-
-	// CSCwr13011 FMC API: policy/ftdplatformsettingspolicies returns incorrect type
-	plan.Type = types.StringValue("FTDPlatformSettingsPolicy")
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
@@ -185,8 +175,17 @@ func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.C
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-func (r *FTDPlatformSettingsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state FTDPlatformSettings
+// End of section. //template:end create
+
+// Section below is generated&owned by "gen/generator.go". //template:begin read
+
+func (r *FTDPlatformSettingsExternalAuthenticationResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionFTDPlatformSettingsExternalAuthentication) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings External Authentication, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
+	var state FTDPlatformSettingsExternalAuthentication
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -225,9 +224,6 @@ func (r *FTDPlatformSettingsResource) Read(ctx context.Context, req resource.Rea
 		state.fromBodyPartial(ctx, res)
 	}
 
-	// CSCwr13011 FMC API: policy/ftdplatformsettingspolicies returns incorrect type
-	state.Type = types.StringValue("FTDPlatformSettingsPolicy")
-
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &state)
@@ -236,10 +232,12 @@ func (r *FTDPlatformSettingsResource) Read(ctx context.Context, req resource.Rea
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
+// End of section. //template:end read
+
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *FTDPlatformSettingsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state FTDPlatformSettings
+func (r *FTDPlatformSettingsExternalAuthenticationResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state FTDPlatformSettingsExternalAuthentication
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -257,11 +255,6 @@ func (r *FTDPlatformSettingsResource) Update(ctx context.Context, req resource.U
 	reqMods := [](func(*fmc.Req)){}
 	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
-	}
-
-	if plan.Id.ValueString() == "" {
-		resp.Diagnostics.AddError("Client Error", "Cannot update object: id is empty, refusing to send request to the collection endpoint")
-		return
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
@@ -283,8 +276,8 @@ func (r *FTDPlatformSettingsResource) Update(ctx context.Context, req resource.U
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *FTDPlatformSettingsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state FTDPlatformSettings
+func (r *FTDPlatformSettingsExternalAuthenticationResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state FTDPlatformSettingsExternalAuthentication
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -298,15 +291,11 @@ func (r *FTDPlatformSettingsResource) Delete(ctx context.Context, req resource.D
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
 	}
 
-	if state.Id.ValueString() == "" {
-		resp.Diagnostics.AddError("Client Error", "Cannot delete object: id is empty, refusing to send request to the collection endpoint")
-		return
-	}
-
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
+	body := state.toBodyPutDelete(ctx)
+	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
 	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
 		return
 	}
 
@@ -318,12 +307,12 @@ func (r *FTDPlatformSettingsResource) Delete(ctx context.Context, req resource.D
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *FTDPlatformSettingsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *FTDPlatformSettingsExternalAuthenticationResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
-	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<id>[^\s,]+?)$`)
+	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<ftd_platform_settings_id>[^\s,]+),(?P<id>[^\s,]+?)$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
 	if match == nil {
-		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,<id>\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
+		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,<ftd_platform_settings_id>,<id>\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
 		resp.Diagnostics.AddError("Import error", errMsg)
 		return
 	}
@@ -333,8 +322,21 @@ func (r *FTDPlatformSettingsResource) ImportState(ctx context.Context, req resou
 		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("ftd_platform_settings_id"), match[inputPattern.SubexpIndex("ftd_platform_settings_id")])...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+
+// End of section. //template:end createSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
+// End of section. //template:end updateSubresources

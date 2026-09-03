@@ -1,0 +1,93 @@
+# Manual resource - adjustBody
+---
+name: Radius External Authentication Object
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/users/externalauths/authconfigobjects/radiusconfigobjects
+doc_category: Objects
+res_description: >-
+ This resource manages a RADIUS External Authentication object. It defines the RADIUS server(s) used to authenticate users, and can be referenced by `fmc_ftd_platform_settings_external_authentication` to enable RADIUS-based SSH/CLI authentication on FTD devices, or configured directly on the FMC (System > Users > External Authentication) for FMC login.\n
+ User privileges (e.g. Administrator vs. read-only access) are derived from attributes returned by the RADIUS server for the authenticating user - most commonly the `Service-Type` attribute for FTD CLI access. This can be driven by Active Directory group membership if the RADIUS server (e.g. ISE or NPS) is configured to authenticate against AD and map groups to the appropriate attribute values. FMC does not configure this mapping; it is done entirely on the RADIUS server.
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the RADIUS External Authentication object.
+    example: my_radius_auth_object
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RADIUSConfigObject'.
+    computed: true
+  - model_name: type
+    type: String
+    value: RADIUSConfigObject
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: My RADIUS external authentication object
+  - model_name: serverAddress
+    tf_name: server_address
+    type: String
+    mandatory: true
+    description: IP address or hostname of the primary RADIUS server.
+    example: 10.1.1.10
+  - model_name: serverPort
+    tf_name: server_port
+    type: String
+    description: Port number of the primary RADIUS server.
+    example: "1812"
+    default_value: "1812"
+  - model_name: secretKey
+    tf_name: key
+    type: String
+    mandatory: true
+    sensitive: true
+    write_only: true
+    description: Shared secret used to communicate with the primary RADIUS server.
+    example: my_secret_key
+  - model_name: backupServerAddress
+    tf_name: backup_server_address
+    type: String
+    description: IP address or hostname of the backup RADIUS server.
+    exclude_example: true
+    exclude_test: true
+  - model_name: backupServerPort
+    tf_name: backup_server_port
+    type: String
+    description: Port number of the backup RADIUS server.
+    exclude_example: true
+    exclude_test: true
+  - model_name: backupServerSecretKey
+    tf_name: backup_key
+    type: String
+    sensitive: true
+    write_only: true
+    description: Shared secret used to communicate with the backup RADIUS server.
+    exclude_example: true
+    exclude_test: true
+  - model_name: timeout
+    type: Int64
+    description: Timeout (in seconds) before retrying the primary server.
+    min_int: 1
+    max_int: 1024
+    example: 30
+    default_value: 30
+  - model_name: retries
+    type: Int64
+    description: Number of retries before rolling over to the backup RADIUS server.
+    min_int: 0
+    max_int: 10
+    example: 3
+    default_value: 3
+  - model_name: isMAEnabled
+    tf_name: message_authenticator_enabled
+    type: Bool
+    description: Enables RADIUS Server-Enabled Message Authenticator, requiring the Message-Authenticator attribute in all RADIUS responses.
+    example: true
+    default_value: true
+  - model_name: cliAccessUserList
+    tf_name: cli_access_user_list
+    type: String
+    description: >-
+      Comma-separated list of usernames that should have CLI access, when using the predefined user list method instead of defining users on the RADIUS server. Leave unset when users and their privileges are managed on the RADIUS server (recommended when privileges are based on Active Directory group membership).
+    exclude_example: true
+    exclude_test: true
