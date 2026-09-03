@@ -100,7 +100,7 @@ attributes:
     tf_name: disable_forwarding_on_interface_type
     type: String
     description:  Type of the VLAN interface that this interface is blocked from forwarding traffic to.
-    enum: ["VlanInterface"]
+    enum_values: ["VlanInterface"]
     exclude_example: true
     exclude_test: true
   # IPv4 - Static

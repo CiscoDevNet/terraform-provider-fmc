@@ -162,8 +162,11 @@ func (r *DeviceVLANInterfaceResource) Schema(ctx context.Context, req resource.S
 				Optional:            true,
 			},
 			"disable_forwarding_on_interface_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the VLAN interface that this interface is blocked from forwarding traffic to.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the VLAN interface that this interface is blocked from forwarding traffic to.").AddStringEnumDescription("VlanInterface").String,
 				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("VlanInterface"),
+				},
 			},
 			"ipv4_static_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Static IPv4 address.").String,

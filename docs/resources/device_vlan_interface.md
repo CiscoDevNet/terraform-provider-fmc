@@ -47,6 +47,7 @@ resource "fmc_device_vlan_interface" "example" {
 - `disable_forwarding_on_interface_id` (String) Id of the VLAN interface that this interface is blocked from forwarding traffic to.
 - `disable_forwarding_on_interface_name` (String) Name of the VLAN interface that this interface is blocked from forwarding traffic to.
 - `disable_forwarding_on_interface_type` (String) Type of the VLAN interface that this interface is blocked from forwarding traffic to.
+  - Choices: `VlanInterface`
 - `domain` (String) Name of the FMC domain
 - `enabled` (Boolean) Enable the interface.
   - Default value: `true`
