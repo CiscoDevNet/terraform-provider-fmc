@@ -156,12 +156,24 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Access Control Policy.").String,
 				Required:            true,
 			},
+			"access_control_policy_domain": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FMC domain in which the assigned Access Control Policy exists. If not set, the device's `domain` is assumed.").String,
+				Optional:            true,
+			},
 			"nat_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned FTD NAT policy.").String,
 				Optional:            true,
 			},
+			"nat_policy_domain": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FMC domain in which the assigned FTD NAT Policy exists. If not set, the device's `domain` is assumed.").String,
+				Optional:            true,
+			},
 			"health_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.").String,
+				Optional:            true,
+			},
+			"health_policy_domain": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FMC domain in which the assigned Health Policy exists. If not set, the device's `domain` is assumed.").String,
 				Optional:            true,
 			},
 			"container_id": schema.StringAttribute{
@@ -270,7 +282,8 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 	tflog.Debug(ctx, fmt.Sprintf("%s: Configuring the non-access policy assignments", plan.Id.ValueString()))
 
 	if !plan.NatPolicyId.IsNull() {
-		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("nat_policy_id"), req.Plan, resp.State, reqMods...)
+		natReqMods := policyReqMods(resolvePolicyDomain(plan.NatPolicyDomain, plan.Domain))
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("nat_policy_id"), req.Plan, resp.State, natReqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -293,7 +306,8 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 	// On device registration, default health policy is auto assigned. We are waiting till that is finished. (see loop above)
 	// Health policy assignment triggers automatic deployment.
 	if !plan.HealthPolicyId.IsNull() {
-		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, resp.State, reqMods...)
+		healthReqMods := policyReqMods(resolvePolicyDomain(plan.HealthPolicyDomain, plan.Domain))
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, resp.State, healthReqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -337,11 +351,26 @@ func (r *DeviceResource) Read(ctx context.Context, req resource.ReadRequest, res
 		return
 	}
 
-	// Get policy assignments for the device
-	policies, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve Policy Assignments (GET), got error: %s, %s", err, policies.String()))
-		return
+	// Get policy assignments for the device. Each policy may reside in a different domain, hence policy assignments
+	// are fetched from every domain in use (only once per domain).
+	policyDomains := map[string]string{
+		"AccessPolicy": resolvePolicyDomain(state.AccessControlPolicyDomain, state.Domain),
+		"FTDNatPolicy": resolvePolicyDomain(state.NatPolicyDomain, state.Domain),
+		"HealthPolicy": resolvePolicyDomain(state.HealthPolicyDomain, state.Domain),
+	}
+
+	assignmentsByDomain := make(map[string]gjson.Result, len(policyDomains))
+	policies := make(map[string]gjson.Result, len(policyDomains))
+	for policyType, domain := range policyDomains {
+		if _, ok := assignmentsByDomain[domain]; !ok {
+			assignments, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments?expanded=true", policyReqMods(domain)...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve Policy Assignments (GET), got error: %s, %s", err, assignments.String()))
+				return
+			}
+			assignmentsByDomain[domain] = assignments
+		}
+		policies[policyType] = assignmentsByDomain[domain]
 	}
 
 	imp, diags := helpers.IsFlagImporting(ctx, req)
@@ -393,6 +422,16 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
+	// Health policy is always assigned per device
+	if plan.HealthPolicyId != state.HealthPolicyId {
+		healthReqMods := policyReqMods(resolvePolicyDomain(plan.HealthPolicyDomain, plan.Domain))
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, req.State, healthReqMods...)
+		resp.Diagnostics.Append(diags...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+	}
+
 	if state.ContainerType.ValueString() == "DeviceHAPair" && state.ContainerStatus.ValueString() != "Active" {
 		tflog.Info(ctx, fmt.Sprintf("%s: Device %s is in HA Pair, with current status: %s, hence cannot be updated. Configuration will be replicated from active node.", state.Id.ValueString(), state.Name.ValueString(), state.ContainerStatus.ValueString()))
 		plan.copyComputed(ctx, state)
@@ -431,7 +470,8 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	// Update policy assignments
 	if plan.AccessControlPolicyId != state.AccessControlPolicyId {
-		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("access_control_policy_id"), req.Plan, req.State, reqMods...)
+		acpReqMods := policyReqMods(resolvePolicyDomain(plan.AccessControlPolicyDomain, plan.Domain))
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("access_control_policy_id"), req.Plan, req.State, acpReqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -439,15 +479,8 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	if plan.NatPolicyId != state.NatPolicyId {
-		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("nat_policy_id"), req.Plan, req.State, reqMods...)
-		resp.Diagnostics.Append(diags...)
-		if resp.Diagnostics.HasError() {
-			return
-		}
-	}
-
-	if plan.HealthPolicyId != state.HealthPolicyId {
-		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("health_policy_id"), req.Plan, req.State, reqMods...)
+		natReqMods := policyReqMods(resolvePolicyDomain(plan.NatPolicyDomain, plan.Domain))
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("nat_policy_id"), req.Plan, req.State, natReqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -468,6 +501,25 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
+}
+
+// resolvePolicyDomain returns the name of the domain in which a policy exists. Policies may reside in a different
+// domain than the device itself, hence a per-policy domain can be configured. If it is not set, device's domain is assumed.
+func resolvePolicyDomain(policyDomain, deviceDomain types.String) string {
+	if !policyDomain.IsNull() && policyDomain.ValueString() != "" {
+		return policyDomain.ValueString()
+	}
+	return deviceDomain.ValueString()
+}
+
+// policyReqMods translates a domain name into request modifiers. Empty domain name means that no modifier is applied,
+// hence the provider-level default domain is used.
+func policyReqMods(domain string) []func(*fmc.Req) {
+	reqMods := [](func(*fmc.Req)){}
+	if domain != "" {
+		reqMods = append(reqMods, fmc.DomainName(domain))
+	}
+	return reqMods
 }
 
 // updatePolicy updates policy-to-device assignment of one specific device (UUID) and of one specific policy type

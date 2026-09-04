@@ -1,4 +1,4 @@
-# Manual resource - Create, Read, Update, Delete
+# Manual resource - Create, Read, Update, Delete, fromBodyPolicy, updatePolicy, resolvePolicyDomain, policyReqMods
 ---
 name: Device
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords
@@ -111,10 +111,24 @@ attributes:
     description: Id of the assigned Access Control Policy.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_access_control_policy.test.id
+  - tf_name: access_control_policy_domain
+    tf_only: true
+    type: String
+    description: >-
+      Name of the FMC domain in which the assigned Access Control Policy exists. If not set, the device's `domain` is assumed.
+    exclude_example: true
+    exclude_test: true
   - model_name: dummy_nat_policy_id
     tf_name: nat_policy_id
     type: String
     description: Id of the assigned FTD NAT policy.
+    exclude_example: true
+    test_value: fmc_ftd_nat_policy.test.id
+  - tf_name: nat_policy_domain
+    tf_only: true
+    type: String
+    description: >-
+      Name of the FMC domain in which the assigned FTD NAT Policy exists. If not set, the device's `domain` is assumed.
     exclude_example: true
     exclude_test: true
   - model_name: id
@@ -122,6 +136,13 @@ attributes:
     tf_name: health_policy_id
     type: String
     description: Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
+    exclude_example: true
+    exclude_test: true
+  - tf_name: health_policy_domain
+    tf_only: true
+    type: String
+    description: >-
+      Name of the FMC domain in which the assigned Health Policy exists. If not set, the device's `domain` is assumed.
     exclude_example: true
     exclude_test: true
   # Container Details
@@ -181,4 +202,8 @@ test_prerequisites: |-
   resource "fmc_access_control_policy" "test" {
     name = "fmc_device_access_control_policy"
     default_action = "BLOCK"
+  }
+
+  resource "fmc_ftd_nat_policy" "test" {
+    name        = "fmc_device_nat_policy"
   }

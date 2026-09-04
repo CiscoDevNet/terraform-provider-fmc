@@ -29,6 +29,7 @@ data "fmc_device" "example" {
 
 ### Read-Only
 
+- `access_control_policy_domain` (String) Name of the FMC domain in which the assigned Access Control Policy exists. If not set, the device's `domain` is assumed.
 - `access_control_policy_id` (String) Id of the assigned Access Control Policy.
 - `container_id` (String) Id of the parent container. Empty if device is Standalone.
 - `container_name` (String) Name of the parent container. Empty if device is Standalone.
@@ -36,12 +37,14 @@ data "fmc_device" "example" {
 - `container_status` (String) Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
 - `container_type` (String) Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
 - `device_group_id` (String) Id of the device group.
+- `health_policy_domain` (String) Name of the FMC domain in which the assigned Health Policy exists. If not set, the device's `domain` is assumed.
 - `health_policy_id` (String) Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
 - `host` (String) Hostname or IP address of the device. Either the `host` or `nat_id` must be present.
 - `is_multi_instance` (Boolean) True if the device is part of a multi-instance.
 - `is_part_of_container` (Boolean) True if the device is part of a container (DeviceHAPair or DeviceCluster).
 - `licenses` (Set of String) Array of strings representing the license capabilities on the managed device.
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
+- `nat_policy_domain` (String) Name of the FMC domain in which the assigned FTD NAT Policy exists. If not set, the device's `domain` is assumed.
 - `nat_policy_id` (String) Id of the assigned FTD NAT policy.
 - `object_group_search` (Boolean) Enables Object Group Search
 - `performance_tier` (String) Performance tier for the managed device.

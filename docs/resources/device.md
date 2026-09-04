@@ -39,10 +39,13 @@ resource "fmc_device" "example" {
 
 ### Optional
 
+- `access_control_policy_domain` (String) Name of the FMC domain in which the assigned Access Control Policy exists. If not set, the device's `domain` is assumed.
 - `device_group_id` (String) Id of the device group.
 - `domain` (String) Name of the FMC domain
+- `health_policy_domain` (String) Name of the FMC domain in which the assigned Health Policy exists. If not set, the device's `domain` is assumed.
 - `health_policy_id` (String) Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
+- `nat_policy_domain` (String) Name of the FMC domain in which the assigned FTD NAT Policy exists. If not set, the device's `domain` is assumed.
 - `nat_policy_id` (String) Id of the assigned FTD NAT policy.
 - `object_group_search` (Boolean) Enables Object Group Search
 - `performance_tier` (String) Performance tier for the managed device.
