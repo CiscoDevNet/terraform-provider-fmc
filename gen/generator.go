@@ -145,6 +145,7 @@ type YamlConfigAttribute struct {
 	ExcludeTest                         bool                  `yaml:"exclude_test"`
 	ExcludeExample                      bool                  `yaml:"exclude_example"`
 	Description                         string                `yaml:"description"`
+	DsDescription                       string                `yaml:"ds_description"`
 	Example                             string                `yaml:"example"`
 	EnumValues                          []string              `yaml:"enum_values"`
 	MinList                             int64                 `yaml:"min_list"`
