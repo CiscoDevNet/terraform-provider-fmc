@@ -37,7 +37,7 @@ func TestAccDataSourceFmcDevicePhysicalInterface(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_physical_interface.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "logical_name", "myinterface-0-1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "description", "my description"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "mode", "NONE"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_physical_interface.test", "mode"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "mtu", "1400"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv4_static_address", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv4_static_netmask", "24"))
@@ -82,7 +82,6 @@ func testAccDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config += `	enabled = true` + "\n"
 	config += `	management_only = false` + "\n"
 	config += `	description = "my description"` + "\n"
-	config += `	mode = "NONE"` + "\n"
 	config += `	name = var.interface_name` + "\n"
 	config += `	mtu = 1400` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
@@ -106,7 +105,6 @@ func testAccNamedByLogicalNameDataSourceFmcDevicePhysicalInterfaceConfig() strin
 	config += `	enabled = true` + "\n"
 	config += `	management_only = false` + "\n"
 	config += `	description = "my description"` + "\n"
-	config += `	mode = "NONE"` + "\n"
 	config += `	name = var.interface_name` + "\n"
 	config += `	mtu = 1400` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
@@ -129,7 +127,6 @@ func testAccNamedDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config += `	enabled = true` + "\n"
 	config += `	management_only = false` + "\n"
 	config += `	description = "my description"` + "\n"
-	config += `	mode = "NONE"` + "\n"
 	config += `	name = var.interface_name` + "\n"
 	config += `	mtu = 1400` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"

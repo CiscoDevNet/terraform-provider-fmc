@@ -125,10 +125,14 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Optional:            true,
 			},
 			"mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Mode of the interface. Use INLINE if, and only if, the interface is part of fmc_inline_set with tap_mode=false or tap_mode unset. Use TAP if, and only if, the interface is part of fmc_inline_set with tap_mode = true. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.").AddStringEnumDescription("INLINE", "PASSIVE", "TAP", "ERSPAN", "NONE", "SWITCHPORT").String,
-				Required:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("Mode of the interface. Leave unset for interfaces that are (or are about to become) members of fmc_device_inline_set - FMC assigns INLINE (or TAP, when the inline set has tap_mode = true) on its own and rejects any attempt to set those values on an interface that is not a member yet. Set INLINE or TAP explicitly only to adopt an interface that already is a member. Defaults to NONE when not set on creation. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.").AddStringEnumDescription("INLINE", "PASSIVE", "TAP", "ERSPAN", "NONE", "SWITCHPORT").String,
+				Optional:            true,
+				Computed:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("INLINE", "PASSIVE", "TAP", "ERSPAN", "NONE", "SWITCHPORT"),
+				},
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"security_zone_id": schema.StringAttribute{
@@ -572,6 +576,7 @@ func (r *DeviceEtherChannelInterfaceResource) Create(ctx context.Context, req re
 
 			// Update interface
 			body := plan.toBody(ctx, DeviceEtherChannelInterface{})
+			body = plan.adjustBody(ctx, body)
 
 			// Name field is computed, but it's required for the PUT request
 			body, _ = sjson.Set(body, "name", fmt.Sprintf("Port-channel%s", plan.EtherChannelId.ValueString()))
@@ -586,6 +591,7 @@ func (r *DeviceEtherChannelInterfaceResource) Create(ctx context.Context, req re
 		// This is not multi-instance device, hence the object needs to be created
 		// Create object
 		body := plan.toBody(ctx, DeviceEtherChannelInterface{})
+		body = plan.adjustBody(ctx, body)
 		res, err = r.client.Post(plan.getPath(), body, reqMods...)
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -684,6 +690,7 @@ func (r *DeviceEtherChannelInterfaceResource) Update(ctx context.Context, req re
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
+	body = plan.adjustBody(ctx, body)
 	// Name is computed field, but it's needed in the request anyways
 	if !plan.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", plan.Name.ValueString())

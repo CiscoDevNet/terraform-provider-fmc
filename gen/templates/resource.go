@@ -155,7 +155,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 				{{- end}}
 				{{- if or .Reference .Mandatory}}
 				Required:            true,
-				{{- else if and (not .ResourceId) (not .Computed)}}
+				{{- else if and (not .ResourceId) (or (not .Computed) .Optional)}}
 				Optional:            true,
 				{{- end}}
 				{{- if or (len .DefaultValue) .ResourceId .Computed}}
@@ -240,7 +240,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 							{{- end}}
 							{{- if or .Reference .Mandatory}}
 							Required:            true,
-							{{- else if and (not .ResourceId) (not .Computed)}}
+							{{- else if and (not .ResourceId) (or (not .Computed) .Optional)}}
 							Optional:            true,
 							{{- end}}
 							{{- if or (len .DefaultValue) .ResourceId .Computed}}
@@ -332,7 +332,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 										{{- end}}
 										{{- if or .Reference .Mandatory}}
 										Required:            true,
-										{{- else if and (not .ResourceId) (not .Computed)}}
+										{{- else if and (not .ResourceId) (or (not .Computed) .Optional)}}
 										Optional:            true,
 										{{- end}}
 										{{- if or (len .DefaultValue) .ResourceId .Computed}}
@@ -415,7 +415,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 													{{- end}}
 													{{- if or .Reference .Mandatory}}
 													Required:            true,
-													{{- else if and (not .ResourceId) (not .Computed)}}
+													{{- else if and (not .ResourceId) (or (not .Computed) .Optional)}}
 													Optional:            true,
 													{{- end}}
 													{{- if or (len .DefaultValue) .ResourceId .Computed}}

@@ -172,7 +172,7 @@ func (data DeviceEtherChannelInterface) toBody(ctx context.Context, state Device
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
-	if !data.Mode.IsNull() {
+	if !data.Mode.IsNull() && !data.Mode.IsUnknown() {
 		body, _ = sjson.Set(body, "mode", data.Mode.ValueString())
 	}
 	if !data.SecurityZoneId.IsNull() {
@@ -1505,6 +1505,13 @@ func (data *DeviceEtherChannelInterface) fromBodyUnknowns(ctx context.Context, r
 			data.IsMultiInstance = types.BoolNull()
 		}
 	}
+	if data.Mode.IsUnknown() {
+		if value := res.Get("mode"); value.Exists() {
+			data.Mode = types.StringValue(value.String())
+		} else {
+			data.Mode = types.StringNull()
+		}
+	}
 	if data.Name.IsUnknown() {
 		if value := res.Get("name"); value.Exists() {
 			data.Name = types.StringValue(value.String())
@@ -1535,4 +1542,16 @@ func (data DeviceEtherChannelInterface) toBodyPutDelete(ctx context.Context) str
 	body, _ = sjson.Set(body, "etherChannelId", data.EtherChannelId.ValueString())
 	body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	return body
+}
+
+// adjustBody makes sure `mode` is always present in the request body.
+// FMC rejects a payload without it ("Interface mode is mandatory, it needs to be provided."),
+// but `mode` is optional in the schema, so on create its planned value is unknown and toBody
+// skips it. NONE is the mode FMC would assign anyway; INLINE/TAP cannot be requested here, as
+// FMC sets those on its own once the interface becomes a member of an inline set.
+func (data DeviceEtherChannelInterface) adjustBody(ctx context.Context, req string) string {
+	if data.Mode.IsUnknown() {
+		req, _ = sjson.Set(req, "mode", "NONE")
+	}
+	return req
 }
