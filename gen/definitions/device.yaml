@@ -1,4 +1,4 @@
-# Manual resource - Create, Read, Update, Delete, fromBodyPolicy, updatePolicy, resolvePolicyDomain, policyReqMods
+# Manual resource - Create, Read, Update, Delete, fromBodyPolicy, updatePolicy, resolvePolicyDomain, policyReqMods, displayDomain, policyDomainPath
 ---
 name: Device
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords
@@ -116,12 +116,17 @@ attributes:
     type: String
     description: >-
       Name of the FMC domain in which the assigned Access Control Policy exists. If not set, the device's `domain` is assumed.
+    ds_description: >-
+      Not populated by this data source; Device's domain is assumed implicitly.
     exclude_example: true
     exclude_test: true
   - model_name: dummy_nat_policy_id
     tf_name: nat_policy_id
     type: String
     description: Id of the assigned FTD NAT policy.
+    ds_description: >-
+      Id of the assigned FTD NAT policy. Only populated if the NAT policy resides in the same FMC domain as the
+      device.
     exclude_example: true
     test_value: fmc_ftd_nat_policy.test.id
   - tf_name: nat_policy_domain
@@ -129,6 +134,8 @@ attributes:
     type: String
     description: >-
       Name of the FMC domain in which the assigned FTD NAT Policy exists. If not set, the device's `domain` is assumed.
+    ds_description: >-
+      Not populated by this data source; Device's domain is assumed implicitly.
     exclude_example: true
     exclude_test: true
   - model_name: id
@@ -143,6 +150,8 @@ attributes:
     type: String
     description: >-
       Name of the FMC domain in which the assigned Health Policy exists. If not set, the device's `domain` is assumed.
+    ds_description: >-
+      Not populated by this data source; Device's domain is assumed implicitly.
     exclude_example: true
     exclude_test: true
   # Container Details

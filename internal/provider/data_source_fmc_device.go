@@ -122,15 +122,15 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"access_control_policy_domain": schema.StringAttribute{
-				MarkdownDescription: "Name of the FMC domain in which the assigned Access Control Policy exists. If not set, the device's `domain` is assumed.",
+				MarkdownDescription: "Not populated by this data source; Device's domain is assumed implicitly.",
 				Computed:            true,
 			},
 			"nat_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned FTD NAT policy.",
+				MarkdownDescription: "Id of the assigned FTD NAT policy. Only populated if the NAT policy resides in the same FMC domain as the device.",
 				Computed:            true,
 			},
 			"nat_policy_domain": schema.StringAttribute{
-				MarkdownDescription: "Name of the FMC domain in which the assigned FTD NAT Policy exists. If not set, the device's `domain` is assumed.",
+				MarkdownDescription: "Not populated by this data source; Device's domain is assumed implicitly.",
 				Computed:            true,
 			},
 			"health_policy_id": schema.StringAttribute{
@@ -138,7 +138,7 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"health_policy_domain": schema.StringAttribute{
-				MarkdownDescription: "Name of the FMC domain in which the assigned Health Policy exists. If not set, the device's `domain` is assumed.",
+				MarkdownDescription: "Not populated by this data source; Device's domain is assumed implicitly.",
 				Computed:            true,
 			},
 			"container_id": schema.StringAttribute{
