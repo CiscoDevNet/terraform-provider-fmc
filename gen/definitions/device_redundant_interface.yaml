@@ -1,9 +1,8 @@
 ---
-name: Device EtherChannel Interface
-rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/etherchannelinterfaces
+name: Device Redundant Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/redundantinterfaces
 doc_category: Devices
-adjust_body: true
-test_tags: [TF_VAR_device_id, TF_VAR_interface_name, FMC_DEVICE_ETHERCHANNEL_INTERFACE]
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name, TF_VAR_interface_2_name]
 attributes:
   - tf_name: device_id
     type: String
@@ -13,21 +12,21 @@ attributes:
     test_value: var.device_id
   - model_name: type
     type: String
+    description: Type of the object; this value is always 'RedundantInterface'.
     computed: true
-    description: Type of the object.
-  - model_name: dummy_is_multi_instance
-    tf_name: is_multi_instance
-    type: Bool
+  - model_name: name
+    type: String
+    description: Name of the Redundant interface in format Redundant<redundant_id>.
     computed: true
-    description: Is parent device multi-instance.
+    computed_body_param: true
+    data_source_query: true
   # General
   - model_name: ifname
     tf_name: logical_name
     type: String
-    description: Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
-    example: myinterface-0-1
+    description: Logical name of the interface, unique on the device.
+    example: my_redundant_interface
     data_source_query: true
-    minimum_test_value: '"iface_minimum"'
   - model_name: enabled
     type: Bool
     description: Enable the interface.
@@ -36,29 +35,13 @@ attributes:
     exclude_example: true
   - model_name: managementOnly
     type: Bool
-    description: >-
-      Whether this interface limits traffic to management traffic; when true, through-the-box traffic is
-      disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
+    description: Whether this interface limits traffic to management traffic.
     exclude_test: true
     exclude_example: true
   - model_name: description
     type: String
     description: Description of the object.
     example: my description
-  - model_name: mode
-    type: String
-    optional: true
-    computed: true
-    computed_body_param: true
-    description: >-
-      Mode of the interface. Leave unset for interfaces that are (or are about to become) members of
-      fmc_device_inline_set - FMC assigns INLINE (or TAP, when the inline set has tap_mode = true)
-      on its own and rejects any attempt to set those values on an interface that is not a member yet.
-      Set INLINE or TAP explicitly only to adopt an interface that already is a member.
-      Defaults to NONE when not set on creation.
-      Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.
-    enum_values: [INLINE, PASSIVE, TAP, ERSPAN, NONE, SWITCHPORT]
-    example: NONE
   - model_name: id
     data_path: [securityZone]
     tf_name: security_zone_id
@@ -71,11 +54,6 @@ attributes:
     data_path: [securityZone]
     type: String
     value: SecurityZone
-  - model_name: name
-    type: String
-    description: Name of the interface; it must already be present on the device.
-    computed: true
-    data_source_query: true
   - model_name: MTU
     tf_name: mtu
     type: Int64
@@ -85,7 +63,7 @@ attributes:
     example: 9000
   - model_name: priority
     type: Int64
-    description: Priority. Can only be set for routed interfaces.
+    description: Priority.
     min_int: 0
     max_int: 65535
     exclude_example: true
@@ -94,35 +72,59 @@ attributes:
     tf_name: sgt_propagate
     type: Bool
     description: Enable SGT propagation.
-    default_value: "false"
     example: "false"
     exclude_test: true
-  - model_name: etherChannelId
-    type: String
+  - model_name: redundantId
+    tf_name: redundant_interface_id
+    type: Int64
+    description: Id of the Redundant interface.
     mandatory: true
-    example: "1"
-    description: Value of Ether Channel ID, allowed range 1 to 48.
-  - model_name: selectedInterfaces
-    description: Physical Interfaces that are members of the Ether Channel.
-    type: Set
-    attributes:
-      - model_name: id
-        type: String
-        description: Id of the object.
-        id: true
-        mandatory: true
-        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        test_value: data.fmc_device_physical_interface.test.id
-      - model_name: type
-        type: String
-        description: Type of the selected interface.
-        exclude_example: true
-        exclude_test: true
-      - model_name: name
-        type: String
-        description: Name of the selected interface.
-        example: "GigabitEthernet0/1"
-        test_value: data.fmc_device_physical_interface.test.name
+    min_int: 1
+    max_int: 8
+    requires_replace: true
+    example: 1
+  - model_name: id
+    data_path: [primaryInterface]
+    tf_name: primary_interface_id
+    type: String
+    description: Id of the physical interface that is the primary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: data.fmc_device_physical_interface.test.id
+  - model_name: name
+    data_path: [primaryInterface]
+    tf_name: primary_interface_name
+    type: String
+    description: Name of the physical interface that is the primary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: GigabitEthernet0/1
+    test_value: data.fmc_device_physical_interface.test.name
+  - model_name: type
+    data_path: [primaryInterface]
+    tf_name: primary_interface_type
+    type: String
+    description: Type of the physical interface that is the primary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: PhysicalInterface
+    test_value: data.fmc_device_physical_interface.test.type
+  - model_name: id
+    data_path: [secondaryInterface]
+    tf_name: secondary_interface_id
+    type: String
+    description: Id of the physical interface that is the secondary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08471
+    test_value: data.fmc_device_physical_interface.test_2.id
+  - model_name: name
+    data_path: [secondaryInterface]
+    tf_name: secondary_interface_name
+    type: String
+    description: Name of the physical interface that is the secondary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: GigabitEthernet0/2
+    test_value: data.fmc_device_physical_interface.test_2.name
+  - model_name: type
+    data_path: [secondaryInterface]
+    tf_name: secondary_interface_type
+    type: String
+    description: Type of the physical interface that is the secondary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: PhysicalInterface
+    test_value: data.fmc_device_physical_interface.test_2.type
   - model_name: nveOnly
     type: Bool
     description: >-
@@ -137,7 +139,7 @@ attributes:
     data_path: [ipv4, static]
     tf_name: ipv4_static_address
     type: String
-    description: Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
+    description: Static IPv4 address. Conflicts with mode INLINE or TAP.
     example: "10.1.1.1"
   - model_name: netmask
     data_path: [ipv4, static]
@@ -307,7 +309,7 @@ attributes:
         type: String
         description: IPv6 address with the prefix length.
         id: true
-        example: "2004::"
+        example: "2004::/64"
       - model_name: default
         type: Bool
         description: Use default prefix.
@@ -387,20 +389,6 @@ attributes:
     type: Bool
     exclude_example: true
     exclude_test: true
-  - model_name: id
-    data_path: [ipv6, ipv6DHCPPool]
-    tf_name: ipv6_dhcp_pool_id
-    type: String
-    description: Id of the assigned DHCPv6 Pool.
-    exclude_example: true
-    exclude_test: true
-  - model_name: type
-    tf_name: ipv6_dhcp_pool_type
-    data_path: [ipv6, ipv6DHCPPool]
-    type: String
-    description: Type of the object; this value is always 'IPv6AddressPool'.
-    exclude_example: true
-    exclude_test: true
   - model_name: enableDHCPAddrConfig
     data_path: [ipv6]
     tf_name: ipv6_dhcp_address_config
@@ -452,83 +440,15 @@ attributes:
     description: IP address to monitor.
     exclude_example: true
     exclude_test: true
-  # Hardware
-  - model_name: autoNegState
-    data_path: [hardware]
-    tf_name: auto_negotiation
+  - model_name: enable
+    data_path: [applicationMonitoring]
+    tf_name: http_based_application_monitoring
     type: Bool
-    description: Enables auto negotiation of duplex and speed.
-    exclude_test: true
-    exclude_example: true
-  - model_name: duplex
-    data_path: [hardware]
-    type: String
-    description: Duplex configuration.
-    enum_values: [AUTO, FULL, HALF]
+    description: >-
+      Enable HTTP based Application Monitoring.
+      FMC enables it implicitly whenever `ip_based_monitoring` is enabled.
     exclude_example: true
     exclude_test: true
-  - model_name: speed
-    data_path: [hardware]
-    type: String
-    description: Speed configuration.
-    enum_values: [AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP]
-    exclude_example: true
-    exclude_test: true
-  - model_name: receive
-    tf_name: lldp_receive
-    data_path: [LLDP]
-    type: Bool
-    description: LLDP receive configuration.
-    exclude_example: true
-    exclude_test: true
-  - model_name: transmit
-    tf_name: lldp_transmit
-    data_path: [LLDP]
-    type: Bool
-    description: LLDP transmit configuration.
-    exclude_example: true
-    exclude_test: true
-  - model_name: flowControlSend
-    data_path: [hardware]
-    type: String
-    description: Flow Control Send configuration.
-    enum_values: ["ON", "OFF"]
-    exclude_example: true
-    exclude_test: true
-  - model_name: fecMode
-    data_path: [hardware]
-    type: String
-    description: Forward Error Correction (FEC) mode.
-    enum_values: [AUTO, CL108RS, CL74FC, CL91RS, DISABLE]
-    exclude_example: true
-    exclude_test: true
-  # Manager Access
-  - model_name: enableAccess
-    data_path: [fmcAccessConfig]
-    tf_name: management_access
-    description: Enable Management Access.
-    type: Bool
-    exclude_example: true
-    exclude_test: true
-  - model_name: allowedNetworks
-    data_path: [fmcAccessConfig]
-    tf_name: management_access_network_objects
-    exclude_example: true
-    exclude_test: true
-    type: Set
-    attributes:
-      - model_name: id
-        id: true
-        type: String
-        description: ID of the network object (Host, Network or Range).
-        exclude_example: true
-        exclude_test: true
-      - model_name: type
-        tf_name: type
-        type: String
-        description: Type of the object.
-        exclude_example: true
-        exclude_test: true
   # Advanced - Information
   - model_name: activeMACAddress
     tf_name: active_mac_address
@@ -606,8 +526,14 @@ attributes:
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
   variable "interface_name" { default = null } // tests will set $TF_VAR_interface_name
+  variable "interface_2_name" { default = null } // tests will set $TF_VAR_interface_2_name
 
   data "fmc_device_physical_interface" "test" {
     device_id = var.device_id
     name      = var.interface_name
+  }
+
+  data "fmc_device_physical_interface" "test_2" {
+    device_id = var.device_id
+    name      = var.interface_2_name
   }

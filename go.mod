@@ -1,6 +1,6 @@
 module github.com/CiscoDevNet/terraform-provider-fmc
 
-go 1.25.10
+go 1.26.6
 
 require (
 	github.com/google/uuid v1.6.0
@@ -11,7 +11,7 @@ require (
 	github.com/hashicorp/terraform-plugin-go v0.31.0
 	github.com/hashicorp/terraform-plugin-log v0.11.0
 	github.com/hashicorp/terraform-plugin-testing v1.16.0
-	github.com/netascode/go-fmc v0.3.2-0.20260827135816-bca868c5c91e
+	github.com/netascode/go-fmc v0.4.0
 	github.com/tidwall/gjson v1.19.0
 	github.com/tidwall/sjson v1.2.5
 	golang.org/x/crypto v0.55.0

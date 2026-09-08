@@ -112,7 +112,7 @@ resource "fmc_device_etherchannel_interface" "example" {
 - `mode` (String) Mode of the interface. Leave unset for interfaces that are (or are about to become) members of fmc_device_inline_set - FMC assigns INLINE (or TAP, when the inline set has tap_mode = true) on its own and rejects any attempt to set those values on an interface that is not a member yet. Set INLINE or TAP explicitly only to adopt an interface that already is a member. Defaults to NONE when not set on creation. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.
   - Choices: `INLINE`, `PASSIVE`, `TAP`, `ERSPAN`, `NONE`, `SWITCHPORT`
 - `mtu` (Number) Maximum transmission unit. Can only be used when `logical_name` is set.
-  - Range: `64`-`9000`
+  - Range: `64`-`9198`
 - `nve_only` (Boolean) Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.
 - `override_default_fragment_setting_chain` (Number) Override Default Fragment Setting - Chain value.
   - Range: `1`-`8200`
