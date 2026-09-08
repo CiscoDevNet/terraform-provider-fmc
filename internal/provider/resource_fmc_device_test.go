@@ -82,6 +82,10 @@ resource "fmc_access_control_policy" "test" {
   name = "fmc_device_access_control_policy"
   default_action = "BLOCK"
 }
+
+resource "fmc_ftd_nat_policy" "test" {
+  name        = "fmc_device_nat_policy"
+}
 `
 
 // End of section. //template:end testPrerequisites
@@ -112,6 +116,7 @@ func testAccFmcDeviceConfig_all() string {
 	config += `	performance_tier = "FTDv5"` + "\n"
 	config += `	snort_engine = "SNORT3"` + "\n"
 	config += `	access_control_policy_id = fmc_access_control_policy.test.id` + "\n"
+	config += `	nat_policy_id = fmc_ftd_nat_policy.test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }

@@ -1,9 +1,8 @@
-# Manual resource
 ---
-name: Device Subinterface
-rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/subinterfaces
+name: Device VLAN Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/vlaninterfaces
 doc_category: Devices
-test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+test_tags: [TF_VAR_device_id, FMC_DEVICE_VLAN_INTERFACE]
 attributes:
   - tf_name: device_id
     type: String
@@ -14,25 +13,20 @@ attributes:
   - model_name: type
     type: String
     computed: true
-    description: Type of the object, this value is always 'SubInterface'.
+    description: Type of the object, this value is always 'VlanInterface'.
   - model_name: name
     type: String
     computed: true
-    description: Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).
+    computed_body_param: true
+    description: Name of the VLAN interface in format `Vlan<vlan_id>` (eg. Vlan7).
     data_source_query: true
-  - model_name: dummy_is_multi_instance
-    tf_name: is_multi_instance
-    type: Bool
-    computed: true
-    description: Is parent device multi-instance.
 # General
   - model_name: ifname
     tf_name: logical_name
     type: String
     description: >-
-      Logical name of the interface, unique on the device. Should not contain whitespace or slash
-      characters.
-    example: myinterface-0-1
+      Logical name of the interface, unique on the device.
+    example: myvlaninterface-7
     data_source_query: true
     minimum_test_value: '"iface_minimum"'
   - model_name: enabled
@@ -41,24 +35,22 @@ attributes:
     default_value: true
     test_value: "true"
     exclude_example: true
-  - model_name: managementOnly
-    type: Bool
-    description: >-
-      Whether this interface limits traffic to management traffic; when true, through-the-box traffic is
-      disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
-    minimum_test_value: "true"
-    test_value: "false"
-    exclude_example: true
   - model_name: description
     type: String
-    description: Description of the object.
+    description: Description of the interface.
     example: my description
+  - model_name: mode
+    type: String
+    mandatory: true
+    description: Mode of the interface.
+    enum_values: [NONE]
+    example: NONE
   - model_name: id
     data_path: [securityZone]
     tf_name: security_zone_id
     type: String
     description: >-
-      Id of the assigned Security Zone. Can only be used when `logical_name`
+      Id of the assigned Security Zone. Can only be used when the interface's `logical_name`
       is set.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
@@ -81,48 +73,48 @@ attributes:
     max_int: 65535
     exclude_example: true
     exclude_test: true
-  - model_name: enableSGTPropagate
-    tf_name: sgt_propagate
-    type: Bool
-    description: Whether to propagate SGT.
-    example: "false"
-    exclude_test: true
-  - model_name: name
-    tf_name: interface_name
-    type: String
-    mandatory: true
-    requires_replace: true
-    description: Name of the parent interface. It has to already exist on the device.
-    example: GigabitEthernet0/1
-    test_value: var.interface_name
-  - model_name: subIntfId
-    tf_name: sub_interface_id
+  - model_name: vlanId
     type: Int64
-    description: The numerical id of this subinterface, unique on the parent interface. For multi-instance devices, this value must match with what was configured on chassis.
+    description: VLAN identifier, unique on the device.
     mandatory: true
     requires_replace: true
     example: 7
-    min_int: 0
-    max_int: 4294967295
-  - model_name: vlanId
-    type: Int64
-    description: VLAN identifier, unique per the parent interface. For multi-instance devices, this value must match with what was configured on chassis.
-    mandatory: true
-    example: 4094
     min_int: 1
     max_int: 4094
+  - model_name: id
+    data_path: [disablePortForwardOnVlan]
+    tf_name: disable_forwarding_on_interface_id
+    type: String
+    description: Id of the VLAN interface that this interface is blocked from forwarding traffic to.
+    exclude_example: true
+    exclude_test: true
+  - model_name: name
+    data_path: [disablePortForwardOnVlan]
+    tf_name: disable_forwarding_on_interface_name
+    type: String
+    description: Name of the VLAN interface that this interface is blocked from forwarding traffic to.
+    exclude_example: true
+    exclude_test: true
+  - model_name: type
+    data_path: [disablePortForwardOnVlan]
+    tf_name: disable_forwarding_on_interface_type
+    type: String
+    description:  Type of the VLAN interface that this interface is blocked from forwarding traffic to.
+    enum_values: ["VlanInterface"]
+    exclude_example: true
+    exclude_test: true
   # IPv4 - Static
   - model_name: address
     data_path: [ipv4, static]
     tf_name: ipv4_static_address
     type: String
-    description: Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
+    description: Static IPv4 address.
     example: "10.1.1.1"
   - model_name: netmask
     data_path: [ipv4, static]
     tf_name: ipv4_static_netmask
     type: String
-    description: Netmask (width) for ipv4_static_address.
+    description: Netmask (width) for `ipv4_static_address`.
     example: "24"
   - model_name: id
     data_path: [ipv4, static, pool]
@@ -292,7 +284,7 @@ attributes:
         type: Bool
         description: Use default prefix.
         example: "false"
-  # IPv6 Settings:
+  # IPv6 Settings
   - model_name: enableDADLoopback
     data_path: [ipv6]
     tf_name: ipv6_dad
@@ -341,7 +333,6 @@ attributes:
     description: Router Advertisement (RA) lifetime.
     min_int: 0
     max_int: 9000
-    example: 0
     exclude_example: true
     exclude_test: true
   - model_name: raInterval
@@ -408,30 +399,6 @@ attributes:
     data_path: [ipv6, DHCP, clientPd]
     type: String
     description: Hint Prefixes for Prefix Delegation (PD).
-    exclude_example: true
-    exclude_test: true
-  # Path Monitoring
-  - model_name: enable
-    data_path: [pathMonitoring]
-    tf_name: ip_based_monitoring
-    description: Enable IP based Monitoring.
-    type: Bool
-    exclude_example: true
-    exclude_test: true
-  - model_name: type
-    data_path: [pathMonitoring]
-    tf_name: ip_based_monitoring_type
-    type: String
-    description: IP based Monitoring type.
-    enum_values: [AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6]
-    example: AUTO
-    exclude_example: true
-    exclude_test: true
-  - model_name: monitoredIp
-    data_path: [pathMonitoring]
-    tf_name: ip_based_monitoring_next_hop
-    type: String
-    description: IP address to monitor.
     exclude_example: true
     exclude_test: true
   # Advanced - Information
@@ -511,9 +478,3 @@ attributes:
 
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
-  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
-
-  resource "fmc_security_zone" "test" {
-    name           = "routed1"
-    interface_type = "ROUTED"
-  }

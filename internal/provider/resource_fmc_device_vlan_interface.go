@@ -32,7 +32,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -40,8 +39,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
-	"github.com/tidwall/gjson"
-	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -50,26 +47,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &DeviceSubinterfaceResource{}
-	_ resource.ResourceWithImportState = &DeviceSubinterfaceResource{}
+	_ resource.Resource                = &DeviceVLANInterfaceResource{}
+	_ resource.ResourceWithImportState = &DeviceVLANInterfaceResource{}
 )
 
-func NewDeviceSubinterfaceResource() resource.Resource {
-	return &DeviceSubinterfaceResource{}
+func NewDeviceVLANInterfaceResource() resource.Resource {
+	return &DeviceVLANInterfaceResource{}
 }
 
-type DeviceSubinterfaceResource struct {
+type DeviceVLANInterfaceResource struct {
 	client *fmc.Client
 }
 
-func (r *DeviceSubinterfaceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_subinterface"
+func (r *DeviceVLANInterfaceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_vlan_interface"
 }
 
-func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DeviceVLANInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device Subinterface.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device VLAN Interface.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -94,28 +91,21 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object, this value is always 'SubInterface'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object, this value is always 'VlanInterface'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the VLAN interface in format `Vlan<vlan_id>` (eg. Vlan7).").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"is_multi_instance": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Is parent device multi-instance.").String,
-				Computed:            true,
-				PlanModifiers: []planmodifier.Bool{
-					boolplanmodifier.UseStateForUnknown(),
-				},
-			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logical name of the interface, unique on the device.").String,
 				Optional:            true,
 			},
 			"enabled": schema.BoolAttribute{
@@ -124,16 +114,19 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
-			"management_only": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.").String,
+			"description": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the interface.").String,
 				Optional:            true,
 			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
-				Optional:            true,
+			"mode": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Mode of the interface.").AddStringEnumDescription("NONE").String,
+				Required:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("NONE"),
+				},
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Security Zone. Can only be used when `logical_name` is set.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Security Zone. Can only be used when the interface's `logical_name` is set.").String,
 				Optional:            true,
 			},
 			"mtu": schema.Int64Attribute{
@@ -150,40 +143,37 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 					int64validator.Between(0, 65535),
 				},
 			},
-			"sgt_propagate": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to propagate SGT.").String,
-				Optional:            true,
-			},
-			"interface_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the parent interface. It has to already exist on the device.").String,
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"sub_interface_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The numerical id of this subinterface, unique on the parent interface. For multi-instance devices, this value must match with what was configured on chassis.").AddIntegerRangeDescription(0, 4294967295).String,
+			"vlan_id": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("VLAN identifier, unique on the device.").AddIntegerRangeDescription(1, 4094).String,
 				Required:            true,
 				Validators: []validator.Int64{
-					int64validator.Between(0, 4294967295),
+					int64validator.Between(1, 4094),
 				},
 				PlanModifiers: []planmodifier.Int64{
 					int64planmodifier.RequiresReplace(),
 				},
 			},
-			"vlan_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("VLAN identifier, unique per the parent interface. For multi-instance devices, this value must match with what was configured on chassis.").AddIntegerRangeDescription(1, 4094).String,
-				Required:            true,
-				Validators: []validator.Int64{
-					int64validator.Between(1, 4094),
+			"disable_forwarding_on_interface_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the VLAN interface that this interface is blocked from forwarding traffic to.").String,
+				Optional:            true,
+			},
+			"disable_forwarding_on_interface_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the VLAN interface that this interface is blocked from forwarding traffic to.").String,
+				Optional:            true,
+			},
+			"disable_forwarding_on_interface_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the VLAN interface that this interface is blocked from forwarding traffic to.").AddStringEnumDescription("VlanInterface").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("VlanInterface"),
 				},
 			},
 			"ipv4_static_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Static IPv4 address.").String,
 				Optional:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for ipv4_static_address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for `ipv4_static_address`.").String,
 				Optional:            true,
 			},
 			"ipv4_address_pool_id": schema.StringAttribute{
@@ -366,21 +356,6 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				MarkdownDescription: helpers.NewAttributeDescription("Hint Prefixes for Prefix Delegation (PD).").String,
 				Optional:            true,
 			},
-			"ip_based_monitoring": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable IP based Monitoring.").String,
-				Optional:            true,
-			},
-			"ip_based_monitoring_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IP based Monitoring type.").AddStringEnumDescription("AUTO", "PEER_IPV4", "PEER_IPV6", "AUTO4", "AUTO6").String,
-				Optional:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("AUTO", "PEER_IPV4", "PEER_IPV6", "AUTO4", "AUTO6"),
-				},
-			},
-			"ip_based_monitoring_next_hop": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IP address to monitor.").String,
-				Optional:            true,
-			},
 			"active_mac_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("MAC address for active interface in format 0123.4567.89ab.").String,
 				Optional:            true,
@@ -444,7 +419,7 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 	}
 }
 
-func (r *DeviceSubinterfaceResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *DeviceVLANInterfaceResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -454,11 +429,10 @@ func (r *DeviceSubinterfaceResource) Configure(_ context.Context, req resource.C
 
 // End of section. //template:end model
 
-func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan DeviceSubinterface
-	var isMultiInstance bool
-	var res fmc.Res
-	var err error
+// Section below is generated&owned by "gen/generator.go". //template:begin create
+
+func (r *DeviceVLANInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DeviceVLANInterface
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -474,70 +448,15 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
-	// Check if device is multi-instance
-	isMultiInstance, diags = FMCIsDeviceMultiInstance(ctx, r.client, plan.DeviceId.ValueString(), reqMods)
-	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+	// Create object
+	body := plan.toBody(ctx, DeviceVLANInterface{})
+	res, err := r.client.Post(plan.getPath(), body, reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
-
-	if isMultiInstance {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Subinterface parent device is multi-instance", plan.Id.ValueString()))
-		// Multi-instance devices get their subinterfaces created on chassis level, hence creation equals to update of the existing object
-		// Get all subinterfaces
-		res, err = r.client.Get(fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/subinterfaces?expanded=true", url.QueryEscape(plan.DeviceId.ValueString())), reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve subinterfaces (GET), got error: %s, %s", err, res.String()))
-			return
-		}
-		// Get all subinterfaces that name matches the one in the plan
-		query_1 := fmt.Sprintf("items.#(name==%s)#", plan.InterfaceName.ValueString())
-		res_1 := gjson.Get(res.String(), query_1).String()
-
-		// Filter above to get one subinterface with the same subIntId
-		// This will find just one occurence of subIntId, as FMC should not allow duplicates
-		query_2 := fmt.Sprintf("#(subIntfId==%d)", plan.SubInterfaceId.ValueInt64())
-		res_2 := gjson.Get(res_1, query_2)
-
-		// Check if any interface was found
-		if res_2.Exists() {
-			plan.Id = types.StringValue(res_2.Get("id").String())
-			tflog.Debug(ctx, fmt.Sprintf("%s: subinterface found", plan.Id.ValueString()))
-
-			// vlan_id is set on chassis level and cannot be modified thorugh device subinterface
-			vlanId := res_2.Get("vlanId").Int()
-			if vlanId != plan.VlanId.ValueInt64() {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("%s: vlan_id in the Terraform resource (%d) does not match with the Vlan ID read from appliance (%d)", plan.Id.ValueString(), plan.VlanId.ValueInt64(), vlanId))
-				return
-			}
-
-			// Update interface
-			body := plan.toBody(ctx, DeviceSubinterface{})
-			res, err = r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
-			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
-				return
-			}
-		} else {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Subinterface not found (interface name: %s, sub_interface_id: %d, vlan_id: %d)", plan.InterfaceName.ValueString(), plan.SubInterfaceId.ValueInt64(), plan.VlanId.ValueInt64()))
-			return
-		}
-	} else {
-		// This is not multi-instance device, hence the object needs to be created
-		// Create object
-		body := plan.toBody(ctx, DeviceSubinterface{})
-		res, err = r.client.Post(plan.getPath(), body, reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
-			return
-		}
-		plan.Id = types.StringValue(res.Get("id").String())
-	}
+	plan.Id = types.StringValue(res.Get("id").String())
 	plan.fromBodyUnknowns(ctx, res)
-
-	// Fix 'name`
-	plan.Name = types.StringValue(fmt.Sprintf("%s.%d", plan.Name.ValueString(), plan.SubInterfaceId.ValueInt64()))
-	// Save multi-instance flag
-	plan.IsMultiInstance = types.BoolValue(isMultiInstance)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
@@ -547,17 +466,18 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state DeviceSubinterface
+// End of section. //template:end create
+
+// Section below is generated&owned by "gen/generator.go". //template:begin read
+
+func (r *DeviceVLANInterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DeviceVLANInterface
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
-
-	// Save value to be restored later
-	var isMultiInstance = state.IsMultiInstance
 
 	// Set request domain if provided
 	reqMods := [](func(*fmc.Req)){}
@@ -590,11 +510,6 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 		state.fromBodyPartial(ctx, res)
 	}
 
-	// Fix 'name`
-	state.Name = types.StringValue(fmt.Sprintf("%s.%d", state.Name.ValueString(), state.SubInterfaceId.ValueInt64()))
-	// Restore multi-instance flag
-	state.IsMultiInstance = isMultiInstance
-
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &state)
@@ -603,8 +518,12 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-func (r *DeviceSubinterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state DeviceSubinterface
+// End of section. //template:end read
+
+// Section below is generated&owned by "gen/generator.go". //template:begin update
+
+func (r *DeviceVLANInterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state DeviceVLANInterface
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -633,19 +552,18 @@ func (r *DeviceSubinterfaceResource) Update(ctx context.Context, req resource.Up
 		return
 	}
 
-	// Fix 'name`
-	plan.Name = types.StringValue(fmt.Sprintf("%s.%d", strings.Split(plan.Name.ValueString(), ".")[0], plan.SubInterfaceId.ValueInt64()))
-	// Save multi-instance flag from state (the flag doesn't change thorugh the lifecycle of the resource)
-	plan.IsMultiInstance = state.IsMultiInstance
-
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
 
-func (r *DeviceSubinterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state DeviceSubinterface
+// End of section. //template:end update
+
+// Section below is generated&owned by "gen/generator.go". //template:begin delete
+
+func (r *DeviceVLANInterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state DeviceVLANInterface
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -660,32 +578,10 @@ func (r *DeviceSubinterfaceResource) Delete(ctx context.Context, req resource.De
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-
-	if state.IsMultiInstance.ValueBool() {
-		// If it's multi-instance, we need to put delete, to clear the interface configuration
-		body := state.toBodyPutDelete(ctx)
-		res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 1 (PUT), got error: %s, %s", err, res.String()))
-			return
-		}
-
-		// Step 2: Remove 'ifname' (if still configured) from body and re-run request
-		if !state.LogicalName.IsNull() {
-			body, _ = sjson.Delete(body, "ifname")
-			res, err = r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
-			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 2 (PUT), got error: %s, %s", err, res.String()))
-				return
-			}
-		}
-	} else {
-		// If it's not multi-instance, we need to delete the object
-		res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-		if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
-			return
-		}
+	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
+		return
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
@@ -693,8 +589,10 @@ func (r *DeviceSubinterfaceResource) Delete(ctx context.Context, req resource.De
 	resp.State.RemoveResource(ctx)
 }
 
+// End of section. //template:end delete
+
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *DeviceSubinterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *DeviceVLANInterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<device_id>[^\s,]+),(?P<id>[^\s,]+?)$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -715,3 +613,15 @@ func (r *DeviceSubinterfaceResource) ImportState(ctx context.Context, req resour
 }
 
 // End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+
+// End of section. //template:end createSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
+// End of section. //template:end updateSubresources

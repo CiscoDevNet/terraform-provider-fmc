@@ -107,7 +107,7 @@ resource "fmc_device_physical_interface" "example" {
 - `management_access_network_objects` (Attributes Set) Allowed networks for Management Access. (see [below for nested schema](#nestedatt--management_access_network_objects))
 - `management_only` (Boolean) Whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
 - `mtu` (Number) Maximum transmission unit. Can only be used when `logical_name` is set.
-  - Range: `64`-`9000`
+  - Range: `64`-`9198`
 - `nve_only` (Boolean) Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.
 - `override_default_fragment_setting_chain` (Number) Override Default Fragment Setting - Chain value.
   - Range: `1`-`8200`
@@ -122,6 +122,14 @@ resource "fmc_device_physical_interface" "example" {
 - `speed` (String) Speed configuration.
   - Choices: `AUTO`, `TEN`, `HUNDRED`, `THOUSAND`, `TEN_THOUSAND`, `TWENTY_FIVE_THOUSAND`, `FORTY_THOUSAND`, `HUNDRED_THOUSAND`, `TWO_HUNDRED_THOUSAND`, `DETECT_SFP`
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
+- `switchport_access_vlan_id` (Number) VLAN Id assigned to the switch port in ACCESS mode (switchport_mode).
+  - Range: `1`-`4070`
+- `switchport_mode` (String) Switch port mode. Can only be used when `mode` is SWITCHPORT.
+  - Choices: `ACCESS`, `TRUNK`
+- `switchport_protected` (Boolean) Prevent the switch port from communicating with other protected switch ports on the same VLAN.
+- `switchport_trunk_allowed_vlan_ids` (String) Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode (switchport_mode), for example `2,4-6`.
+- `switchport_trunk_native_vlan_id` (Number) Native VLAN Id of the switch port in TRUNK mode (switchport_mode).
+  - Range: `1`-`4070`
 
 ### Read-Only
 
