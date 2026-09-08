@@ -50,7 +50,7 @@ resource "fmc_device_inline_set" "example" {
 - `bypass_force` (Boolean) Enable hardware bypass (bypass-force) for the Inline Set. Available only on interfaces of devices equipped with a bypass-capable network module.
 - `bypass_standby` (Boolean) Put the hardware bypass of the Inline Set into standby mode. Available only on interfaces of devices equipped with a bypass-capable network module.
 - `domain` (String) Name of the FMC domain
-- `fail_safe` (Boolean)
+- `fail_safe` (Boolean) Fail safe.
 - `mtu` (Number) Maximum Transmission Unit (MTU) of the Inline Set.
   - Range: `64`-`9198`
   - Default value: `1500`

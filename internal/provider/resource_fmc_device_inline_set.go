@@ -109,7 +109,7 @@ func (r *DeviceInlineSetResource) Schema(ctx context.Context, req resource.Schem
 				Default: int64default.StaticInt64(1500),
 			},
 			"fail_safe": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Fail safe.").String,
 				Optional:            true,
 			},
 			"bypass_standby": schema.BoolAttribute{

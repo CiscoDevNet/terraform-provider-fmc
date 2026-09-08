@@ -33,6 +33,7 @@ attributes:
   - model_name: failSafe
     tf_name: fail_safe
     type: Bool
+    description: Fail safe.
     example: "true"
   - model_name: standBy
     tf_name: bypass_standby

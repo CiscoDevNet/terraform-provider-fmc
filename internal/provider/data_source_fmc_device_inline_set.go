@@ -89,7 +89,7 @@ func (d *DeviceInlineSetDataSource) Schema(ctx context.Context, req datasource.S
 				Computed:            true,
 			},
 			"fail_safe": schema.BoolAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Fail safe.",
 				Computed:            true,
 			},
 			"bypass_standby": schema.BoolAttribute{

@@ -36,7 +36,7 @@ data "fmc_device_inline_set" "example" {
 
 - `bypass_force` (Boolean) Enable hardware bypass (bypass-force) for the Inline Set. Available only on interfaces of devices equipped with a bypass-capable network module.
 - `bypass_standby` (Boolean) Put the hardware bypass of the Inline Set into standby mode. Available only on interfaces of devices equipped with a bypass-capable network module.
-- `fail_safe` (Boolean)
+- `fail_safe` (Boolean) Fail safe.
 - `interface_pairs` (Attributes Set) Interface pairs that are members of the Inline Set. (see [below for nested schema](#nestedatt--interface_pairs))
 - `mtu` (Number) Maximum Transmission Unit (MTU) of the Inline Set.
 - `propagate_link_state` (Boolean) Automatically bring down the second interface of an interface pair when one of the interfaces in the pair goes down.

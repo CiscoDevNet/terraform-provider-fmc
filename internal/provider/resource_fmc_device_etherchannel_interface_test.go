@@ -114,3 +114,54 @@ func testAccFmcDeviceEtherChannelInterfaceConfig_all() string {
 }
 
 // End of section. //template:end testAccConfigAll
+
+// TestAccFmcDeviceEtherChannelInterfaceMode covers `mode`, which is optional and computed, so the
+// generated test above cannot exercise it - attributes marked as computed are left out of the
+// generated configurations. The first step leaves `mode` unset (implicit: adjustBody sends NONE
+// and FMC owns the value), the second one sets it explicitly, which also covers the transition
+// from an unset to an explicitly configured `mode` and, in the last step, a change from one
+// explicitly configured value to another.
+// Only NONE and PASSIVE are used here: INLINE and TAP are assigned by FMC itself once the
+// interface becomes a member of an inline set and are rejected otherwise, ERSPAN additionally
+// requires `erspan_source_ip` and `erspan_flow_id`, and SWITCHPORT is limited to models with
+// switch-capable ports.
+func TestAccFmcDeviceEtherChannelInterfaceMode(t *testing.T) {
+	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_name") == "" || os.Getenv("FMC_DEVICE_ETHERCHANNEL_INTERFACE") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_name and FMC_DEVICE_ETHERCHANNEL_INTERFACE")
+	}
+
+	steps := []resource.TestStep{{
+		// `mode` not configured
+		Config: testAccFmcDeviceEtherChannelInterfacePrerequisitesConfig + testAccFmcDeviceEtherChannelInterfaceConfig_mode(""),
+		Check:  resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "mode", "NONE"),
+	}, {
+		// `mode` configured explicitly
+		Config: testAccFmcDeviceEtherChannelInterfacePrerequisitesConfig + testAccFmcDeviceEtherChannelInterfaceConfig_mode("NONE"),
+		Check:  resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "mode", "NONE"),
+	}, {
+		// `mode` configured explicitly to a value other than the implicit NONE
+		Config: testAccFmcDeviceEtherChannelInterfacePrerequisitesConfig + testAccFmcDeviceEtherChannelInterfaceConfig_mode("PASSIVE"),
+		Check:  resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "mode", "PASSIVE"),
+	}}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		ErrorCheck:               func(err error) error { return testAccErrorCheck(t, err) },
+		Steps:                    steps,
+	})
+}
+
+// testAccFmcDeviceEtherChannelInterfaceConfig_mode renders the configuration with `mode` set to
+// the provided value, or with `mode` omitted altogether if the value is empty.
+func testAccFmcDeviceEtherChannelInterfaceConfig_mode(mode string) string {
+	config := `resource "fmc_device_etherchannel_interface" "test" {` + "\n"
+	config += `	device_id = var.device_id` + "\n"
+	config += `	ether_channel_id = "1"` + "\n"
+	config += `	logical_name = "iface_mode"` + "\n"
+	if mode != "" {
+		config += `	mode = "` + mode + `"` + "\n"
+	}
+	config += `}` + "\n"
+	return config
+}
