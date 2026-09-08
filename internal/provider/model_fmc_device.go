@@ -34,29 +34,32 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type Device struct {
-	Id                     types.String `tfsdk:"id"`
-	Domain                 types.String `tfsdk:"domain"`
-	Name                   types.String `tfsdk:"name"`
-	Type                   types.String `tfsdk:"type"`
-	Host                   types.String `tfsdk:"host"`
-	NatId                  types.String `tfsdk:"nat_id"`
-	Licenses               types.Set    `tfsdk:"licenses"`
-	RegistrationKey        types.String `tfsdk:"registration_key"`
-	DeviceGroupId          types.String `tfsdk:"device_group_id"`
-	ProhibitPacketTransfer types.Bool   `tfsdk:"prohibit_packet_transfer"`
-	PerformanceTier        types.String `tfsdk:"performance_tier"`
-	SnortEngine            types.String `tfsdk:"snort_engine"`
-	ObjectGroupSearch      types.Bool   `tfsdk:"object_group_search"`
-	AccessControlPolicyId  types.String `tfsdk:"access_control_policy_id"`
-	NatPolicyId            types.String `tfsdk:"nat_policy_id"`
-	HealthPolicyId         types.String `tfsdk:"health_policy_id"`
-	ContainerId            types.String `tfsdk:"container_id"`
-	ContainerType          types.String `tfsdk:"container_type"`
-	ContainerName          types.String `tfsdk:"container_name"`
-	ContainerRole          types.String `tfsdk:"container_role"`
-	ContainerStatus        types.String `tfsdk:"container_status"`
-	IsPartOfContainer      types.Bool   `tfsdk:"is_part_of_container"`
-	IsMultiInstance        types.Bool   `tfsdk:"is_multi_instance"`
+	Id                        types.String `tfsdk:"id"`
+	Domain                    types.String `tfsdk:"domain"`
+	Name                      types.String `tfsdk:"name"`
+	Type                      types.String `tfsdk:"type"`
+	Host                      types.String `tfsdk:"host"`
+	NatId                     types.String `tfsdk:"nat_id"`
+	Licenses                  types.Set    `tfsdk:"licenses"`
+	RegistrationKey           types.String `tfsdk:"registration_key"`
+	DeviceGroupId             types.String `tfsdk:"device_group_id"`
+	ProhibitPacketTransfer    types.Bool   `tfsdk:"prohibit_packet_transfer"`
+	PerformanceTier           types.String `tfsdk:"performance_tier"`
+	SnortEngine               types.String `tfsdk:"snort_engine"`
+	ObjectGroupSearch         types.Bool   `tfsdk:"object_group_search"`
+	AccessControlPolicyId     types.String `tfsdk:"access_control_policy_id"`
+	AccessControlPolicyDomain types.String `tfsdk:"access_control_policy_domain"`
+	NatPolicyId               types.String `tfsdk:"nat_policy_id"`
+	NatPolicyDomain           types.String `tfsdk:"nat_policy_domain"`
+	HealthPolicyId            types.String `tfsdk:"health_policy_id"`
+	HealthPolicyDomain        types.String `tfsdk:"health_policy_domain"`
+	ContainerId               types.String `tfsdk:"container_id"`
+	ContainerType             types.String `tfsdk:"container_type"`
+	ContainerName             types.String `tfsdk:"container_name"`
+	ContainerRole             types.String `tfsdk:"container_role"`
+	ContainerStatus           types.String `tfsdk:"container_status"`
+	IsPartOfContainer         types.Bool   `tfsdk:"is_part_of_container"`
+	IsMultiInstance           types.Bool   `tfsdk:"is_multi_instance"`
 }
 
 // End of section. //template:end types
@@ -376,8 +379,10 @@ func (data *Device) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 
 // End of section. //template:end fromBodyUnknowns
 
-// Fill response with policies IDs obtained from different API endpoint
-func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, policies gjson.Result) gjson.Result {
+// Fill response with policies IDs obtained from different API endpoint.
+// The `policies` map is keyed by FMC policy type and holds the policy assignments listing fetched from the domain
+// in which that particular policy exists.
+func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, policies map[string]gjson.Result) gjson.Result {
 	deviceId := data.Id.ValueString()
 
 	// If device is member of HAPair or Cluster, we should use that ID for policy management
@@ -386,40 +391,40 @@ func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, polici
 	}
 
 	query := fmt.Sprintf(`items.#(targets.#(id=="%s"))#.policy`, deviceId)
-	list := policies.Get(query)
-	tflog.Debug(ctx, fmt.Sprintf("gjson path %s resulted in %d policies for update: %s", query, len(list.Array()), list))
 
-	if !list.Exists() {
-		tflog.Error(ctx, fmt.Sprintf("No mandatory policies found for device %s", data.Id.ValueString()))
-		return res
+	// Response field to be filled in per policy type.
+	// Altough AccessPolicy ID exists in device object, it may have different upper/lower cases in ID, which causes problems when compared with tfstate
+	resFields := map[string]string{
+		"AccessPolicy": "accessPolicy.id",
+		"FTDNatPolicy": "dummy_nat_policy_id",
+		"HealthPolicy": "healthPolicy.id",
 	}
 
 	var ret = res.String()
 
-	// Altough AccessPolicy ID exists in device object, it may have different upper/lower cases in ID, which causes problems when compared with tfstate
-	value := list.Get(`#(type=="AccessPolicy").id`)
-	tflog.Debug(ctx, fmt.Sprintf("gjson search AccessPolicy resulted in: %s", value))
-	if value.Exists() {
-		ret, _ = sjson.Set(ret, "accessPolicy.id", value.String())
-	}
+	for _, policyType := range []string{"AccessPolicy", "FTDNatPolicy", "HealthPolicy"} {
+		assignments, ok := policies[policyType]
+		if !ok {
+			continue
+		}
 
-	value = list.Get(`#(type=="FTDNatPolicy").id`)
-	tflog.Debug(ctx, fmt.Sprintf("gjson search FTDNatPolicy resulted in: %s", value))
-	if value.Exists() {
-		ret, _ = sjson.Set(ret, "dummy_nat_policy_id", value.String())
-	}
+		list := assignments.Get(query)
+		tflog.Debug(ctx, fmt.Sprintf("gjson path %s resulted in %d policies for update: %s", query, len(list.Array()), list))
 
-	value = list.Get(`#(type=="HealthPolicy").id`)
-	tflog.Debug(ctx, fmt.Sprintf("gjson search HealthPolicy resulted in: %s", value))
-	if value.Exists() {
-		ret, _ = sjson.Set(ret, "healthPolicy.id", value.String())
+		value := list.Get(fmt.Sprintf(`#(type=="%s").id`, policyType))
+		tflog.Debug(ctx, fmt.Sprintf("gjson search %s resulted in: %s", policyType, value))
+		if value.Exists() {
+			ret, _ = sjson.Set(ret, resFields[policyType], value.String())
+		} else {
+			tflog.Debug(ctx, fmt.Sprintf("No %s assignment found for device %s", policyType, data.Id.ValueString()))
+		}
 	}
 
 	return gjson.Parse(ret)
 }
 
 // Rewrite Computed values from state to plan
-func (data *Device) copyComputed(ctx context.Context, state Device) {
+func (data *Device) copyComputed(_ context.Context, state Device) {
 	data.ContainerId = state.ContainerId
 	data.ContainerType = state.ContainerType
 	data.ContainerName = state.ContainerName

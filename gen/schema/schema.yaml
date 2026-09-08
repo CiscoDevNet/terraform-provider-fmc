@@ -47,6 +47,7 @@ attribute:
   exclude_test: bool(required=False) # Exclude attribute from acceptance test only (example/documentation is still generated)
   exclude_example: bool(required=False) # Exclude attribute from example (documentation)
   description: str(required=False) # Attribute description
+  ds_description: str(required=False) # Attribute description override used only in the data source schema. Falls back to `description` if not set
   example: any(str(), int(), bool(), required=False) # Example value for documentation, also used for acceptance test
   enum_values: list(str(), required=False) # List of enum values, only relevant if type is "String". Null value is instead governed by `mandatory`, never include null here
   min_list: int(required=False) # Minimum number of elements in a list, only relevant if type is "List"
