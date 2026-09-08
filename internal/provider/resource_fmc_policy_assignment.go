@@ -124,7 +124,7 @@ func (r *PolicyAssignmentResource) Schema(ctx context.Context, req resource.Sche
 				Optional:            true,
 			},
 			"after_destroy_policy_domain": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the FMC domain that `after_destroy_policy_id` belongs to. If not set, the `domain` of this resource is used. Applicable for Health and Access Control Policies only.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FMC domain that `after_destroy_policy_id` belongs to. If not set, the `domain` of this resource is used.").String,
 				Optional:            true,
 			},
 			"targets": schema.SetNestedAttribute{

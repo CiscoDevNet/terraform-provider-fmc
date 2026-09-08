@@ -44,7 +44,7 @@ attributes:
   - tf_name: after_destroy_policy_domain
     tf_only: true
     type: String
-    description: Name of the FMC domain that `after_destroy_policy_id` belongs to. If not set, the `domain` of this resource is used. Applicable for Health and Access Control Policies only.
+    description: Name of the FMC domain that `after_destroy_policy_id` belongs to. If not set, the `domain` of this resource is used.
     exclude_example: true
     exclude_test: true
   - model_name: targets
