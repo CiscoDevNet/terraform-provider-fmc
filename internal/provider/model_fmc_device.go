@@ -34,30 +34,33 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type Device struct {
-	Id                     types.String `tfsdk:"id"`
-	Domain                 types.String `tfsdk:"domain"`
-	Name                   types.String `tfsdk:"name"`
-	Type                   types.String `tfsdk:"type"`
-	Host                   types.String `tfsdk:"host"`
-	NatId                  types.String `tfsdk:"nat_id"`
-	Licenses               types.Set    `tfsdk:"licenses"`
-	RegistrationKey        types.String `tfsdk:"registration_key"`
-	DeviceGroupId          types.String `tfsdk:"device_group_id"`
-	ProhibitPacketTransfer types.Bool   `tfsdk:"prohibit_packet_transfer"`
-	PerformanceTier        types.String `tfsdk:"performance_tier"`
-	SnortEngine            types.String `tfsdk:"snort_engine"`
-	ObjectGroupSearch      types.Bool   `tfsdk:"object_group_search"`
-	DeployOnDestroy        types.Bool   `tfsdk:"deploy_on_destroy"`
-	AccessControlPolicyId  types.String `tfsdk:"access_control_policy_id"`
-	NatPolicyId            types.String `tfsdk:"nat_policy_id"`
-	HealthPolicyId         types.String `tfsdk:"health_policy_id"`
-	ContainerId            types.String `tfsdk:"container_id"`
-	ContainerType          types.String `tfsdk:"container_type"`
-	ContainerName          types.String `tfsdk:"container_name"`
-	ContainerRole          types.String `tfsdk:"container_role"`
-	ContainerStatus        types.String `tfsdk:"container_status"`
-	IsPartOfContainer      types.Bool   `tfsdk:"is_part_of_container"`
-	IsMultiInstance        types.Bool   `tfsdk:"is_multi_instance"`
+	Id                        types.String `tfsdk:"id"`
+	Domain                    types.String `tfsdk:"domain"`
+	Name                      types.String `tfsdk:"name"`
+	Type                      types.String `tfsdk:"type"`
+	Host                      types.String `tfsdk:"host"`
+	NatId                     types.String `tfsdk:"nat_id"`
+	Licenses                  types.Set    `tfsdk:"licenses"`
+	RegistrationKey           types.String `tfsdk:"registration_key"`
+	DeviceGroupId             types.String `tfsdk:"device_group_id"`
+	ProhibitPacketTransfer    types.Bool   `tfsdk:"prohibit_packet_transfer"`
+	PerformanceTier           types.String `tfsdk:"performance_tier"`
+	SnortEngine               types.String `tfsdk:"snort_engine"`
+	ObjectGroupSearch         types.Bool   `tfsdk:"object_group_search"`
+	DeployOnDestroy           types.Bool   `tfsdk:"deploy_on_destroy"`
+	AccessControlPolicyId     types.String `tfsdk:"access_control_policy_id"`
+	AccessControlPolicyDomain types.String `tfsdk:"access_control_policy_domain"`
+	NatPolicyId               types.String `tfsdk:"nat_policy_id"`
+	NatPolicyDomain           types.String `tfsdk:"nat_policy_domain"`
+	HealthPolicyId            types.String `tfsdk:"health_policy_id"`
+	HealthPolicyDomain        types.String `tfsdk:"health_policy_domain"`
+	ContainerId               types.String `tfsdk:"container_id"`
+	ContainerType             types.String `tfsdk:"container_type"`
+	ContainerName             types.String `tfsdk:"container_name"`
+	ContainerRole             types.String `tfsdk:"container_role"`
+	ContainerStatus           types.String `tfsdk:"container_status"`
+	IsPartOfContainer         types.Bool   `tfsdk:"is_part_of_container"`
+	IsMultiInstance           types.Bool   `tfsdk:"is_multi_instance"`
 }
 
 // End of section. //template:end types

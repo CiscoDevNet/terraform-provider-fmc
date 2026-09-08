@@ -702,6 +702,7 @@ func (r *DeviceResource) Delete(ctx context.Context, req resource.DeleteRequest,
 		deployPlan := DeviceDeploy{
 			Id:             state.Id,
 			Domain:         state.Domain,
+			IgnoreWarning:  types.BoolValue(true),
 			DeviceIdList:   helpers.GetStringListFromStringSlice([]string{state.Id.ValueString()}),
 			DeploymentNote: types.StringValue("Deployment triggered by Terraform before device removal"),
 		}

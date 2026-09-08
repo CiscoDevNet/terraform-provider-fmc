@@ -21,7 +21,6 @@ resource "fmc_device" "example" {
   performance_tier         = "FTDv5"
   snort_engine             = "SNORT3"
   object_group_search      = true
-  deploy_on_destroy        = true
   access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }
 ```
@@ -40,9 +39,9 @@ resource "fmc_device" "example" {
 
 ### Optional
 
+- `access_control_policy_domain` (String) Name of the FMC domain in which the assigned Access Control Policy exists. If not set, the device's `domain` is assumed.
 - `deploy_on_destroy` (Boolean) Trigger deployment of the device right before it is removed from FMC.
   - Default value: `false`
-- `access_control_policy_domain` (String) Name of the FMC domain in which the assigned Access Control Policy exists. If not set, the device's `domain` is assumed.
 - `device_group_id` (String) Id of the device group.
 - `domain` (String) Name of the FMC domain
 - `health_policy_domain` (String) Name of the FMC domain in which the assigned Health Policy exists. If not set, the device's `domain` is assumed.

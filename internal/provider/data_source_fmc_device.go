@@ -118,7 +118,7 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"deploy_on_destroy": schema.BoolAttribute{
-				MarkdownDescription: "Trigger deployment of the device right before it is removed from FMC.",
+				MarkdownDescription: "Ignored for Data Source.",
 				Computed:            true,
 			},
 			"access_control_policy_id": schema.StringAttribute{
