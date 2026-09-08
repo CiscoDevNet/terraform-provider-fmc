@@ -156,12 +156,24 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Access Control Policy.").String,
 				Required:            true,
 			},
+			"access_control_policy_domain": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FMC domain in which the assigned Access Control Policy exists. If not set, the device's `domain` is assumed.").String,
+				Optional:            true,
+			},
 			"nat_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned FTD NAT policy.").String,
 				Optional:            true,
 			},
+			"nat_policy_domain": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FMC domain in which the assigned FTD NAT Policy exists. If not set, the device's `domain` is assumed.").String,
+				Optional:            true,
+			},
 			"health_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.").String,
+				Optional:            true,
+			},
+			"health_policy_domain": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FMC domain in which the assigned Health Policy exists. If not set, the device's `domain` is assumed.").String,
 				Optional:            true,
 			},
 			"container_id": schema.StringAttribute{
@@ -270,7 +282,7 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 	tflog.Debug(ctx, fmt.Sprintf("%s: Configuring the non-access policy assignments", plan.Id.ValueString()))
 
 	if !plan.NatPolicyId.IsNull() {
-		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("nat_policy_id"), req.Plan, resp.State, reqMods...)
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("nat_policy_id"), req.Plan, resp.State)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -293,7 +305,7 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 	// On device registration, default health policy is auto assigned. We are waiting till that is finished. (see loop above)
 	// Health policy assignment triggers automatic deployment.
 	if !plan.HealthPolicyId.IsNull() {
-		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, resp.State, reqMods...)
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, resp.State)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -337,16 +349,36 @@ func (r *DeviceResource) Read(ctx context.Context, req resource.ReadRequest, res
 		return
 	}
 
-	// Get policy assignments for the device
-	policies, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve Policy Assignments (GET), got error: %s, %s", err, policies.String()))
-		return
-	}
-
 	imp, diags := helpers.IsFlagImporting(ctx, req)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
+	}
+
+	// Get policy assignments for the device. Each policy may reside in a different domain, hence policy assignments
+	// are fetched from every domain in use (only once per domain). Policies that are not assigned are not looked up,
+	// with the exception of `terraform import`, where the state is not populated yet and all policies must be discovered.
+	policyDomains := map[string]string{
+		"AccessPolicy": resolvePolicyDomain(state.AccessControlPolicyDomain, state.Domain),
+	}
+	if imp || !state.NatPolicyId.IsNull() {
+		policyDomains["FTDNatPolicy"] = resolvePolicyDomain(state.NatPolicyDomain, state.Domain)
+	}
+	if imp || !state.HealthPolicyId.IsNull() {
+		policyDomains["HealthPolicy"] = resolvePolicyDomain(state.HealthPolicyDomain, state.Domain)
+	}
+
+	assignmentsByDomain := make(map[string]gjson.Result, len(policyDomains))
+	policies := make(map[string]gjson.Result, len(policyDomains))
+	for policyType, domain := range policyDomains {
+		if _, ok := assignmentsByDomain[domain]; !ok {
+			assignments, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments?expanded=true", policyReqMods(domain)...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve Policy Assignments (GET) from domain %s, got error: %s, %s", displayDomain(domain), err, assignments.String()))
+				return
+			}
+			assignmentsByDomain[domain] = assignments
+		}
+		policies[policyType] = assignmentsByDomain[domain]
 	}
 
 	// Update body with policy assignments
@@ -393,6 +425,15 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
+	// Health policy is always assigned per device
+	if plan.HealthPolicyId != state.HealthPolicyId {
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, req.State)
+		resp.Diagnostics.Append(diags...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+	}
+
 	if state.ContainerType.ValueString() == "DeviceHAPair" && state.ContainerStatus.ValueString() != "Active" {
 		tflog.Info(ctx, fmt.Sprintf("%s: Device %s is in HA Pair, with current status: %s, hence cannot be updated. Configuration will be replicated from active node.", state.Id.ValueString(), state.Name.ValueString(), state.ContainerStatus.ValueString()))
 		plan.copyComputed(ctx, state)
@@ -431,7 +472,7 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	// Update policy assignments
 	if plan.AccessControlPolicyId != state.AccessControlPolicyId {
-		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("access_control_policy_id"), req.Plan, req.State, reqMods...)
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("access_control_policy_id"), req.Plan, req.State)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -439,15 +480,7 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	if plan.NatPolicyId != state.NatPolicyId {
-		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("nat_policy_id"), req.Plan, req.State, reqMods...)
-		resp.Diagnostics.Append(diags...)
-		if resp.Diagnostics.HasError() {
-			return
-		}
-	}
-
-	if plan.HealthPolicyId != state.HealthPolicyId {
-		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("health_policy_id"), req.Plan, req.State, reqMods...)
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("nat_policy_id"), req.Plan, req.State)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -470,9 +503,42 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 	resp.Diagnostics.Append(diags...)
 }
 
+// resolvePolicyDomain returns the name of the domain in which a policy exists. Policies may reside in a different
+// domain than the device itself, hence a per-policy domain can be configured. If it is not set, device's domain is assumed.
+func resolvePolicyDomain(policyDomain, deviceDomain types.String) string {
+	if !policyDomain.IsNull() && policyDomain.ValueString() != "" {
+		return policyDomain.ValueString()
+	}
+	return deviceDomain.ValueString()
+}
+
+// policyReqMods translates a domain name into request modifiers. Empty domain name means that no modifier is applied,
+// hence the provider-level default domain is used.
+func policyReqMods(domain string) []func(*fmc.Req) {
+	reqMods := [](func(*fmc.Req)){}
+	if domain != "" {
+		reqMods = append(reqMods, fmc.DomainName(domain))
+	}
+	return reqMods
+}
+
+// displayDomain renders a domain name for diagnostics. Empty domain name means the provider-level default domain.
+func displayDomain(domain string) string {
+	if domain == "" {
+		return "Global"
+	}
+	return domain
+}
+
+// policyDomainPath maps an attribute holding a policy id to the attribute holding the domain of that policy,
+// eg. `nat_policy_id` to `nat_policy_domain`.
+func policyDomainPath(policyPath path.Path) path.Path {
+	return path.Root(strings.TrimSuffix(policyPath.String(), "_id") + "_domain")
+}
+
 // updatePolicy updates policy-to-device assignment of one specific device (UUID) and of one specific policy type
 // (policyPath points to a different attribute for Access Policy, NAT Policy, Platform Settings Policy, etc.).
-func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, deviceType string, policyPath path.Path, plan tfsdk.Plan, state tfsdk.State, reqMods ...func(*fmc.Req)) diag.Diagnostics {
+func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, deviceType string, policyPath path.Path, plan tfsdk.Plan, state tfsdk.State) diag.Diagnostics {
 	var planPolicy, statePolicy types.String
 
 	if diags := plan.GetAttribute(ctx, policyPath, &planPolicy); diags.HasError() {
@@ -488,6 +554,25 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, devi
 	if statePolicy.Equal(planPolicy) {
 		return nil
 	}
+
+	// A policy may exist in a different domain than the device itself. When the policy is being de-assigned, the
+	// assignment lives in the domain recorded in the state, otherwise the planned domain applies.
+	var policyDomain, deviceDomain types.String
+	var diags diag.Diagnostics
+	if planPolicy.IsNull() {
+		diags.Append(state.GetAttribute(ctx, policyDomainPath(policyPath), &policyDomain)...)
+		diags.Append(state.GetAttribute(ctx, path.Root("domain"), &deviceDomain)...)
+	} else {
+		diags.Append(plan.GetAttribute(ctx, policyDomainPath(policyPath), &policyDomain)...)
+		diags.Append(plan.GetAttribute(ctx, path.Root("domain"), &deviceDomain)...)
+	}
+	if diags.HasError() {
+		return diags
+	}
+
+	domain := resolvePolicyDomain(policyDomain, deviceDomain)
+	reqMods := policyReqMods(domain)
+	domainHint := fmt.Sprintf("Verify that `%s` is the domain in which the policy exists (set via `%s`, defaulting to the device's `domain`).", displayDomain(domain), policyDomainPath(policyPath))
 
 	// Marginal risk of data race follows (GET/PUT).
 	// Partial self-protection in case user specifies terraform -parallelism 2 or more:
@@ -505,7 +590,7 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, devi
 		} else if err != nil {
 			return diag.Diagnostics{diag.NewErrorDiagnostic(
 				"Client Error",
-				fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()),
+				fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s\n%s", err, res.String(), domainHint),
 			)}
 		}
 		targets := res.Get(fmt.Sprintf(`targets.#(id != "%s")#`, deviceId))
@@ -523,7 +608,7 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, devi
 		if err != nil {
 			return diag.Diagnostics{diag.NewErrorDiagnostic(
 				"Client Error",
-				fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()),
+				fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s\n%s", err, res.String(), domainHint),
 			)}
 		}
 		return nil
@@ -542,7 +627,7 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, devi
 		if err != nil {
 			return diag.Diagnostics{diag.NewErrorDiagnostic(
 				"Client Error",
-				fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()),
+				fmt.Sprintf("Failed to configure object (POST), got error: %s, %s\n%s", err, res.String(), domainHint),
 			)}
 		}
 		return nil
@@ -582,7 +667,7 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, devi
 	if err != nil {
 		return diag.Diagnostics{diag.NewErrorDiagnostic(
 			"Client Error",
-			fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()),
+			fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s\n%s", err, res.String(), domainHint),
 		)}
 	}
 
