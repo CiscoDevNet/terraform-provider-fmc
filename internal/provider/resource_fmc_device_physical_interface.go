@@ -161,21 +161,21 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"switchport_access_vlan_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("VLAN Id assigned to the switch port in ACCESS mode.").AddIntegerRangeDescription(1, 4070).String,
+				MarkdownDescription: helpers.NewAttributeDescription("VLAN Id assigned to the switch port in ACCESS mode (switchport_mode).").AddIntegerRangeDescription(1, 4070).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 4070),
 				},
 			},
 			"switchport_trunk_native_vlan_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Native VLAN Id of the switch port in TRUNK mode.").AddIntegerRangeDescription(1, 4070).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Native VLAN Id of the switch port in TRUNK mode (switchport_mode).").AddIntegerRangeDescription(1, 4070).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 4070),
 				},
 			},
 			"switchport_trunk_allowed_vlan_ids": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode, for example `2,4-6`.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode (switchport_mode), for example `2,4-6`.").String,
 				Optional:            true,
 			},
 			"switchport_protected": schema.BoolAttribute{

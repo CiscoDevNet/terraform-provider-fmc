@@ -130,15 +130,15 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"switchport_access_vlan_id": schema.Int64Attribute{
-				MarkdownDescription: "VLAN Id assigned to the switch port in ACCESS mode.",
+				MarkdownDescription: "VLAN Id assigned to the switch port in ACCESS mode (switchport_mode).",
 				Computed:            true,
 			},
 			"switchport_trunk_native_vlan_id": schema.Int64Attribute{
-				MarkdownDescription: "Native VLAN Id of the switch port in TRUNK mode.",
+				MarkdownDescription: "Native VLAN Id of the switch port in TRUNK mode (switchport_mode).",
 				Computed:            true,
 			},
 			"switchport_trunk_allowed_vlan_ids": schema.StringAttribute{
-				MarkdownDescription: "Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode, for example `2,4-6`.",
+				MarkdownDescription: "Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode (switchport_mode), for example `2,4-6`.",
 				Computed:            true,
 			},
 			"switchport_protected": schema.BoolAttribute{

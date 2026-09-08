@@ -117,7 +117,7 @@ attributes:
     data_path: [switchPortConfig]
     tf_name: switchport_access_vlan_id
     type: Int64
-    description: VLAN Id assigned to the switch port in ACCESS mode.
+    description: VLAN Id assigned to the switch port in ACCESS mode (switchport_mode).
     min_int: 1
     max_int: 4070
     exclude_example: true
@@ -126,7 +126,7 @@ attributes:
     data_path: [switchPortConfig]
     tf_name: switchport_trunk_native_vlan_id
     type: Int64
-    description: Native VLAN Id of the switch port in TRUNK mode.
+    description: Native VLAN Id of the switch port in TRUNK mode (switchport_mode).
     min_int: 1
     max_int: 4070
     exclude_example: true
@@ -136,7 +136,7 @@ attributes:
     tf_name: switchport_trunk_allowed_vlan_ids
     type: String
     description: >-
-      Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode,
+      Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode (switchport_mode),
       for example `2,4-6`.
     exclude_example: true
     exclude_test: true
