@@ -4,6 +4,7 @@
 - (Enhancement) Add support for `fmc_device_vlan_interface`
 - (Enhancement) Add support for `fmc_device_redundant_interface`
 - (Enhancement) `fmc_device`: Add `access_control_policy_domain`, `nat_policy_domain` and `health_policy_domain` to support policies that exist in a different domain than the device
+- (Enhancement) `fmc_device`: Add `deploy_on_destroy` attribute to trigger device deployment just before the device is removed from FMC
 - (Enhancement) `fmc_policy_assignment`: Add `after_destroy_policy_domain` to point in which domain `after_destroy_policy_id` exists
 - (Enhancement) `fmc_device_physical_interface`: Add `switchport_*` attributes
 - (Enhancement) `fmc_device_physical_interface`: Increase the maximum MTU from `9000` to `9198`

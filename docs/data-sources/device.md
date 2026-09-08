@@ -36,6 +36,7 @@ data "fmc_device" "example" {
 - `container_role` (String) Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.
 - `container_status` (String) Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
 - `container_type` (String) Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
+- `deploy_on_destroy` (Boolean) Ignored for Data Source.
 - `device_group_id` (String) Id of the device group.
 - `health_policy_domain` (String) Not populated by this data source; Device's domain is assumed implicitly.
 - `health_policy_id` (String) Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
