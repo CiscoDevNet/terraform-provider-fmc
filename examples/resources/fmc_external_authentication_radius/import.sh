@@ -1,2 +1,2 @@
 # <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
-terraform import fmc_radius_external_authentication_object.example "<domain>,<id>"
+terraform import fmc_external_authentication_radius.example "<domain>,<id>"

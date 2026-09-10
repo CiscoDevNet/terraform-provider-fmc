@@ -48,23 +48,23 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &RadiusExternalAuthenticationObjectResource{}
-	_ resource.ResourceWithImportState = &RadiusExternalAuthenticationObjectResource{}
+	_ resource.Resource                = &ExternalAuthenticationRadiusResource{}
+	_ resource.ResourceWithImportState = &ExternalAuthenticationRadiusResource{}
 )
 
-func NewRadiusExternalAuthenticationObjectResource() resource.Resource {
-	return &RadiusExternalAuthenticationObjectResource{}
+func NewExternalAuthenticationRadiusResource() resource.Resource {
+	return &ExternalAuthenticationRadiusResource{}
 }
 
-type RadiusExternalAuthenticationObjectResource struct {
+type ExternalAuthenticationRadiusResource struct {
 	client *fmc.Client
 }
 
-func (r *RadiusExternalAuthenticationObjectResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_radius_external_authentication_object"
+func (r *ExternalAuthenticationRadiusResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_external_authentication_radius"
 }
 
-func (r *RadiusExternalAuthenticationObjectResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ExternalAuthenticationRadiusResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a RADIUS External Authentication object. It defines the RADIUS server(s) used to authenticate users, and can be referenced by `fmc_ftd_platform_settings_external_authentication` to enable RADIUS-based SSH/CLI authentication on FTD devices, or configured directly on the FMC (System > Users > External Authentication) for FMC login.\n User privileges (e.g. Administrator vs. read-only access) are derived from attributes returned by the RADIUS server for the authenticating user - most commonly the `Service-Type` attribute for FTD CLI access. This can be driven by Active Directory group membership if the RADIUS server (e.g. ISE or NPS) is configured to authenticate against AD and map groups to the appropriate attribute values. FMC does not configure this mapping; it is done entirely on the RADIUS server.").String,
@@ -99,7 +99,7 @@ func (r *RadiusExternalAuthenticationObjectResource) Schema(ctx context.Context,
 				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
-			"server_address": schema.StringAttribute{
+			"server_hostname": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IP address or hostname of the primary RADIUS server.").String,
 				Required:            true,
 			},
@@ -109,12 +109,12 @@ func (r *RadiusExternalAuthenticationObjectResource) Schema(ctx context.Context,
 				Computed:            true,
 				Default:             stringdefault.StaticString("1812"),
 			},
-			"key": schema.StringAttribute{
+			"server_key": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Shared secret used to communicate with the primary RADIUS server.").String,
 				Required:            true,
 				Sensitive:           true,
 			},
-			"backup_server_address": schema.StringAttribute{
+			"backup_server_hostname": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IP address or hostname of the backup RADIUS server.").String,
 				Optional:            true,
 			},
@@ -122,7 +122,7 @@ func (r *RadiusExternalAuthenticationObjectResource) Schema(ctx context.Context,
 				MarkdownDescription: helpers.NewAttributeDescription("Port number of the backup RADIUS server.").String,
 				Optional:            true,
 			},
-			"backup_key": schema.StringAttribute{
+			"backup_server_key": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Shared secret used to communicate with the backup RADIUS server.").String,
 				Optional:            true,
 				Sensitive:           true,
@@ -151,7 +151,7 @@ func (r *RadiusExternalAuthenticationObjectResource) Schema(ctx context.Context,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
-			"cli_access_user_list": schema.StringAttribute{
+			"cli_access_users": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Comma-separated list of usernames that should have CLI access, when using the predefined user list method instead of defining users on the RADIUS server. Leave unset when users and their privileges are managed on the RADIUS server (recommended when privileges are based on Active Directory group membership).").String,
 				Optional:            true,
 			},
@@ -159,7 +159,7 @@ func (r *RadiusExternalAuthenticationObjectResource) Schema(ctx context.Context,
 	}
 }
 
-func (r *RadiusExternalAuthenticationObjectResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *ExternalAuthenticationRadiusResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -171,8 +171,8 @@ func (r *RadiusExternalAuthenticationObjectResource) Configure(_ context.Context
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *RadiusExternalAuthenticationObjectResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan RadiusExternalAuthenticationObject
+func (r *ExternalAuthenticationRadiusResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan ExternalAuthenticationRadius
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -189,13 +189,12 @@ func (r *RadiusExternalAuthenticationObjectResource) Create(ctx context.Context,
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, RadiusExternalAuthenticationObject{})
+	body := plan.toBody(ctx, ExternalAuthenticationRadius{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
-
 	if retrievedId := res.Get("id"); retrievedId.Exists() {
 		// FMC returned the id directly in the POST response (documented/expected behavior)
 		plan.Id = types.StringValue(retrievedId.String())
@@ -242,8 +241,8 @@ func (r *RadiusExternalAuthenticationObjectResource) Create(ctx context.Context,
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *RadiusExternalAuthenticationObjectResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state RadiusExternalAuthenticationObject
+func (r *ExternalAuthenticationRadiusResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state ExternalAuthenticationRadius
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -294,8 +293,8 @@ func (r *RadiusExternalAuthenticationObjectResource) Read(ctx context.Context, r
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *RadiusExternalAuthenticationObjectResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state RadiusExternalAuthenticationObject
+func (r *ExternalAuthenticationRadiusResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state ExternalAuthenticationRadius
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -339,8 +338,8 @@ func (r *RadiusExternalAuthenticationObjectResource) Update(ctx context.Context,
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *RadiusExternalAuthenticationObjectResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state RadiusExternalAuthenticationObject
+func (r *ExternalAuthenticationRadiusResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state ExternalAuthenticationRadius
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -374,7 +373,7 @@ func (r *RadiusExternalAuthenticationObjectResource) Delete(ctx context.Context,
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *RadiusExternalAuthenticationObjectResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *ExternalAuthenticationRadiusResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<id>[^\s,]+?)$`)
 	match := inputPattern.FindStringSubmatch(req.ID)

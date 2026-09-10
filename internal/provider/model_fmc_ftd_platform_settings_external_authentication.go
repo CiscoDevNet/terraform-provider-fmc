@@ -34,11 +34,11 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type FTDPlatformSettingsExternalAuthentication struct {
-	Id                    types.String `tfsdk:"id"`
-	Domain                types.String `tfsdk:"domain"`
-	FtdPlatformSettingsId types.String `tfsdk:"ftd_platform_settings_id"`
-	Type                  types.String `tfsdk:"type"`
-	ExternalAuthServerId  types.String `tfsdk:"external_auth_server_id"`
+	Id                             types.String `tfsdk:"id"`
+	Domain                         types.String `tfsdk:"domain"`
+	FtdPlatformSettingsId          types.String `tfsdk:"ftd_platform_settings_id"`
+	Type                           types.String `tfsdk:"type"`
+	ExternalAuthenticationServerId types.String `tfsdk:"external_authentication_server_id"`
 }
 
 // End of section. //template:end types
@@ -63,8 +63,8 @@ func (data FTDPlatformSettingsExternalAuthentication) toBody(ctx context.Context
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
-	if !data.ExternalAuthServerId.IsNull() {
-		body, _ = sjson.Set(body, "externalAuthServer.id", data.ExternalAuthServerId.ValueString())
+	if !data.ExternalAuthenticationServerId.IsNull() {
+		body, _ = sjson.Set(body, "externalAuthServer.id", data.ExternalAuthenticationServerId.ValueString())
 	}
 	return body
 }
@@ -80,9 +80,9 @@ func (data *FTDPlatformSettingsExternalAuthentication) fromBody(ctx context.Cont
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("externalAuthServer.id"); value.Exists() {
-		data.ExternalAuthServerId = types.StringValue(value.String())
+		data.ExternalAuthenticationServerId = types.StringValue(value.String())
 	} else {
-		data.ExternalAuthServerId = types.StringNull()
+		data.ExternalAuthenticationServerId = types.StringNull()
 	}
 }
 
@@ -100,10 +100,10 @@ func (data *FTDPlatformSettingsExternalAuthentication) fromBodyPartial(ctx conte
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("externalAuthServer.id"); value.Exists() && !data.ExternalAuthServerId.IsNull() {
-		data.ExternalAuthServerId = types.StringValue(value.String())
+	if value := res.Get("externalAuthServer.id"); value.Exists() && !data.ExternalAuthenticationServerId.IsNull() {
+		data.ExternalAuthenticationServerId = types.StringValue(value.String())
 	} else {
-		data.ExternalAuthServerId = types.StringNull()
+		data.ExternalAuthenticationServerId = types.StringNull()
 	}
 }
 

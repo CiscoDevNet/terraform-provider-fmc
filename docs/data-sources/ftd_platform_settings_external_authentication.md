@@ -19,7 +19,7 @@ The following restrictions apply:
 
 ```terraform
 data "fmc_ftd_platform_settings_external_authentication" "example" {
-  id                       = "a3c2f8e1-5b47-4d6a-9e0f-1c8d7a2b3e4f"
+  id                       = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }
 ```
@@ -38,5 +38,5 @@ data "fmc_ftd_platform_settings_external_authentication" "example" {
 
 ### Read-Only
 
-- `external_auth_server_id` (String) Id of the RADIUS External Authentication object (`fmc_radius_external_authentication_object`) to use for SSH/CLI authentication on this FTD.
+- `external_authentication_server_id` (String) Id of the RADIUS External Authentication object (`fmc_external_authentication_radius`) to use for SSH/CLI authentication on this FTD.
 - `type` (String) Type of the object; this value is always 'ExternalAuthSetting'.

@@ -61,7 +61,7 @@ func (r *FTDPlatformSettingsExternalAuthenticationResource) Metadata(ctx context
 func (r *FTDPlatformSettingsExternalAuthenticationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - External Authentication. It enables RADIUS-based authentication for SSH/CLI access to the FTD, referencing an `fmc_radius_external_authentication_object`. You can only activate one External Authentication object per FTD Platform Settings policy.\n User privileges (Administrator vs. Basic/read-only CLI access) are derived from attributes returned by the RADIUS server for the authenticating user (commonly the RADIUS `Service-Type` attribute), which can be driven by Active Directory group membership if the RADIUS server is configured to authenticate against AD. This mapping is not configured in FMC/Terraform.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - External Authentication. It enables RADIUS-based authentication for SSH/CLI access to the FTD, referencing an `fmc_external_authentication_radius` object. You can only activate one External Authentication object per FTD Platform Settings policy.\n User privileges (Administrator vs. Basic/read-only CLI access) are derived from attributes returned by the RADIUS server for the authenticating user (commonly the RADIUS `Service-Type` attribute), which can be driven by Active Directory group membership if the RADIUS server is configured to authenticate against AD. This mapping is not configured in FMC/Terraform.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -92,8 +92,8 @@ func (r *FTDPlatformSettingsExternalAuthenticationResource) Schema(ctx context.C
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"external_auth_server_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the RADIUS External Authentication object (`fmc_radius_external_authentication_object`) to use for SSH/CLI authentication on this FTD.").String,
+			"external_authentication_server_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the RADIUS External Authentication object (`fmc_external_authentication_radius`) to use for SSH/CLI authentication on this FTD.").String,
 				Required:            true,
 			},
 		},

@@ -55,10 +55,10 @@ resource "fmc_ftd_platform_settings" "test" {
   name = "ftd_platform_settings_external_authentication"
 }
 
-resource "fmc_radius_external_authentication_object" "test" {
-  name           = "ftd_platform_settings_external_authentication_radius"
-  server_address = "10.1.1.10"
-  key            = "my_secret_key"
+resource "fmc_external_authentication_radius" "test" {
+  name            = "ftd_platform_settings_external_authentication_radius"
+  server_hostname = "10.1.1.10"
+  server_key      = "my_secret_key"
 }
 `
 
@@ -72,7 +72,7 @@ resource "fmc_radius_external_authentication_object" "test" {
 func testAccFmcFTDPlatformSettingsExternalAuthenticationConfig_all() string {
 	config := `resource "fmc_ftd_platform_settings_external_authentication" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
-	config += `	external_auth_server_id = fmc_radius_external_authentication_object.test.id` + "\n"
+	config += `	external_authentication_server_id = fmc_external_authentication_radius.test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }

@@ -1,6 +1,6 @@
 # Manual resource - adjustBody
 ---
-name: Radius External Authentication Object
+name: External Authentication Radius
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/users/externalauths/authconfigobjects/radiusconfigobjects
 doc_category: Objects
 res_description: >-
@@ -25,7 +25,7 @@ attributes:
     description: Description of the object.
     example: My RADIUS external authentication object
   - model_name: serverAddress
-    tf_name: server_address
+    tf_name: server_hostname
     type: String
     mandatory: true
     description: IP address or hostname of the primary RADIUS server.
@@ -37,7 +37,7 @@ attributes:
     example: "1812"
     default_value: "1812"
   - model_name: secretKey
-    tf_name: key
+    tf_name: server_key
     type: String
     mandatory: true
     sensitive: true
@@ -45,7 +45,7 @@ attributes:
     description: Shared secret used to communicate with the primary RADIUS server.
     example: my_secret_key
   - model_name: backupServerAddress
-    tf_name: backup_server_address
+    tf_name: backup_server_hostname
     type: String
     description: IP address or hostname of the backup RADIUS server.
     exclude_example: true
@@ -57,7 +57,7 @@ attributes:
     exclude_example: true
     exclude_test: true
   - model_name: backupServerSecretKey
-    tf_name: backup_key
+    tf_name: backup_server_key
     type: String
     sensitive: true
     write_only: true
@@ -85,7 +85,7 @@ attributes:
     example: true
     default_value: true
   - model_name: cliAccessUserList
-    tf_name: cli_access_user_list
+    tf_name: cli_access_users
     type: String
     description: >-
       Comma-separated list of usernames that should have CLI access, when using the predefined user list method instead of defining users on the RADIUS server. Leave unset when users and their privileges are managed on the RADIUS server (recommended when privileges are based on Active Directory group membership).

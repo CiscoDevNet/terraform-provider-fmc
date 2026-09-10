@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &RadiusExternalAuthenticationObjectDataSource{}
-	_ datasource.DataSourceWithConfigure = &RadiusExternalAuthenticationObjectDataSource{}
+	_ datasource.DataSource              = &ExternalAuthenticationRadiusDataSource{}
+	_ datasource.DataSourceWithConfigure = &ExternalAuthenticationRadiusDataSource{}
 )
 
-func NewRadiusExternalAuthenticationObjectDataSource() datasource.DataSource {
-	return &RadiusExternalAuthenticationObjectDataSource{}
+func NewExternalAuthenticationRadiusDataSource() datasource.DataSource {
+	return &ExternalAuthenticationRadiusDataSource{}
 }
 
-type RadiusExternalAuthenticationObjectDataSource struct {
+type ExternalAuthenticationRadiusDataSource struct {
 	client *fmc.Client
 }
 
-func (d *RadiusExternalAuthenticationObjectDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_radius_external_authentication_object"
+func (d *ExternalAuthenticationRadiusDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_external_authentication_radius"
 }
 
-func (d *RadiusExternalAuthenticationObjectDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *ExternalAuthenticationRadiusDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Radius External Authentication Object.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the External Authentication Radius.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -84,7 +84,7 @@ func (d *RadiusExternalAuthenticationObjectDataSource) Schema(ctx context.Contex
 				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
-			"server_address": schema.StringAttribute{
+			"server_hostname": schema.StringAttribute{
 				MarkdownDescription: "IP address or hostname of the primary RADIUS server.",
 				Computed:            true,
 			},
@@ -92,12 +92,12 @@ func (d *RadiusExternalAuthenticationObjectDataSource) Schema(ctx context.Contex
 				MarkdownDescription: "Port number of the primary RADIUS server.",
 				Computed:            true,
 			},
-			"key": schema.StringAttribute{
+			"server_key": schema.StringAttribute{
 				MarkdownDescription: "Shared secret used to communicate with the primary RADIUS server.",
 				Computed:            true,
 				Sensitive:           true,
 			},
-			"backup_server_address": schema.StringAttribute{
+			"backup_server_hostname": schema.StringAttribute{
 				MarkdownDescription: "IP address or hostname of the backup RADIUS server.",
 				Computed:            true,
 			},
@@ -105,7 +105,7 @@ func (d *RadiusExternalAuthenticationObjectDataSource) Schema(ctx context.Contex
 				MarkdownDescription: "Port number of the backup RADIUS server.",
 				Computed:            true,
 			},
-			"backup_key": schema.StringAttribute{
+			"backup_server_key": schema.StringAttribute{
 				MarkdownDescription: "Shared secret used to communicate with the backup RADIUS server.",
 				Computed:            true,
 				Sensitive:           true,
@@ -122,14 +122,14 @@ func (d *RadiusExternalAuthenticationObjectDataSource) Schema(ctx context.Contex
 				MarkdownDescription: "Enables RADIUS Server-Enabled Message Authenticator, requiring the Message-Authenticator attribute in all RADIUS responses.",
 				Computed:            true,
 			},
-			"cli_access_user_list": schema.StringAttribute{
+			"cli_access_users": schema.StringAttribute{
 				MarkdownDescription: "Comma-separated list of usernames that should have CLI access, when using the predefined user list method instead of defining users on the RADIUS server. Leave unset when users and their privileges are managed on the RADIUS server (recommended when privileges are based on Active Directory group membership).",
 				Computed:            true,
 			},
 		},
 	}
 }
-func (d *RadiusExternalAuthenticationObjectDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *ExternalAuthenticationRadiusDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -138,7 +138,7 @@ func (d *RadiusExternalAuthenticationObjectDataSource) ConfigValidators(ctx cont
 	}
 }
 
-func (d *RadiusExternalAuthenticationObjectDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *ExternalAuthenticationRadiusDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -150,8 +150,8 @@ func (d *RadiusExternalAuthenticationObjectDataSource) Configure(_ context.Conte
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *RadiusExternalAuthenticationObjectDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config RadiusExternalAuthenticationObject
+func (d *ExternalAuthenticationRadiusDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config ExternalAuthenticationRadius
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

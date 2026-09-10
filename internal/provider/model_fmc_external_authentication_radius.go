@@ -30,22 +30,22 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type RadiusExternalAuthenticationObject struct {
+type ExternalAuthenticationRadius struct {
 	Id                          types.String `tfsdk:"id"`
 	Domain                      types.String `tfsdk:"domain"`
 	Name                        types.String `tfsdk:"name"`
 	Type                        types.String `tfsdk:"type"`
 	Description                 types.String `tfsdk:"description"`
-	ServerAddress               types.String `tfsdk:"server_address"`
+	ServerHostname              types.String `tfsdk:"server_hostname"`
 	ServerPort                  types.String `tfsdk:"server_port"`
-	Key                         types.String `tfsdk:"key"`
-	BackupServerAddress         types.String `tfsdk:"backup_server_address"`
+	ServerKey                   types.String `tfsdk:"server_key"`
+	BackupServerHostname        types.String `tfsdk:"backup_server_hostname"`
 	BackupServerPort            types.String `tfsdk:"backup_server_port"`
-	BackupKey                   types.String `tfsdk:"backup_key"`
+	BackupServerKey             types.String `tfsdk:"backup_server_key"`
 	Timeout                     types.Int64  `tfsdk:"timeout"`
 	Retries                     types.Int64  `tfsdk:"retries"`
 	MessageAuthenticatorEnabled types.Bool   `tfsdk:"message_authenticator_enabled"`
-	CliAccessUserList           types.String `tfsdk:"cli_access_user_list"`
+	CliAccessUsers              types.String `tfsdk:"cli_access_users"`
 }
 
 // End of section. //template:end types
@@ -56,7 +56,7 @@ type RadiusExternalAuthenticationObject struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data RadiusExternalAuthenticationObject) getPath() string {
+func (data ExternalAuthenticationRadius) getPath() string {
 	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/users/externalauths/authconfigobjects/radiusconfigobjects"
 }
 
@@ -64,7 +64,7 @@ func (data RadiusExternalAuthenticationObject) getPath() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
 
-func (data RadiusExternalAuthenticationObject) toBody(ctx context.Context, state RadiusExternalAuthenticationObject) string {
+func (data ExternalAuthenticationRadius) toBody(ctx context.Context, state ExternalAuthenticationRadius) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
@@ -76,23 +76,23 @@ func (data RadiusExternalAuthenticationObject) toBody(ctx context.Context, state
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
-	if !data.ServerAddress.IsNull() {
-		body, _ = sjson.Set(body, "serverAddress", data.ServerAddress.ValueString())
+	if !data.ServerHostname.IsNull() {
+		body, _ = sjson.Set(body, "serverAddress", data.ServerHostname.ValueString())
 	}
 	if !data.ServerPort.IsNull() {
 		body, _ = sjson.Set(body, "serverPort", data.ServerPort.ValueString())
 	}
-	if !data.Key.IsNull() {
-		body, _ = sjson.Set(body, "secretKey", data.Key.ValueString())
+	if !data.ServerKey.IsNull() {
+		body, _ = sjson.Set(body, "secretKey", data.ServerKey.ValueString())
 	}
-	if !data.BackupServerAddress.IsNull() {
-		body, _ = sjson.Set(body, "backupServerAddress", data.BackupServerAddress.ValueString())
+	if !data.BackupServerHostname.IsNull() {
+		body, _ = sjson.Set(body, "backupServerAddress", data.BackupServerHostname.ValueString())
 	}
 	if !data.BackupServerPort.IsNull() {
 		body, _ = sjson.Set(body, "backupServerPort", data.BackupServerPort.ValueString())
 	}
-	if !data.BackupKey.IsNull() {
-		body, _ = sjson.Set(body, "backupServerSecretKey", data.BackupKey.ValueString())
+	if !data.BackupServerKey.IsNull() {
+		body, _ = sjson.Set(body, "backupServerSecretKey", data.BackupServerKey.ValueString())
 	}
 	if !data.Timeout.IsNull() {
 		body, _ = sjson.Set(body, "timeout", data.Timeout.ValueInt64())
@@ -103,8 +103,8 @@ func (data RadiusExternalAuthenticationObject) toBody(ctx context.Context, state
 	if !data.MessageAuthenticatorEnabled.IsNull() {
 		body, _ = sjson.Set(body, "isMAEnabled", data.MessageAuthenticatorEnabled.ValueBool())
 	}
-	if !data.CliAccessUserList.IsNull() {
-		body, _ = sjson.Set(body, "cliAccessUserList", data.CliAccessUserList.ValueString())
+	if !data.CliAccessUsers.IsNull() {
+		body, _ = sjson.Set(body, "cliAccessUserList", data.CliAccessUsers.ValueString())
 	}
 	return body
 }
@@ -113,7 +113,7 @@ func (data RadiusExternalAuthenticationObject) toBody(ctx context.Context, state
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *RadiusExternalAuthenticationObject) fromBody(ctx context.Context, res gjson.Result) {
+func (data *ExternalAuthenticationRadius) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -130,9 +130,9 @@ func (data *RadiusExternalAuthenticationObject) fromBody(ctx context.Context, re
 		data.Description = types.StringNull()
 	}
 	if value := res.Get("serverAddress"); value.Exists() {
-		data.ServerAddress = types.StringValue(value.String())
+		data.ServerHostname = types.StringValue(value.String())
 	} else {
-		data.ServerAddress = types.StringNull()
+		data.ServerHostname = types.StringNull()
 	}
 	if value := res.Get("serverPort"); value.Exists() {
 		data.ServerPort = types.StringValue(value.String())
@@ -140,9 +140,9 @@ func (data *RadiusExternalAuthenticationObject) fromBody(ctx context.Context, re
 		data.ServerPort = types.StringValue("1812")
 	}
 	if value := res.Get("backupServerAddress"); value.Exists() {
-		data.BackupServerAddress = types.StringValue(value.String())
+		data.BackupServerHostname = types.StringValue(value.String())
 	} else {
-		data.BackupServerAddress = types.StringNull()
+		data.BackupServerHostname = types.StringNull()
 	}
 	if value := res.Get("backupServerPort"); value.Exists() {
 		data.BackupServerPort = types.StringValue(value.String())
@@ -165,9 +165,9 @@ func (data *RadiusExternalAuthenticationObject) fromBody(ctx context.Context, re
 		data.MessageAuthenticatorEnabled = types.BoolValue(true)
 	}
 	if value := res.Get("cliAccessUserList"); value.Exists() {
-		data.CliAccessUserList = types.StringValue(value.String())
+		data.CliAccessUsers = types.StringValue(value.String())
 	} else {
-		data.CliAccessUserList = types.StringNull()
+		data.CliAccessUsers = types.StringNull()
 	}
 }
 
@@ -179,7 +179,7 @@ func (data *RadiusExternalAuthenticationObject) fromBody(ctx context.Context, re
 // uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
-func (data *RadiusExternalAuthenticationObject) fromBodyPartial(ctx context.Context, res gjson.Result) {
+func (data *ExternalAuthenticationRadius) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -195,20 +195,20 @@ func (data *RadiusExternalAuthenticationObject) fromBodyPartial(ctx context.Cont
 	} else {
 		data.Description = types.StringNull()
 	}
-	if value := res.Get("serverAddress"); value.Exists() && !data.ServerAddress.IsNull() {
-		data.ServerAddress = types.StringValue(value.String())
+	if value := res.Get("serverAddress"); value.Exists() && !data.ServerHostname.IsNull() {
+		data.ServerHostname = types.StringValue(value.String())
 	} else {
-		data.ServerAddress = types.StringNull()
+		data.ServerHostname = types.StringNull()
 	}
 	if value := res.Get("serverPort"); value.Exists() && !data.ServerPort.IsNull() {
 		data.ServerPort = types.StringValue(value.String())
 	} else if data.ServerPort.ValueString() != "1812" {
 		data.ServerPort = types.StringNull()
 	}
-	if value := res.Get("backupServerAddress"); value.Exists() && !data.BackupServerAddress.IsNull() {
-		data.BackupServerAddress = types.StringValue(value.String())
+	if value := res.Get("backupServerAddress"); value.Exists() && !data.BackupServerHostname.IsNull() {
+		data.BackupServerHostname = types.StringValue(value.String())
 	} else {
-		data.BackupServerAddress = types.StringNull()
+		data.BackupServerHostname = types.StringNull()
 	}
 	if value := res.Get("backupServerPort"); value.Exists() && !data.BackupServerPort.IsNull() {
 		data.BackupServerPort = types.StringValue(value.String())
@@ -230,10 +230,10 @@ func (data *RadiusExternalAuthenticationObject) fromBodyPartial(ctx context.Cont
 	} else if data.MessageAuthenticatorEnabled.ValueBool() != true {
 		data.MessageAuthenticatorEnabled = types.BoolNull()
 	}
-	if value := res.Get("cliAccessUserList"); value.Exists() && !data.CliAccessUserList.IsNull() {
-		data.CliAccessUserList = types.StringValue(value.String())
+	if value := res.Get("cliAccessUserList"); value.Exists() && !data.CliAccessUsers.IsNull() {
+		data.CliAccessUsers = types.StringValue(value.String())
 	} else {
-		data.CliAccessUserList = types.StringNull()
+		data.CliAccessUsers = types.StringNull()
 	}
 }
 
@@ -243,7 +243,7 @@ func (data *RadiusExternalAuthenticationObject) fromBodyPartial(ctx context.Cont
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
-func (data *RadiusExternalAuthenticationObject) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+func (data *ExternalAuthenticationRadius) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 	if data.Type.IsUnknown() {
 		if value := res.Get("type"); value.Exists() {
 			data.Type = types.StringValue(value.String())

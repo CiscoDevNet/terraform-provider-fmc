@@ -3,7 +3,7 @@
 page_title: "fmc_ftd_platform_settings_external_authentication Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages FTD Platform Settings - External Authentication. It enables RADIUS-based authentication for SSH/CLI access to the FTD, referencing an fmc_radius_external_authentication_object. You can only activate one External Authentication object per FTD Platform Settings policy.
+  This resource manages FTD Platform Settings - External Authentication. It enables RADIUS-based authentication for SSH/CLI access to the FTD, referencing an fmc_external_authentication_radius object. You can only activate one External Authentication object per FTD Platform Settings policy.
   User privileges (Administrator vs. Basic/read-only CLI access) are derived from attributes returned by the RADIUS server for the authenticating user (commonly the RADIUS Service-Type attribute), which can be driven by Active Directory group membership if the RADIUS server is configured to authenticate against AD. This mapping is not configured in FMC/Terraform.
   The following restrictions apply:
   Minimum FMC version: 7.7
@@ -11,7 +11,7 @@ description: |-
 
 # fmc_ftd_platform_settings_external_authentication (Resource)
 
-This resource manages FTD Platform Settings - External Authentication. It enables RADIUS-based authentication for SSH/CLI access to the FTD, referencing an `fmc_radius_external_authentication_object`. You can only activate one External Authentication object per FTD Platform Settings policy.
+This resource manages FTD Platform Settings - External Authentication. It enables RADIUS-based authentication for SSH/CLI access to the FTD, referencing an `fmc_external_authentication_radius` object. You can only activate one External Authentication object per FTD Platform Settings policy.
  User privileges (Administrator vs. Basic/read-only CLI access) are derived from attributes returned by the RADIUS server for the authenticating user (commonly the RADIUS `Service-Type` attribute), which can be driven by Active Directory group membership if the RADIUS server is configured to authenticate against AD. This mapping is not configured in FMC/Terraform.
 
 The following restrictions apply:
@@ -21,8 +21,8 @@ The following restrictions apply:
 
 ```terraform
 resource "fmc_ftd_platform_settings_external_authentication" "example" {
-  ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  external_auth_server_id  = "9b3a4d12-6f8e-4c2a-b7d1-e5f90a6bc384"
+  ftd_platform_settings_id          = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  external_authentication_server_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }
 ```
 
@@ -31,7 +31,7 @@ resource "fmc_ftd_platform_settings_external_authentication" "example" {
 
 ### Required
 
-- `external_auth_server_id` (String) Id of the RADIUS External Authentication object (`fmc_radius_external_authentication_object`) to use for SSH/CLI authentication on this FTD.
+- `external_authentication_server_id` (String) Id of the RADIUS External Authentication object (`fmc_external_authentication_radius`) to use for SSH/CLI authentication on this FTD.
 - `ftd_platform_settings_id` (String) Id of the parent FTD Platform Settings.
 
 ### Optional

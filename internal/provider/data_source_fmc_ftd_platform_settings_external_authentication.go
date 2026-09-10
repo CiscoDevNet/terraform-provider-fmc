@@ -74,8 +74,8 @@ func (d *FTDPlatformSettingsExternalAuthenticationDataSource) Schema(ctx context
 				MarkdownDescription: "Type of the object; this value is always 'ExternalAuthSetting'.",
 				Computed:            true,
 			},
-			"external_auth_server_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the RADIUS External Authentication object (`fmc_radius_external_authentication_object`) to use for SSH/CLI authentication on this FTD.",
+			"external_authentication_server_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the RADIUS External Authentication object (`fmc_external_authentication_radius`) to use for SSH/CLI authentication on this FTD.",
 				Computed:            true,
 			},
 		},

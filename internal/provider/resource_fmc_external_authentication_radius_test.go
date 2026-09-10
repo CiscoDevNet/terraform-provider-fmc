@@ -29,29 +29,29 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
-func TestAccFmcRadiusExternalAuthenticationObject(t *testing.T) {
+func TestAccFmcExternalAuthenticationRadius(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_external_authentication_object.test", "name", "my_radius_auth_object"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_radius_external_authentication_object.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_external_authentication_object.test", "description", "My RADIUS external authentication object"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_external_authentication_object.test", "server_address", "10.1.1.10"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_external_authentication_object.test", "server_port", "1812"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_external_authentication_object.test", "timeout", "30"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_external_authentication_object.test", "retries", "3"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_external_authentication_object.test", "message_authenticator_enabled", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "name", "my_radius_auth_object"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_external_authentication_radius.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "description", "My RADIUS external authentication object"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "server_hostname", "10.1.1.10"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "server_port", "1812"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "timeout", "30"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "retries", "3"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "message_authenticator_enabled", "true"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcRadiusExternalAuthenticationObjectConfig_minimum(),
+			Config: testAccFmcExternalAuthenticationRadiusConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcRadiusExternalAuthenticationObjectConfig_all(),
+		Config: testAccFmcExternalAuthenticationRadiusConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 	steps = append(steps, resource.TestStep{
-		ResourceName: "fmc_radius_external_authentication_object.test",
+		ResourceName: "fmc_external_authentication_radius.test",
 		ImportState:  true,
 	})
 
@@ -70,11 +70,11 @@ func TestAccFmcRadiusExternalAuthenticationObject(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
-func testAccFmcRadiusExternalAuthenticationObjectConfig_minimum() string {
-	config := `resource "fmc_radius_external_authentication_object" "test" {` + "\n"
+func testAccFmcExternalAuthenticationRadiusConfig_minimum() string {
+	config := `resource "fmc_external_authentication_radius" "test" {` + "\n"
 	config += `	name = "my_radius_auth_object"` + "\n"
-	config += `	server_address = "10.1.1.10"` + "\n"
-	config += `	key = "my_secret_key"` + "\n"
+	config += `	server_hostname = "10.1.1.10"` + "\n"
+	config += `	server_key = "my_secret_key"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -83,13 +83,13 @@ func testAccFmcRadiusExternalAuthenticationObjectConfig_minimum() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
-func testAccFmcRadiusExternalAuthenticationObjectConfig_all() string {
-	config := `resource "fmc_radius_external_authentication_object" "test" {` + "\n"
+func testAccFmcExternalAuthenticationRadiusConfig_all() string {
+	config := `resource "fmc_external_authentication_radius" "test" {` + "\n"
 	config += `	name = "my_radius_auth_object"` + "\n"
 	config += `	description = "My RADIUS external authentication object"` + "\n"
-	config += `	server_address = "10.1.1.10"` + "\n"
+	config += `	server_hostname = "10.1.1.10"` + "\n"
 	config += `	server_port = "1812"` + "\n"
-	config += `	key = "my_secret_key"` + "\n"
+	config += `	server_key = "my_secret_key"` + "\n"
 	config += `	timeout = 30` + "\n"
 	config += `	retries = 3` + "\n"
 	config += `	message_authenticator_enabled = true` + "\n"
