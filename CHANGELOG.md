@@ -1,18 +1,18 @@
-## Unreleased
+## 2.6.0
 
-- (Enhancement) Performance improvements
+- (Enhancement) Improve performance when managing large FMC resources
 - (Enhancement) Add support for `fmc_device_vlan_interface`
 - (Enhancement) Add support for `fmc_device_redundant_interface`
 - (Enhancement) Add support for `fmc_device_inline_set`
 - (Enhancement) `fmc_device`: Add `access_control_policy_domain`, `nat_policy_domain` and `health_policy_domain` to support policies that exist in a different domain than the device
 - (Enhancement) `fmc_device`: Add `deploy_on_destroy` attribute to trigger device deployment just before the device is removed from FMC
-- (Enhancement) `fmc_policy_assignment`: Add `after_destroy_policy_domain` to point in which domain `after_destroy_policy_id` exists
-- (Enhancement) `fmc_device_physical_interface`: Add `switchport_*` attributes
-- (Enhancement) `fmc_device_physical_interface`: Increase the maximum MTU from `9000` to `9198`
-- (Enhancement) `fmc_device_etherchannel_interface`: Increase the maximum MTU from `9000` to `9198`
-- (Enhancement) `fmc_device_subinterface`: Increase the maximum MTU from `9000` to `9198`
+- (Enhancement) `fmc_policy_assignment`: Add `after_destroy_policy_domain` to specify the domain in which `after_destroy_policy_id` exists
+- (Enhancement) `fmc_device_physical_interface`: Add switchport configuration attributes
+- (Change) `fmc_device_physical_interface`: Increase the maximum MTU from `9000` to `9198`
+- (Change) `fmc_device_etherchannel_interface`: Increase the maximum MTU from `9000` to `9198`
+- (Change) `fmc_device_subinterface`: Increase the maximum MTU from `9000` to `9198`
 - (Change) `fmc_device_physical_interface`, `fmc_device_etherchannel_interface`: `mode` is now optional and set to `NONE` if not configured
-- (Fix) `fmc_device`: Fix wrong assignment of `health_policy_id` in HA Pair and Cluster configurations
+- (Fix) `fmc_device`: Fix incorrect `health_policy_id` assignment for HA pair and cluster configurations
 
 ## 2.5.0
 
