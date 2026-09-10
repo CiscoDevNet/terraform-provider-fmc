@@ -19,7 +19,7 @@ resource "fmc_external_authentication_radius" "example" {
   name                          = "my_radius_auth_object"
   description                   = "My RADIUS external authentication object"
   server_hostname               = "10.1.1.10"
-  server_port                   = "1812"
+  server_port                   = 1812
   server_key                    = "my_secret_key"
   timeout                       = 30
   retries                       = 3
@@ -40,19 +40,21 @@ resource "fmc_external_authentication_radius" "example" {
 
 - `backup_server_hostname` (String) IP address or hostname of the backup RADIUS server.
 - `backup_server_key` (String, Sensitive) Shared secret used to communicate with the backup RADIUS server.
-- `backup_server_port` (String) Port number of the backup RADIUS server.
+- `backup_server_port` (Number) Port number of the backup RADIUS server.
+  - Range: `1`-`65535`
 - `cli_access_users` (String) Comma-separated list of usernames that should have CLI access, when using the predefined user list method instead of defining users on the RADIUS server. Leave unset when users and their privileges are managed on the RADIUS server (recommended when privileges are based on Active Directory group membership).
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `message_authenticator_enabled` (Boolean) Enables RADIUS Server-Enabled Message Authenticator, requiring the Message-Authenticator attribute in all RADIUS responses.
   - Default value: `true`
 - `retries` (Number) Number of retries before rolling over to the backup RADIUS server.
-  - Range: `0`-`10`
+  - Range: `0`-`5`
   - Default value: `3`
-- `server_port` (String) Port number of the primary RADIUS server.
+- `server_port` (Number) Port number of the primary RADIUS server.
+  - Range: `1`-`65535`
   - Default value: `1812`
 - `timeout` (Number) Timeout (in seconds) before retrying the primary server.
-  - Range: `1`-`1024`
+  - Range: `1`-`60`
   - Default value: `30`
 
 ### Read-Only

@@ -33,7 +33,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -103,11 +102,14 @@ func (r *ExternalAuthenticationRadiusResource) Schema(ctx context.Context, req r
 				MarkdownDescription: helpers.NewAttributeDescription("IP address or hostname of the primary RADIUS server.").String,
 				Required:            true,
 			},
-			"server_port": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Port number of the primary RADIUS server.").AddDefaultValueDescription("1812").String,
+			"server_port": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Port number of the primary RADIUS server.").AddIntegerRangeDescription(1, 65535).AddDefaultValueDescription("1812").String,
 				Optional:            true,
 				Computed:            true,
-				Default:             stringdefault.StaticString("1812"),
+				Validators: []validator.Int64{
+					int64validator.Between(1, 65535),
+				},
+				Default: int64default.StaticInt64(1812),
 			},
 			"server_key": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Shared secret used to communicate with the primary RADIUS server.").String,
@@ -118,9 +120,12 @@ func (r *ExternalAuthenticationRadiusResource) Schema(ctx context.Context, req r
 				MarkdownDescription: helpers.NewAttributeDescription("IP address or hostname of the backup RADIUS server.").String,
 				Optional:            true,
 			},
-			"backup_server_port": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Port number of the backup RADIUS server.").String,
+			"backup_server_port": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Port number of the backup RADIUS server.").AddIntegerRangeDescription(1, 65535).String,
 				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 65535),
+				},
 			},
 			"backup_server_key": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Shared secret used to communicate with the backup RADIUS server.").String,
@@ -128,20 +133,20 @@ func (r *ExternalAuthenticationRadiusResource) Schema(ctx context.Context, req r
 				Sensitive:           true,
 			},
 			"timeout": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in seconds) before retrying the primary server.").AddIntegerRangeDescription(1, 1024).AddDefaultValueDescription("30").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in seconds) before retrying the primary server.").AddIntegerRangeDescription(1, 60).AddDefaultValueDescription("30").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
-					int64validator.Between(1, 1024),
+					int64validator.Between(1, 60),
 				},
 				Default: int64default.StaticInt64(30),
 			},
 			"retries": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Number of retries before rolling over to the backup RADIUS server.").AddIntegerRangeDescription(0, 10).AddDefaultValueDescription("3").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Number of retries before rolling over to the backup RADIUS server.").AddIntegerRangeDescription(0, 5).AddDefaultValueDescription("3").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
-					int64validator.Between(0, 10),
+					int64validator.Between(0, 5),
 				},
 				Default: int64default.StaticInt64(3),
 			},

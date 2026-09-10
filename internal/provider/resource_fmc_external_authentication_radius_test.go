@@ -88,7 +88,7 @@ func testAccFmcExternalAuthenticationRadiusConfig_all() string {
 	config += `	name = "my_radius_auth_object"` + "\n"
 	config += `	description = "My RADIUS external authentication object"` + "\n"
 	config += `	server_hostname = "10.1.1.10"` + "\n"
-	config += `	server_port = "1812"` + "\n"
+	config += `	server_port = 1812` + "\n"
 	config += `	server_key = "my_secret_key"` + "\n"
 	config += `	timeout = 30` + "\n"
 	config += `	retries = 3` + "\n"

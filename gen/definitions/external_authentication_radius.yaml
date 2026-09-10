@@ -32,10 +32,12 @@ attributes:
     example: 10.1.1.10
   - model_name: serverPort
     tf_name: server_port
-    type: String
+    type: Int64
     description: Port number of the primary RADIUS server.
-    example: "1812"
-    default_value: "1812"
+    min_int: 1
+    max_int: 65535
+    example: 1812
+    default_value: 1812
   - model_name: secretKey
     tf_name: server_key
     type: String
@@ -52,8 +54,10 @@ attributes:
     exclude_test: true
   - model_name: backupServerPort
     tf_name: backup_server_port
-    type: String
+    type: Int64
     description: Port number of the backup RADIUS server.
+    min_int: 1
+    max_int: 65535
     exclude_example: true
     exclude_test: true
   - model_name: backupServerSecretKey
@@ -68,14 +72,14 @@ attributes:
     type: Int64
     description: Timeout (in seconds) before retrying the primary server.
     min_int: 1
-    max_int: 1024
+    max_int: 60
     example: 30
     default_value: 30
   - model_name: retries
     type: Int64
     description: Number of retries before rolling over to the backup RADIUS server.
     min_int: 0
-    max_int: 10
+    max_int: 5
     example: 3
     default_value: 3
   - model_name: isMAEnabled

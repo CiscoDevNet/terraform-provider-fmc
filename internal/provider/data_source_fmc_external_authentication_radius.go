@@ -88,7 +88,7 @@ func (d *ExternalAuthenticationRadiusDataSource) Schema(ctx context.Context, req
 				MarkdownDescription: "IP address or hostname of the primary RADIUS server.",
 				Computed:            true,
 			},
-			"server_port": schema.StringAttribute{
+			"server_port": schema.Int64Attribute{
 				MarkdownDescription: "Port number of the primary RADIUS server.",
 				Computed:            true,
 			},
@@ -101,7 +101,7 @@ func (d *ExternalAuthenticationRadiusDataSource) Schema(ctx context.Context, req
 				MarkdownDescription: "IP address or hostname of the backup RADIUS server.",
 				Computed:            true,
 			},
-			"backup_server_port": schema.StringAttribute{
+			"backup_server_port": schema.Int64Attribute{
 				MarkdownDescription: "Port number of the backup RADIUS server.",
 				Computed:            true,
 			},

@@ -37,10 +37,10 @@ type ExternalAuthenticationRadius struct {
 	Type                        types.String `tfsdk:"type"`
 	Description                 types.String `tfsdk:"description"`
 	ServerHostname              types.String `tfsdk:"server_hostname"`
-	ServerPort                  types.String `tfsdk:"server_port"`
+	ServerPort                  types.Int64  `tfsdk:"server_port"`
 	ServerKey                   types.String `tfsdk:"server_key"`
 	BackupServerHostname        types.String `tfsdk:"backup_server_hostname"`
-	BackupServerPort            types.String `tfsdk:"backup_server_port"`
+	BackupServerPort            types.Int64  `tfsdk:"backup_server_port"`
 	BackupServerKey             types.String `tfsdk:"backup_server_key"`
 	Timeout                     types.Int64  `tfsdk:"timeout"`
 	Retries                     types.Int64  `tfsdk:"retries"`
@@ -80,7 +80,7 @@ func (data ExternalAuthenticationRadius) toBody(ctx context.Context, state Exter
 		body, _ = sjson.Set(body, "serverAddress", data.ServerHostname.ValueString())
 	}
 	if !data.ServerPort.IsNull() {
-		body, _ = sjson.Set(body, "serverPort", data.ServerPort.ValueString())
+		body, _ = sjson.Set(body, "serverPort", data.ServerPort.ValueInt64())
 	}
 	if !data.ServerKey.IsNull() {
 		body, _ = sjson.Set(body, "secretKey", data.ServerKey.ValueString())
@@ -89,7 +89,7 @@ func (data ExternalAuthenticationRadius) toBody(ctx context.Context, state Exter
 		body, _ = sjson.Set(body, "backupServerAddress", data.BackupServerHostname.ValueString())
 	}
 	if !data.BackupServerPort.IsNull() {
-		body, _ = sjson.Set(body, "backupServerPort", data.BackupServerPort.ValueString())
+		body, _ = sjson.Set(body, "backupServerPort", data.BackupServerPort.ValueInt64())
 	}
 	if !data.BackupServerKey.IsNull() {
 		body, _ = sjson.Set(body, "backupServerSecretKey", data.BackupServerKey.ValueString())
@@ -135,9 +135,9 @@ func (data *ExternalAuthenticationRadius) fromBody(ctx context.Context, res gjso
 		data.ServerHostname = types.StringNull()
 	}
 	if value := res.Get("serverPort"); value.Exists() {
-		data.ServerPort = types.StringValue(value.String())
+		data.ServerPort = types.Int64Value(value.Int())
 	} else {
-		data.ServerPort = types.StringValue("1812")
+		data.ServerPort = types.Int64Value(1812)
 	}
 	if value := res.Get("backupServerAddress"); value.Exists() {
 		data.BackupServerHostname = types.StringValue(value.String())
@@ -145,9 +145,9 @@ func (data *ExternalAuthenticationRadius) fromBody(ctx context.Context, res gjso
 		data.BackupServerHostname = types.StringNull()
 	}
 	if value := res.Get("backupServerPort"); value.Exists() {
-		data.BackupServerPort = types.StringValue(value.String())
+		data.BackupServerPort = types.Int64Value(value.Int())
 	} else {
-		data.BackupServerPort = types.StringNull()
+		data.BackupServerPort = types.Int64Null()
 	}
 	if value := res.Get("timeout"); value.Exists() {
 		data.Timeout = types.Int64Value(value.Int())
@@ -201,9 +201,9 @@ func (data *ExternalAuthenticationRadius) fromBodyPartial(ctx context.Context, r
 		data.ServerHostname = types.StringNull()
 	}
 	if value := res.Get("serverPort"); value.Exists() && !data.ServerPort.IsNull() {
-		data.ServerPort = types.StringValue(value.String())
-	} else if data.ServerPort.ValueString() != "1812" {
-		data.ServerPort = types.StringNull()
+		data.ServerPort = types.Int64Value(value.Int())
+	} else if data.ServerPort.ValueInt64() != 1812 {
+		data.ServerPort = types.Int64Null()
 	}
 	if value := res.Get("backupServerAddress"); value.Exists() && !data.BackupServerHostname.IsNull() {
 		data.BackupServerHostname = types.StringValue(value.String())
@@ -211,9 +211,9 @@ func (data *ExternalAuthenticationRadius) fromBodyPartial(ctx context.Context, r
 		data.BackupServerHostname = types.StringNull()
 	}
 	if value := res.Get("backupServerPort"); value.Exists() && !data.BackupServerPort.IsNull() {
-		data.BackupServerPort = types.StringValue(value.String())
+		data.BackupServerPort = types.Int64Value(value.Int())
 	} else {
-		data.BackupServerPort = types.StringNull()
+		data.BackupServerPort = types.Int64Null()
 	}
 	if value := res.Get("timeout"); value.Exists() && !data.Timeout.IsNull() {
 		data.Timeout = types.Int64Value(value.Int())

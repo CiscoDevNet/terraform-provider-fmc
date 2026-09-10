@@ -31,13 +31,13 @@ data "fmc_external_authentication_radius" "example" {
 
 - `backup_server_hostname` (String) IP address or hostname of the backup RADIUS server.
 - `backup_server_key` (String, Sensitive) Shared secret used to communicate with the backup RADIUS server.
-- `backup_server_port` (String) Port number of the backup RADIUS server.
+- `backup_server_port` (Number) Port number of the backup RADIUS server.
 - `cli_access_users` (String) Comma-separated list of usernames that should have CLI access, when using the predefined user list method instead of defining users on the RADIUS server. Leave unset when users and their privileges are managed on the RADIUS server (recommended when privileges are based on Active Directory group membership).
 - `description` (String) Description of the object.
 - `message_authenticator_enabled` (Boolean) Enables RADIUS Server-Enabled Message Authenticator, requiring the Message-Authenticator attribute in all RADIUS responses.
 - `retries` (Number) Number of retries before rolling over to the backup RADIUS server.
 - `server_hostname` (String) IP address or hostname of the primary RADIUS server.
 - `server_key` (String, Sensitive) Shared secret used to communicate with the primary RADIUS server.
-- `server_port` (String) Port number of the primary RADIUS server.
+- `server_port` (Number) Port number of the primary RADIUS server.
 - `timeout` (Number) Timeout (in seconds) before retrying the primary server.
 - `type` (String) Type of the object; this value is always 'RADIUSConfigObject'.
