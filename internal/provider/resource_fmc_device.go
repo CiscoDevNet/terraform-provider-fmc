@@ -432,15 +432,6 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
-	// Health policy is always assigned per device
-	if plan.HealthPolicyId != state.HealthPolicyId {
-		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, req.State)
-		resp.Diagnostics.Append(diags...)
-		if resp.Diagnostics.HasError() {
-			return
-		}
-	}
-
 	if state.ContainerType.ValueString() == "DeviceHAPair" && state.ContainerStatus.ValueString() != "Active" {
 		tflog.Info(ctx, fmt.Sprintf("%s: Device %s is in HA Pair, with current status: %s, hence cannot be updated. Configuration will be replicated from active node.", state.Id.ValueString(), state.Name.ValueString(), state.ContainerStatus.ValueString()))
 		plan.copyComputed(ctx, state)
@@ -478,6 +469,15 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	// Update policy assignments
+	// Health policy is assigned to the deviceID, regardless if it is part of HA Pair or Cluster
+	if plan.HealthPolicyId != state.HealthPolicyId {
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, req.State)
+		resp.Diagnostics.Append(diags...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
+	}
+
 	if plan.AccessControlPolicyId != state.AccessControlPolicyId {
 		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("access_control_policy_id"), req.Plan, req.State)
 		resp.Diagnostics.Append(diags...)

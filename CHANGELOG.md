@@ -1,3 +1,7 @@
+## Unreleased
+
+- (Fix) `fmc_policy_assignment`: Do not re-assign targets that no longer exist
+
 ## 2.6.0
 
 - (Enhancement) Improve performance when managing large FMC resources
