@@ -1,4 +1,4 @@
-## Unreleased
+## 2.6.1
 
 - (Fix) `fmc_policy_assignment`: Do not re-assign targets that no longer exist
 
