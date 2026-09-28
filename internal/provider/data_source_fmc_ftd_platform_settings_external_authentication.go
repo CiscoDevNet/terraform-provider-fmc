@@ -78,6 +78,46 @@ func (d *FTDPlatformSettingsExternalAuthenticationDataSource) Schema(ctx context
 				MarkdownDescription: "Id of the RADIUS External Authentication object (`fmc_external_authentication_radius`) to use for SSH/CLI authentication on this FTD.",
 				Computed:            true,
 			},
+			"primary_server_interfaces": schema.ListNestedAttribute{
+				MarkdownDescription: "List of primary server interfaces used for external authentication.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Id of the primary server interface.",
+							Computed:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the primary server interface object.",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "Name of the primary server interface object.",
+							Computed:            true,
+						},
+					},
+				},
+			},
+			"backup_server_interfaces": schema.ListNestedAttribute{
+				MarkdownDescription: "List of backup server interfaces used for external authentication.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Id of the backup server interface.",
+							Computed:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the backup server interface object.",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "Name of the backup server interface object.",
+							Computed:            true,
+						},
+					},
+				},
+			},
 		},
 	}
 }

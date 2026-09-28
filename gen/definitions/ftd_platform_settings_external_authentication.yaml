@@ -29,6 +29,56 @@ attributes:
     mandatory: true
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_external_authentication_radius.test.id
+  - model_name: primaryServerInterfaces
+    tf_name: primary_server_interfaces
+    type: List
+    description: List of primary server interfaces used for external authentication.
+    example: 12345678-1234-1234-1234-123456789abc
+    test_value: fmc_physical_interface.test.id
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the primary server interface.
+        mandatory: true
+        example: 12345678-1234-1234-1234-123456789abc
+        test_value: fmc_physical_interface.test.id
+      - model_name: type
+        type: String
+        description: Type of the primary server interface object.
+        mandatory: true
+        example: PhysicalInterface
+        test_value: fmc_physical_interface.test.type
+      - model_name: name
+        type: String
+        description: Name of the primary server interface object.
+        mandatory: true
+        example: outside
+        test_value: fmc_physical_interface.test.name
+  - model_name: backupServerInterfaces
+    tf_name: backup_server_interfaces
+    type: List
+    description: List of backup server interfaces used for external authentication.
+    example: 12345678-1234-1234-1234-426614174000
+    test_value: fmc_physical_interface.test.id
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the backup server interface.
+        mandatory: true
+        example: 12345678-1234-1234-1234-426614174000
+        test_value: fmc_physical_interface.test.id
+      - model_name: type
+        type: String
+        description: Type of the backup server interface object.
+        mandatory: true
+        example: PhysicalInterface
+        test_value: fmc_physical_interface.test.type
+      - model_name: name
+        type: String
+        description: Name of the backup server interface object.
+        mandatory: true
+        example: inside
+        test_value: fmc_physical_interface.test.name
 
 test_prerequisites: |-
   resource "fmc_ftd_platform_settings" "test" {

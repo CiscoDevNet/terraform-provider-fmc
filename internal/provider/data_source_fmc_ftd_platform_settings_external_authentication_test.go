@@ -68,6 +68,16 @@ func testAccDataSourceFmcFTDPlatformSettingsExternalAuthenticationConfig() strin
 	config := `resource "fmc_ftd_platform_settings_external_authentication" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
 	config += `	external_authentication_server_id = fmc_external_authentication_radius.test.id` + "\n"
+	config += `	primary_server_interfaces = [{` + "\n"
+	config += `		id = fmc_physical_interface.test.id` + "\n"
+	config += `		type = fmc_physical_interface.test.type` + "\n"
+	config += `		name = fmc_physical_interface.test.name` + "\n"
+	config += `	}]` + "\n"
+	config += `	backup_server_interfaces = [{` + "\n"
+	config += `		id = fmc_physical_interface.test.id` + "\n"
+	config += `		type = fmc_physical_interface.test.type` + "\n"
+	config += `		name = fmc_physical_interface.test.name` + "\n"
+	config += `	}]` + "\n"
 	config += `}` + "\n"
 
 	config += `

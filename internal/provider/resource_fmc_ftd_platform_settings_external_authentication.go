@@ -96,6 +96,46 @@ func (r *FTDPlatformSettingsExternalAuthenticationResource) Schema(ctx context.C
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the RADIUS External Authentication object (`fmc_external_authentication_radius`) to use for SSH/CLI authentication on this FTD.").String,
 				Required:            true,
 			},
+			"primary_server_interfaces": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of primary server interfaces used for external authentication.").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the primary server interface.").String,
+							Required:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the primary server interface object.").String,
+							Required:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the primary server interface object.").String,
+							Required:            true,
+						},
+					},
+				},
+			},
+			"backup_server_interfaces": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of backup server interfaces used for external authentication.").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the backup server interface.").String,
+							Required:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the backup server interface object.").String,
+							Required:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the backup server interface object.").String,
+							Required:            true,
+						},
+					},
+				},
+			},
 		},
 	}
 }

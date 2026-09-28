@@ -22,9 +22,12 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 )
@@ -34,11 +37,25 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type FTDPlatformSettingsExternalAuthentication struct {
-	Id                             types.String `tfsdk:"id"`
-	Domain                         types.String `tfsdk:"domain"`
-	FtdPlatformSettingsId          types.String `tfsdk:"ftd_platform_settings_id"`
-	Type                           types.String `tfsdk:"type"`
-	ExternalAuthenticationServerId types.String `tfsdk:"external_authentication_server_id"`
+	Id                             types.String                                                       `tfsdk:"id"`
+	Domain                         types.String                                                       `tfsdk:"domain"`
+	FtdPlatformSettingsId          types.String                                                       `tfsdk:"ftd_platform_settings_id"`
+	Type                           types.String                                                       `tfsdk:"type"`
+	ExternalAuthenticationServerId types.String                                                       `tfsdk:"external_authentication_server_id"`
+	PrimaryServerInterfaces        []FTDPlatformSettingsExternalAuthenticationPrimaryServerInterfaces `tfsdk:"primary_server_interfaces"`
+	BackupServerInterfaces         []FTDPlatformSettingsExternalAuthenticationBackupServerInterfaces  `tfsdk:"backup_server_interfaces"`
+}
+
+type FTDPlatformSettingsExternalAuthenticationPrimaryServerInterfaces struct {
+	Id   types.String `tfsdk:"id"`
+	Type types.String `tfsdk:"type"`
+	Name types.String `tfsdk:"name"`
+}
+
+type FTDPlatformSettingsExternalAuthenticationBackupServerInterfaces struct {
+	Id   types.String `tfsdk:"id"`
+	Type types.String `tfsdk:"type"`
+	Name types.String `tfsdk:"name"`
 }
 
 // End of section. //template:end types
@@ -66,6 +83,54 @@ func (data FTDPlatformSettingsExternalAuthentication) toBody(ctx context.Context
 	if !data.ExternalAuthenticationServerId.IsNull() {
 		body, _ = sjson.Set(body, "externalAuthServer.id", data.ExternalAuthenticationServerId.ValueString())
 	}
+	if len(data.PrimaryServerInterfaces) > 0 {
+		var primaryServerInterfacesBody strings.Builder
+		primaryServerInterfacesBody.WriteString("[")
+		for _, item := range data.PrimaryServerInterfaces {
+			itemBody := ""
+			if !item.Id.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
+			}
+			if !item.Type.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
+			}
+			if !item.Name.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
+			}
+			if itemBody != "" {
+				if primaryServerInterfacesBody.Len() > 1 {
+					primaryServerInterfacesBody.WriteString(",")
+				}
+				primaryServerInterfacesBody.WriteString(itemBody)
+			}
+		}
+		primaryServerInterfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "primaryServerInterfaces", primaryServerInterfacesBody.String())
+	}
+	if len(data.BackupServerInterfaces) > 0 {
+		var backupServerInterfacesBody strings.Builder
+		backupServerInterfacesBody.WriteString("[")
+		for _, item := range data.BackupServerInterfaces {
+			itemBody := ""
+			if !item.Id.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
+			}
+			if !item.Type.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
+			}
+			if !item.Name.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
+			}
+			if itemBody != "" {
+				if backupServerInterfacesBody.Len() > 1 {
+					backupServerInterfacesBody.WriteString(",")
+				}
+				backupServerInterfacesBody.WriteString(itemBody)
+			}
+		}
+		backupServerInterfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "backupServerInterfaces", backupServerInterfacesBody.String())
+	}
 	return body
 }
 
@@ -83,6 +148,54 @@ func (data *FTDPlatformSettingsExternalAuthentication) fromBody(ctx context.Cont
 		data.ExternalAuthenticationServerId = types.StringValue(value.String())
 	} else {
 		data.ExternalAuthenticationServerId = types.StringNull()
+	}
+	if value := res.Get("primaryServerInterfaces"); value.Exists() {
+		data.PrimaryServerInterfaces = make([]FTDPlatformSettingsExternalAuthenticationPrimaryServerInterfaces, 0, int(value.Get("#").Int()))
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := FTDPlatformSettingsExternalAuthenticationPrimaryServerInterfaces{}
+			if value := res.Get("id"); value.Exists() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			if value := res.Get("type"); value.Exists() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			if value := res.Get("name"); value.Exists() {
+				data.Name = types.StringValue(value.String())
+			} else {
+				data.Name = types.StringNull()
+			}
+			(*parent).PrimaryServerInterfaces = append((*parent).PrimaryServerInterfaces, data)
+			return true
+		})
+	}
+	if value := res.Get("backupServerInterfaces"); value.Exists() {
+		data.BackupServerInterfaces = make([]FTDPlatformSettingsExternalAuthenticationBackupServerInterfaces, 0, int(value.Get("#").Int()))
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := FTDPlatformSettingsExternalAuthenticationBackupServerInterfaces{}
+			if value := res.Get("id"); value.Exists() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			if value := res.Get("type"); value.Exists() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			if value := res.Get("name"); value.Exists() {
+				data.Name = types.StringValue(value.String())
+			} else {
+				data.Name = types.StringNull()
+			}
+			(*parent).BackupServerInterfaces = append((*parent).BackupServerInterfaces, data)
+			return true
+		})
 	}
 }
 
@@ -104,6 +217,112 @@ func (data *FTDPlatformSettingsExternalAuthentication) fromBodyPartial(ctx conte
 		data.ExternalAuthenticationServerId = types.StringValue(value.String())
 	} else {
 		data.ExternalAuthenticationServerId = types.StringNull()
+	}
+	primaryServerInterfacesArray := res.Get("primaryServerInterfaces")
+	for i := 0; i < len(data.PrimaryServerInterfaces); i++ {
+		keys := [...]string{"id", "type", "name"}
+		keyValues := [...]string{data.PrimaryServerInterfaces[i].Id.ValueString(), data.PrimaryServerInterfaces[i].Type.ValueString(), data.PrimaryServerInterfaces[i].Name.ValueString()}
+
+		parent := &data
+		data := (*parent).PrimaryServerInterfaces[i]
+		var res gjson.Result
+
+		primaryServerInterfacesArray.ForEach(
+			func(_, v gjson.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
+					}
+					found = true
+				}
+				if found {
+					res = v
+					return false
+				}
+				return true
+			},
+		)
+		if !res.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing PrimaryServerInterfaces[%d] = %+v",
+				i,
+				(*parent).PrimaryServerInterfaces[i],
+			))
+			(*parent).PrimaryServerInterfaces = slices.Delete((*parent).PrimaryServerInterfaces, i, i+1)
+			i--
+
+			continue
+		}
+		if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+			data.Id = types.StringValue(value.String())
+		} else {
+			data.Id = types.StringNull()
+		}
+		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+		if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+			data.Name = types.StringValue(value.String())
+		} else {
+			data.Name = types.StringNull()
+		}
+		(*parent).PrimaryServerInterfaces[i] = data
+	}
+	backupServerInterfacesArray := res.Get("backupServerInterfaces")
+	for i := 0; i < len(data.BackupServerInterfaces); i++ {
+		keys := [...]string{"id", "type", "name"}
+		keyValues := [...]string{data.BackupServerInterfaces[i].Id.ValueString(), data.BackupServerInterfaces[i].Type.ValueString(), data.BackupServerInterfaces[i].Name.ValueString()}
+
+		parent := &data
+		data := (*parent).BackupServerInterfaces[i]
+		var res gjson.Result
+
+		backupServerInterfacesArray.ForEach(
+			func(_, v gjson.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
+					}
+					found = true
+				}
+				if found {
+					res = v
+					return false
+				}
+				return true
+			},
+		)
+		if !res.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing BackupServerInterfaces[%d] = %+v",
+				i,
+				(*parent).BackupServerInterfaces[i],
+			))
+			(*parent).BackupServerInterfaces = slices.Delete((*parent).BackupServerInterfaces, i, i+1)
+			i--
+
+			continue
+		}
+		if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+			data.Id = types.StringValue(value.String())
+		} else {
+			data.Id = types.StringNull()
+		}
+		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+		if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+			data.Name = types.StringValue(value.String())
+		} else {
+			data.Name = types.StringNull()
+		}
+		(*parent).BackupServerInterfaces[i] = data
 	}
 }
 

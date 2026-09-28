@@ -23,6 +23,20 @@ The following restrictions apply:
 resource "fmc_ftd_platform_settings_external_authentication" "example" {
   ftd_platform_settings_id          = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   external_authentication_server_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  primary_server_interfaces = [
+    {
+      id   = "12345678-1234-1234-1234-123456789abc"
+      type = "PhysicalInterface"
+      name = "outside"
+    }
+  ]
+  backup_server_interfaces = [
+    {
+      id   = "12345678-1234-1234-1234-426614174000"
+      type = "PhysicalInterface"
+      name = "inside"
+    }
+  ]
 }
 ```
 
@@ -36,12 +50,33 @@ resource "fmc_ftd_platform_settings_external_authentication" "example" {
 
 ### Optional
 
+- `backup_server_interfaces` (Attributes List) List of backup server interfaces used for external authentication. (see [below for nested schema](#nestedatt--backup_server_interfaces))
 - `domain` (String) Name of the FMC domain
+- `primary_server_interfaces` (Attributes List) List of primary server interfaces used for external authentication. (see [below for nested schema](#nestedatt--primary_server_interfaces))
 
 ### Read-Only
 
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'ExternalAuthSetting'.
+
+<a id="nestedatt--backup_server_interfaces"></a>
+### Nested Schema for `backup_server_interfaces`
+
+Required:
+
+- `id` (String) Id of the backup server interface.
+- `name` (String) Name of the backup server interface object.
+- `type` (String) Type of the backup server interface object.
+
+
+<a id="nestedatt--primary_server_interfaces"></a>
+### Nested Schema for `primary_server_interfaces`
+
+Required:
+
+- `id` (String) Id of the primary server interface.
+- `name` (String) Name of the primary server interface object.
+- `type` (String) Type of the primary server interface object.
 
 ## Import
 
