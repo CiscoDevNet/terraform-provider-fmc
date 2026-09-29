@@ -20,9 +20,17 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
+	"fmt"
+	"os"
+	"regexp"
+	"slices"
+	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
+	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
