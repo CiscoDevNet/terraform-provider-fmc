@@ -1,0 +1,92 @@
+---
+name: FTD Platform Settings External Authentication
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/externalauthsettings
+doc_category: Devices
+minimum_version: "7.7"
+res_description: >-
+ This resource manages FTD Platform Settings - External Authentication. It enables external authentication for SSH/CLI access to the FTD, referencing an external authentication object such as `fmc_external_authentication_radius`. You can only activate one External Authentication object per FTD Platform Settings policy.\n
+ User privileges (Administrator vs. Basic/read-only CLI access) are derived from attributes returned by the external authentication provider for the authenticating user. This mapping is not configured in FMC/Terraform.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'ExternalAuthSetting'.
+    computed: true
+  - model_name: id
+    data_path: [externalAuthServer]
+    tf_name: external_authentication_server_id
+    type: String
+    description: Id of the External Authentication object to use for SSH/CLI authentication on this FTD.
+    mandatory: true
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_external_authentication_radius.test.id
+  - model_name: primaryServerInterfaces
+    tf_name: primary_server_interfaces
+    type: List
+    description: List of primary server interfaces used for external authentication.
+    example: 12345678-1234-1234-1234-123456789abc
+    test_value: fmc_physical_interface.test.id
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the primary server interface.
+        mandatory: true
+        example: 12345678-1234-1234-1234-123456789abc
+        test_value: fmc_physical_interface.test.id
+      - model_name: type
+        type: String
+        description: Type of the primary server interface object.
+        mandatory: true
+        example: PhysicalInterface
+        test_value: fmc_physical_interface.test.type
+      - model_name: name
+        type: String
+        description: Name of the primary server interface object.
+        mandatory: true
+        example: outside
+        test_value: fmc_physical_interface.test.name
+  - model_name: backupServerInterfaces
+    tf_name: backup_server_interfaces
+    type: List
+    description: List of backup server interfaces used for external authentication.
+    example: 12345678-1234-1234-1234-426614174000
+    test_value: fmc_physical_interface.test.id
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the backup server interface.
+        mandatory: true
+        example: 12345678-1234-1234-1234-426614174000
+        test_value: fmc_physical_interface.test.id
+      - model_name: type
+        type: String
+        description: Type of the backup server interface object.
+        mandatory: true
+        example: PhysicalInterface
+        test_value: fmc_physical_interface.test.type
+      - model_name: name
+        type: String
+        description: Name of the backup server interface object.
+        mandatory: true
+        example: inside
+        test_value: fmc_physical_interface.test.name
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name = "ftd_platform_settings_external_authentication"
+  }
+
+  resource "fmc_external_authentication_radius" "test" {
+    name            = "ftd_platform_settings_external_authentication_radius"
+    server_hostname = "10.1.1.10"
+    server_key      = "my_secret_key"
+  }
