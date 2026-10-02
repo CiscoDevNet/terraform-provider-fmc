@@ -39,7 +39,7 @@ data "fmc_ftd_platform_settings_external_authentication" "example" {
 ### Read-Only
 
 - `backup_server_interfaces` (Attributes List) List of backup server interfaces used for external authentication. (see [below for nested schema](#nestedatt--backup_server_interfaces))
-- `external_authentication_server_id` (String) Id of the RADIUS External Authentication object (`fmc_external_authentication_radius`) to use for SSH/CLI authentication on this FTD.
+- `external_authentication_server_id` (String) Id of the External Authentication object to use for SSH/CLI authentication on this FTD.
 - `primary_server_interfaces` (Attributes List) List of primary server interfaces used for external authentication. (see [below for nested schema](#nestedatt--primary_server_interfaces))
 - `type` (String) Type of the object; this value is always 'ExternalAuthSetting'.
 
