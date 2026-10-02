@@ -1,0 +1,1182 @@
+// Copyright © 2023 Cisco Systems, Inc. and its affiliates.
+// All rights reserved.
+//
+// Licensed under the Mozilla Public License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://mozilla.org/MPL/2.0/
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-License-Identifier: MPL-2.0
+
+package provider
+
+// Section below is generated&owned by "gen/generator.go". //template:begin imports
+import (
+	"context"
+	"fmt"
+	"net/url"
+	"slices"
+	"strconv"
+	"strings"
+
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
+)
+
+// End of section. //template:end imports
+
+// Section below is generated&owned by "gen/generator.go". //template:begin types
+
+type DeviceVLANInterface struct {
+	Id                                    types.String                         `tfsdk:"id"`
+	Domain                                types.String                         `tfsdk:"domain"`
+	DeviceId                              types.String                         `tfsdk:"device_id"`
+	Type                                  types.String                         `tfsdk:"type"`
+	Name                                  types.String                         `tfsdk:"name"`
+	LogicalName                           types.String                         `tfsdk:"logical_name"`
+	Enabled                               types.Bool                           `tfsdk:"enabled"`
+	Description                           types.String                         `tfsdk:"description"`
+	Mode                                  types.String                         `tfsdk:"mode"`
+	SecurityZoneId                        types.String                         `tfsdk:"security_zone_id"`
+	Mtu                                   types.Int64                          `tfsdk:"mtu"`
+	Priority                              types.Int64                          `tfsdk:"priority"`
+	VlanId                                types.Int64                          `tfsdk:"vlan_id"`
+	DisableForwardingOnInterfaceId        types.String                         `tfsdk:"disable_forwarding_on_interface_id"`
+	DisableForwardingOnInterfaceName      types.String                         `tfsdk:"disable_forwarding_on_interface_name"`
+	DisableForwardingOnInterfaceType      types.String                         `tfsdk:"disable_forwarding_on_interface_type"`
+	Ipv4StaticAddress                     types.String                         `tfsdk:"ipv4_static_address"`
+	Ipv4StaticNetmask                     types.String                         `tfsdk:"ipv4_static_netmask"`
+	Ipv4AddressPoolId                     types.String                         `tfsdk:"ipv4_address_pool_id"`
+	Ipv4DhcpObtainDefaultRoute            types.Bool                           `tfsdk:"ipv4_dhcp_obtain_default_route"`
+	Ipv4DhcpDefaultRouteMetric            types.Int64                          `tfsdk:"ipv4_dhcp_default_route_metric"`
+	Ipv4PppoeVpdnGroupName                types.String                         `tfsdk:"ipv4_pppoe_vpdn_group_name"`
+	Ipv4PppoeUser                         types.String                         `tfsdk:"ipv4_pppoe_user"`
+	Ipv4PppoePassword                     types.String                         `tfsdk:"ipv4_pppoe_password"`
+	Ipv4PppoeAuthentication               types.String                         `tfsdk:"ipv4_pppoe_authentication"`
+	Ipv4PppoeRouteMetric                  types.Int64                          `tfsdk:"ipv4_pppoe_route_metric"`
+	Ipv4PppoeRouteSettings                types.Bool                           `tfsdk:"ipv4_pppoe_route_settings"`
+	Ipv4PppoeStoreCredentialsInFlash      types.Bool                           `tfsdk:"ipv4_pppoe_store_credentials_in_flash"`
+	Ipv6                                  types.Bool                           `tfsdk:"ipv6"`
+	Ipv6EnforceEui                        types.Bool                           `tfsdk:"ipv6_enforce_eui"`
+	Ipv6LinkLocalAddress                  types.String                         `tfsdk:"ipv6_link_local_address"`
+	Ipv6AutoConfig                        types.Bool                           `tfsdk:"ipv6_auto_config"`
+	Ipv6Addresses                         []DeviceVLANInterfaceIpv6Addresses   `tfsdk:"ipv6_addresses"`
+	Ipv6AddressPoolId                     types.String                         `tfsdk:"ipv6_address_pool_id"`
+	Ipv6Prefixes                          []DeviceVLANInterfaceIpv6Prefixes    `tfsdk:"ipv6_prefixes"`
+	Ipv6Dad                               types.Bool                           `tfsdk:"ipv6_dad"`
+	Ipv6DadAttempts                       types.Int64                          `tfsdk:"ipv6_dad_attempts"`
+	Ipv6NsInterval                        types.Int64                          `tfsdk:"ipv6_ns_interval"`
+	Ipv6ReachableTime                     types.Int64                          `tfsdk:"ipv6_reachable_time"`
+	Ipv6Ra                                types.Bool                           `tfsdk:"ipv6_ra"`
+	Ipv6RaLifeTime                        types.Int64                          `tfsdk:"ipv6_ra_life_time"`
+	Ipv6RaInterval                        types.Int64                          `tfsdk:"ipv6_ra_interval"`
+	Ipv6Dhcp                              types.Bool                           `tfsdk:"ipv6_dhcp"`
+	Ipv6DhcpObtainDefaultRoute            types.Bool                           `tfsdk:"ipv6_dhcp_obtain_default_route"`
+	Ipv6DhcpPoolId                        types.String                         `tfsdk:"ipv6_dhcp_pool_id"`
+	Ipv6DhcpPoolType                      types.String                         `tfsdk:"ipv6_dhcp_pool_type"`
+	Ipv6DhcpAddressConfig                 types.Bool                           `tfsdk:"ipv6_dhcp_address_config"`
+	Ipv6DhcpNonaddressConfig              types.Bool                           `tfsdk:"ipv6_dhcp_nonaddress_config"`
+	Ipv6DhcpClientPdPrefixName            types.String                         `tfsdk:"ipv6_dhcp_client_pd_prefix_name"`
+	Ipv6DhcpClientPdHintPrefixes          types.String                         `tfsdk:"ipv6_dhcp_client_pd_hint_prefixes"`
+	ActiveMacAddress                      types.String                         `tfsdk:"active_mac_address"`
+	StandbyMacAddress                     types.String                         `tfsdk:"standby_mac_address"`
+	ArpTableEntries                       []DeviceVLANInterfaceArpTableEntries `tfsdk:"arp_table_entries"`
+	AntiSpoofing                          types.Bool                           `tfsdk:"anti_spoofing"`
+	AllowFullFragmentReassembly           types.Bool                           `tfsdk:"allow_full_fragment_reassembly"`
+	OverrideDefaultFragmentSettingChain   types.Int64                          `tfsdk:"override_default_fragment_setting_chain"`
+	OverrideDefaultFragmentSettingSize    types.Int64                          `tfsdk:"override_default_fragment_setting_size"`
+	OverrideDefaultFragmentSettingTimeout types.Int64                          `tfsdk:"override_default_fragment_setting_timeout"`
+}
+
+type DeviceVLANInterfaceIpv6Addresses struct {
+	Address    types.String `tfsdk:"address"`
+	Prefix     types.String `tfsdk:"prefix"`
+	EnforceEui types.Bool   `tfsdk:"enforce_eui"`
+}
+
+type DeviceVLANInterfaceIpv6Prefixes struct {
+	Address types.String `tfsdk:"address"`
+	Default types.Bool   `tfsdk:"default"`
+}
+
+type DeviceVLANInterfaceArpTableEntries struct {
+	MacAddress types.String `tfsdk:"mac_address"`
+	IpAddress  types.String `tfsdk:"ip_address"`
+	Enabled    types.Bool   `tfsdk:"enabled"`
+}
+
+// End of section. //template:end types
+
+// Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
+
+// End of section. //template:end minimumVersions
+
+// Section below is generated&owned by "gen/generator.go". //template:begin getPath
+
+func (data DeviceVLANInterface) getPath() string {
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/vlaninterfaces", url.QueryEscape(data.DeviceId.ValueString()))
+}
+
+// End of section. //template:end getPath
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBody
+
+func (data DeviceVLANInterface) toBody(ctx context.Context, state DeviceVLANInterface) string {
+	body := ""
+	if data.Id.ValueString() != "" {
+		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	if !data.Name.IsNull() && !data.Name.IsUnknown() {
+		body, _ = sjson.Set(body, "name", data.Name.ValueString())
+	}
+	if !data.LogicalName.IsNull() {
+		body, _ = sjson.Set(body, "ifname", data.LogicalName.ValueString())
+	}
+	if !data.Enabled.IsNull() {
+		body, _ = sjson.Set(body, "enabled", data.Enabled.ValueBool())
+	}
+	if !data.Description.IsNull() {
+		body, _ = sjson.Set(body, "description", data.Description.ValueString())
+	}
+	if !data.Mode.IsNull() {
+		body, _ = sjson.Set(body, "mode", data.Mode.ValueString())
+	}
+	if !data.SecurityZoneId.IsNull() {
+		body, _ = sjson.Set(body, "securityZone.id", data.SecurityZoneId.ValueString())
+	}
+	body, _ = sjson.Set(body, "securityZone.type", "SecurityZone")
+	if !data.Mtu.IsNull() {
+		body, _ = sjson.Set(body, "MTU", data.Mtu.ValueInt64())
+	}
+	if !data.Priority.IsNull() {
+		body, _ = sjson.Set(body, "priority", data.Priority.ValueInt64())
+	}
+	if !data.VlanId.IsNull() {
+		body, _ = sjson.Set(body, "vlanId", data.VlanId.ValueInt64())
+	}
+	if !data.DisableForwardingOnInterfaceId.IsNull() {
+		body, _ = sjson.Set(body, "disablePortForwardOnVlan.id", data.DisableForwardingOnInterfaceId.ValueString())
+	}
+	if !data.DisableForwardingOnInterfaceName.IsNull() {
+		body, _ = sjson.Set(body, "disablePortForwardOnVlan.name", data.DisableForwardingOnInterfaceName.ValueString())
+	}
+	if !data.DisableForwardingOnInterfaceType.IsNull() {
+		body, _ = sjson.Set(body, "disablePortForwardOnVlan.type", data.DisableForwardingOnInterfaceType.ValueString())
+	}
+	if !data.Ipv4StaticAddress.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.static.address", data.Ipv4StaticAddress.ValueString())
+	}
+	if !data.Ipv4StaticNetmask.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.static.netmask", data.Ipv4StaticNetmask.ValueString())
+	}
+	if !data.Ipv4AddressPoolId.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.static.pool.id", data.Ipv4AddressPoolId.ValueString())
+	}
+	if !data.Ipv4DhcpObtainDefaultRoute.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.dhcp.enableDefaultRouteDHCP", data.Ipv4DhcpObtainDefaultRoute.ValueBool())
+	}
+	if !data.Ipv4DhcpDefaultRouteMetric.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.dhcp.dhcpRouteMetric", data.Ipv4DhcpDefaultRouteMetric.ValueInt64())
+	}
+	if !data.Ipv4PppoeVpdnGroupName.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.pppoe.vpdnGroupName", data.Ipv4PppoeVpdnGroupName.ValueString())
+	}
+	if !data.Ipv4PppoeUser.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.pppoe.pppoeUser", data.Ipv4PppoeUser.ValueString())
+	}
+	if !data.Ipv4PppoePassword.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.pppoe.pppoePassword", data.Ipv4PppoePassword.ValueString())
+	}
+	if !data.Ipv4PppoeAuthentication.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.pppoe.pppAuth", data.Ipv4PppoeAuthentication.ValueString())
+	}
+	if !data.Ipv4PppoeRouteMetric.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.pppoe.pppoeRouteMetric", data.Ipv4PppoeRouteMetric.ValueInt64())
+	}
+	if !data.Ipv4PppoeRouteSettings.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.pppoe.enableRouteSettings", data.Ipv4PppoeRouteSettings.ValueBool())
+	}
+	if !data.Ipv4PppoeStoreCredentialsInFlash.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.pppoe.storeCredsInFlash", data.Ipv4PppoeStoreCredentialsInFlash.ValueBool())
+	}
+	if !data.Ipv6.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableIPV6", data.Ipv6.ValueBool())
+	}
+	if !data.Ipv6EnforceEui.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enforceEUI64", data.Ipv6EnforceEui.ValueBool())
+	}
+	if !data.Ipv6LinkLocalAddress.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.linkLocalAddress", data.Ipv6LinkLocalAddress.ValueString())
+	}
+	if !data.Ipv6AutoConfig.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableAutoConfig", data.Ipv6AutoConfig.ValueBool())
+	}
+	if len(data.Ipv6Addresses) > 0 {
+		var ipv6AddressesBody strings.Builder
+		ipv6AddressesBody.WriteString("[")
+		for _, item := range data.Ipv6Addresses {
+			itemBody := ""
+			if !item.Address.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "address", item.Address.ValueString())
+			}
+			if !item.Prefix.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "prefix", item.Prefix.ValueString())
+			}
+			if !item.EnforceEui.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "enforceEUI64", item.EnforceEui.ValueBool())
+			}
+			if itemBody != "" {
+				if ipv6AddressesBody.Len() > 1 {
+					ipv6AddressesBody.WriteString(",")
+				}
+				ipv6AddressesBody.WriteString(itemBody)
+			}
+		}
+		ipv6AddressesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv6.addresses", ipv6AddressesBody.String())
+	}
+	if !data.Ipv6AddressPoolId.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.pool.id", data.Ipv6AddressPoolId.ValueString())
+	}
+	if len(data.Ipv6Prefixes) > 0 {
+		var ipv6PrefixesBody strings.Builder
+		ipv6PrefixesBody.WriteString("[")
+		for _, item := range data.Ipv6Prefixes {
+			itemBody := ""
+			if !item.Address.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "address", item.Address.ValueString())
+			}
+			if !item.Default.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "default", item.Default.ValueBool())
+			}
+			if itemBody != "" {
+				if ipv6PrefixesBody.Len() > 1 {
+					ipv6PrefixesBody.WriteString(",")
+				}
+				ipv6PrefixesBody.WriteString(itemBody)
+			}
+		}
+		ipv6PrefixesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv6.prefixes", ipv6PrefixesBody.String())
+	}
+	if !data.Ipv6Dad.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableDADLoopback", data.Ipv6Dad.ValueBool())
+	}
+	if !data.Ipv6DadAttempts.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.dadAttempts", data.Ipv6DadAttempts.ValueInt64())
+	}
+	if !data.Ipv6NsInterval.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.nsInterval", data.Ipv6NsInterval.ValueInt64())
+	}
+	if !data.Ipv6ReachableTime.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.reachableTime", data.Ipv6ReachableTime.ValueInt64())
+	}
+	if !data.Ipv6Ra.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableRA", data.Ipv6Ra.ValueBool())
+	}
+	if !data.Ipv6RaLifeTime.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.raLifeTime", data.Ipv6RaLifeTime.ValueInt64())
+	}
+	if !data.Ipv6RaInterval.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.raInterval", data.Ipv6RaInterval.ValueInt64())
+	}
+	if !data.Ipv6Dhcp.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.DHCP.enableDHCPClient", data.Ipv6Dhcp.ValueBool())
+	}
+	if !data.Ipv6DhcpObtainDefaultRoute.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.DHCP.obtainIPV6DefaultRouteDHCP", data.Ipv6DhcpObtainDefaultRoute.ValueBool())
+	}
+	if !data.Ipv6DhcpPoolId.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.ipv6DHCPPool.id", data.Ipv6DhcpPoolId.ValueString())
+	}
+	if !data.Ipv6DhcpPoolType.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.ipv6DHCPPool.type", data.Ipv6DhcpPoolType.ValueString())
+	}
+	if !data.Ipv6DhcpAddressConfig.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableDHCPAddrConfig", data.Ipv6DhcpAddressConfig.ValueBool())
+	}
+	if !data.Ipv6DhcpNonaddressConfig.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableDHCPNonAddrConfig", data.Ipv6DhcpNonaddressConfig.ValueBool())
+	}
+	if !data.Ipv6DhcpClientPdPrefixName.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.DHCP.clientPd.prefixName", data.Ipv6DhcpClientPdPrefixName.ValueString())
+	}
+	if !data.Ipv6DhcpClientPdHintPrefixes.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.DHCP.clientPd.hintPrefixes", data.Ipv6DhcpClientPdHintPrefixes.ValueString())
+	}
+	if !data.ActiveMacAddress.IsNull() {
+		body, _ = sjson.Set(body, "activeMACAddress", data.ActiveMacAddress.ValueString())
+	}
+	if !data.StandbyMacAddress.IsNull() {
+		body, _ = sjson.Set(body, "standbyMACAddress", data.StandbyMacAddress.ValueString())
+	}
+	if len(data.ArpTableEntries) > 0 {
+		var arpTableEntriesBody strings.Builder
+		arpTableEntriesBody.WriteString("[")
+		for _, item := range data.ArpTableEntries {
+			itemBody := ""
+			if !item.MacAddress.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "macAddress", item.MacAddress.ValueString())
+			}
+			if !item.IpAddress.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "ipAddress", item.IpAddress.ValueString())
+			}
+			if !item.Enabled.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "enableAlias", item.Enabled.ValueBool())
+			}
+			if itemBody != "" {
+				if arpTableEntriesBody.Len() > 1 {
+					arpTableEntriesBody.WriteString(",")
+				}
+				arpTableEntriesBody.WriteString(itemBody)
+			}
+		}
+		arpTableEntriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "arpConfig", arpTableEntriesBody.String())
+	}
+	if !data.AntiSpoofing.IsNull() {
+		body, _ = sjson.Set(body, "enableAntiSpoofing", data.AntiSpoofing.ValueBool())
+	}
+	if !data.AllowFullFragmentReassembly.IsNull() {
+		body, _ = sjson.Set(body, "fragmentReassembly", data.AllowFullFragmentReassembly.ValueBool())
+	}
+	if !data.OverrideDefaultFragmentSettingChain.IsNull() {
+		body, _ = sjson.Set(body, "overrideDefaultFragmentSetting.chain", data.OverrideDefaultFragmentSettingChain.ValueInt64())
+	}
+	if !data.OverrideDefaultFragmentSettingSize.IsNull() {
+		body, _ = sjson.Set(body, "overrideDefaultFragmentSetting.size", data.OverrideDefaultFragmentSettingSize.ValueInt64())
+	}
+	if !data.OverrideDefaultFragmentSettingTimeout.IsNull() {
+		body, _ = sjson.Set(body, "overrideDefaultFragmentSetting.timeout", data.OverrideDefaultFragmentSettingTimeout.ValueInt64())
+	}
+	return body
+}
+
+// End of section. //template:end toBody
+
+// Section below is generated&owned by "gen/generator.go". //template:begin fromBody
+
+func (data *DeviceVLANInterface) fromBody(ctx context.Context, res gjson.Result) {
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
+	if value := res.Get("name"); value.Exists() {
+		data.Name = types.StringValue(value.String())
+	} else {
+		data.Name = types.StringNull()
+	}
+	if value := res.Get("ifname"); value.Exists() {
+		data.LogicalName = types.StringValue(value.String())
+	} else {
+		data.LogicalName = types.StringNull()
+	}
+	if value := res.Get("enabled"); value.Exists() {
+		data.Enabled = types.BoolValue(value.Bool())
+	} else {
+		data.Enabled = types.BoolValue(true)
+	}
+	if value := res.Get("description"); value.Exists() {
+		data.Description = types.StringValue(value.String())
+	} else {
+		data.Description = types.StringNull()
+	}
+	if value := res.Get("mode"); value.Exists() {
+		data.Mode = types.StringValue(value.String())
+	} else {
+		data.Mode = types.StringNull()
+	}
+	if value := res.Get("securityZone.id"); value.Exists() {
+		data.SecurityZoneId = types.StringValue(value.String())
+	} else {
+		data.SecurityZoneId = types.StringNull()
+	}
+	if value := res.Get("MTU"); value.Exists() {
+		data.Mtu = types.Int64Value(value.Int())
+	} else {
+		data.Mtu = types.Int64Null()
+	}
+	if value := res.Get("priority"); value.Exists() {
+		data.Priority = types.Int64Value(value.Int())
+	} else {
+		data.Priority = types.Int64Null()
+	}
+	if value := res.Get("vlanId"); value.Exists() {
+		data.VlanId = types.Int64Value(value.Int())
+	} else {
+		data.VlanId = types.Int64Null()
+	}
+	if value := res.Get("disablePortForwardOnVlan.id"); value.Exists() {
+		data.DisableForwardingOnInterfaceId = types.StringValue(value.String())
+	} else {
+		data.DisableForwardingOnInterfaceId = types.StringNull()
+	}
+	if value := res.Get("disablePortForwardOnVlan.name"); value.Exists() {
+		data.DisableForwardingOnInterfaceName = types.StringValue(value.String())
+	} else {
+		data.DisableForwardingOnInterfaceName = types.StringNull()
+	}
+	if value := res.Get("disablePortForwardOnVlan.type"); value.Exists() {
+		data.DisableForwardingOnInterfaceType = types.StringValue(value.String())
+	} else {
+		data.DisableForwardingOnInterfaceType = types.StringNull()
+	}
+	if value := res.Get("ipv4.static.address"); value.Exists() {
+		data.Ipv4StaticAddress = types.StringValue(value.String())
+	} else {
+		data.Ipv4StaticAddress = types.StringNull()
+	}
+	if value := res.Get("ipv4.static.netmask"); value.Exists() {
+		data.Ipv4StaticNetmask = types.StringValue(value.String())
+	} else {
+		data.Ipv4StaticNetmask = types.StringNull()
+	}
+	if value := res.Get("ipv4.static.pool.id"); value.Exists() {
+		data.Ipv4AddressPoolId = types.StringValue(value.String())
+	} else {
+		data.Ipv4AddressPoolId = types.StringNull()
+	}
+	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() {
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
+	}
+	if value := res.Get("ipv4.dhcp.dhcpRouteMetric"); value.Exists() {
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Value(value.Int())
+	} else {
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Null()
+	}
+	if value := res.Get("ipv4.pppoe.vpdnGroupName"); value.Exists() {
+		data.Ipv4PppoeVpdnGroupName = types.StringValue(value.String())
+	} else {
+		data.Ipv4PppoeVpdnGroupName = types.StringNull()
+	}
+	if value := res.Get("ipv4.pppoe.pppoeUser"); value.Exists() {
+		data.Ipv4PppoeUser = types.StringValue(value.String())
+	} else {
+		data.Ipv4PppoeUser = types.StringNull()
+	}
+	if value := res.Get("ipv4.pppoe.pppoePassword"); value.Exists() {
+		data.Ipv4PppoePassword = types.StringValue(value.String())
+	} else {
+		data.Ipv4PppoePassword = types.StringNull()
+	}
+	if value := res.Get("ipv4.pppoe.pppAuth"); value.Exists() {
+		data.Ipv4PppoeAuthentication = types.StringValue(value.String())
+	} else {
+		data.Ipv4PppoeAuthentication = types.StringNull()
+	}
+	if value := res.Get("ipv4.pppoe.pppoeRouteMetric"); value.Exists() {
+		data.Ipv4PppoeRouteMetric = types.Int64Value(value.Int())
+	} else {
+		data.Ipv4PppoeRouteMetric = types.Int64Null()
+	}
+	if value := res.Get("ipv4.pppoe.enableRouteSettings"); value.Exists() {
+		data.Ipv4PppoeRouteSettings = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv4PppoeRouteSettings = types.BoolNull()
+	}
+	if value := res.Get("ipv4.pppoe.storeCredsInFlash"); value.Exists() {
+		data.Ipv4PppoeStoreCredentialsInFlash = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv4PppoeStoreCredentialsInFlash = types.BoolNull()
+	}
+	if value := res.Get("ipv6.enableIPV6"); value.Exists() {
+		data.Ipv6 = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6 = types.BoolNull()
+	}
+	if value := res.Get("ipv6.enforceEUI64"); value.Exists() {
+		data.Ipv6EnforceEui = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6EnforceEui = types.BoolNull()
+	}
+	if value := res.Get("ipv6.linkLocalAddress"); value.Exists() {
+		data.Ipv6LinkLocalAddress = types.StringValue(value.String())
+	} else {
+		data.Ipv6LinkLocalAddress = types.StringNull()
+	}
+	if value := res.Get("ipv6.enableAutoConfig"); value.Exists() {
+		data.Ipv6AutoConfig = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6AutoConfig = types.BoolNull()
+	}
+	if value := res.Get("ipv6.addresses"); value.Exists() {
+		data.Ipv6Addresses = make([]DeviceVLANInterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := DeviceVLANInterfaceIpv6Addresses{}
+			if value := res.Get("address"); value.Exists() {
+				data.Address = types.StringValue(value.String())
+			} else {
+				data.Address = types.StringNull()
+			}
+			if value := res.Get("prefix"); value.Exists() {
+				data.Prefix = types.StringValue(value.String())
+			} else {
+				data.Prefix = types.StringNull()
+			}
+			if value := res.Get("enforceEUI64"); value.Exists() {
+				data.EnforceEui = types.BoolValue(value.Bool())
+			} else {
+				data.EnforceEui = types.BoolNull()
+			}
+			(*parent).Ipv6Addresses = append((*parent).Ipv6Addresses, data)
+			return true
+		})
+	}
+	if value := res.Get("ipv6.pool.id"); value.Exists() {
+		data.Ipv6AddressPoolId = types.StringValue(value.String())
+	} else {
+		data.Ipv6AddressPoolId = types.StringNull()
+	}
+	if value := res.Get("ipv6.prefixes"); value.Exists() {
+		data.Ipv6Prefixes = make([]DeviceVLANInterfaceIpv6Prefixes, 0, int(value.Get("#").Int()))
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := DeviceVLANInterfaceIpv6Prefixes{}
+			if value := res.Get("address"); value.Exists() {
+				data.Address = types.StringValue(value.String())
+			} else {
+				data.Address = types.StringNull()
+			}
+			if value := res.Get("default"); value.Exists() {
+				data.Default = types.BoolValue(value.Bool())
+			} else {
+				data.Default = types.BoolNull()
+			}
+			(*parent).Ipv6Prefixes = append((*parent).Ipv6Prefixes, data)
+			return true
+		})
+	}
+	if value := res.Get("ipv6.enableDADLoopback"); value.Exists() {
+		data.Ipv6Dad = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6Dad = types.BoolNull()
+	}
+	if value := res.Get("ipv6.dadAttempts"); value.Exists() {
+		data.Ipv6DadAttempts = types.Int64Value(value.Int())
+	} else {
+		data.Ipv6DadAttempts = types.Int64Null()
+	}
+	if value := res.Get("ipv6.nsInterval"); value.Exists() {
+		data.Ipv6NsInterval = types.Int64Value(value.Int())
+	} else {
+		data.Ipv6NsInterval = types.Int64Null()
+	}
+	if value := res.Get("ipv6.reachableTime"); value.Exists() {
+		data.Ipv6ReachableTime = types.Int64Value(value.Int())
+	} else {
+		data.Ipv6ReachableTime = types.Int64Null()
+	}
+	if value := res.Get("ipv6.enableRA"); value.Exists() {
+		data.Ipv6Ra = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6Ra = types.BoolNull()
+	}
+	if value := res.Get("ipv6.raLifeTime"); value.Exists() {
+		data.Ipv6RaLifeTime = types.Int64Value(value.Int())
+	} else {
+		data.Ipv6RaLifeTime = types.Int64Null()
+	}
+	if value := res.Get("ipv6.raInterval"); value.Exists() {
+		data.Ipv6RaInterval = types.Int64Value(value.Int())
+	} else {
+		data.Ipv6RaInterval = types.Int64Null()
+	}
+	if value := res.Get("ipv6.DHCP.enableDHCPClient"); value.Exists() {
+		data.Ipv6Dhcp = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6Dhcp = types.BoolNull()
+	}
+	if value := res.Get("ipv6.DHCP.obtainIPV6DefaultRouteDHCP"); value.Exists() {
+		data.Ipv6DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6DhcpObtainDefaultRoute = types.BoolNull()
+	}
+	if value := res.Get("ipv6.ipv6DHCPPool.id"); value.Exists() {
+		data.Ipv6DhcpPoolId = types.StringValue(value.String())
+	} else {
+		data.Ipv6DhcpPoolId = types.StringNull()
+	}
+	if value := res.Get("ipv6.ipv6DHCPPool.type"); value.Exists() {
+		data.Ipv6DhcpPoolType = types.StringValue(value.String())
+	} else {
+		data.Ipv6DhcpPoolType = types.StringNull()
+	}
+	if value := res.Get("ipv6.enableDHCPAddrConfig"); value.Exists() {
+		data.Ipv6DhcpAddressConfig = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6DhcpAddressConfig = types.BoolNull()
+	}
+	if value := res.Get("ipv6.enableDHCPNonAddrConfig"); value.Exists() {
+		data.Ipv6DhcpNonaddressConfig = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6DhcpNonaddressConfig = types.BoolNull()
+	}
+	if value := res.Get("ipv6.DHCP.clientPd.prefixName"); value.Exists() {
+		data.Ipv6DhcpClientPdPrefixName = types.StringValue(value.String())
+	} else {
+		data.Ipv6DhcpClientPdPrefixName = types.StringNull()
+	}
+	if value := res.Get("ipv6.DHCP.clientPd.hintPrefixes"); value.Exists() {
+		data.Ipv6DhcpClientPdHintPrefixes = types.StringValue(value.String())
+	} else {
+		data.Ipv6DhcpClientPdHintPrefixes = types.StringNull()
+	}
+	if value := res.Get("activeMACAddress"); value.Exists() {
+		data.ActiveMacAddress = types.StringValue(value.String())
+	} else {
+		data.ActiveMacAddress = types.StringNull()
+	}
+	if value := res.Get("standbyMACAddress"); value.Exists() {
+		data.StandbyMacAddress = types.StringValue(value.String())
+	} else {
+		data.StandbyMacAddress = types.StringNull()
+	}
+	if value := res.Get("arpConfig"); value.Exists() {
+		data.ArpTableEntries = make([]DeviceVLANInterfaceArpTableEntries, 0, int(value.Get("#").Int()))
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := DeviceVLANInterfaceArpTableEntries{}
+			if value := res.Get("macAddress"); value.Exists() {
+				data.MacAddress = types.StringValue(value.String())
+			} else {
+				data.MacAddress = types.StringNull()
+			}
+			if value := res.Get("ipAddress"); value.Exists() {
+				data.IpAddress = types.StringValue(value.String())
+			} else {
+				data.IpAddress = types.StringNull()
+			}
+			if value := res.Get("enableAlias"); value.Exists() {
+				data.Enabled = types.BoolValue(value.Bool())
+			} else {
+				data.Enabled = types.BoolValue(true)
+			}
+			(*parent).ArpTableEntries = append((*parent).ArpTableEntries, data)
+			return true
+		})
+	}
+	if value := res.Get("enableAntiSpoofing"); value.Exists() {
+		data.AntiSpoofing = types.BoolValue(value.Bool())
+	} else {
+		data.AntiSpoofing = types.BoolNull()
+	}
+	if value := res.Get("fragmentReassembly"); value.Exists() {
+		data.AllowFullFragmentReassembly = types.BoolValue(value.Bool())
+	} else {
+		data.AllowFullFragmentReassembly = types.BoolNull()
+	}
+	if value := res.Get("overrideDefaultFragmentSetting.chain"); value.Exists() {
+		data.OverrideDefaultFragmentSettingChain = types.Int64Value(value.Int())
+	} else {
+		data.OverrideDefaultFragmentSettingChain = types.Int64Null()
+	}
+	if value := res.Get("overrideDefaultFragmentSetting.size"); value.Exists() {
+		data.OverrideDefaultFragmentSettingSize = types.Int64Value(value.Int())
+	} else {
+		data.OverrideDefaultFragmentSettingSize = types.Int64Null()
+	}
+	if value := res.Get("overrideDefaultFragmentSetting.timeout"); value.Exists() {
+		data.OverrideDefaultFragmentSettingTimeout = types.Int64Value(value.Int())
+	} else {
+		data.OverrideDefaultFragmentSettingTimeout = types.Int64Null()
+	}
+}
+
+// End of section. //template:end fromBody
+
+// Section below is generated&owned by "gen/generator.go". //template:begin fromBodyPartial
+
+// fromBodyPartial reads values from a gjson.Result into a tfstate model. It ignores null attributes in order to
+// uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
+// easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
+// "managed" elements, instead of all elements.
+func (data *DeviceVLANInterface) fromBodyPartial(ctx context.Context, res gjson.Result) {
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
+	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+		data.Name = types.StringValue(value.String())
+	} else {
+		data.Name = types.StringNull()
+	}
+	if value := res.Get("ifname"); value.Exists() && !data.LogicalName.IsNull() {
+		data.LogicalName = types.StringValue(value.String())
+	} else {
+		data.LogicalName = types.StringNull()
+	}
+	if value := res.Get("enabled"); value.Exists() && !data.Enabled.IsNull() {
+		data.Enabled = types.BoolValue(value.Bool())
+	} else if data.Enabled.ValueBool() != true {
+		data.Enabled = types.BoolNull()
+	}
+	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
+		data.Description = types.StringValue(value.String())
+	} else {
+		data.Description = types.StringNull()
+	}
+	if value := res.Get("mode"); value.Exists() && !data.Mode.IsNull() {
+		data.Mode = types.StringValue(value.String())
+	} else {
+		data.Mode = types.StringNull()
+	}
+	if value := res.Get("securityZone.id"); value.Exists() && !data.SecurityZoneId.IsNull() {
+		data.SecurityZoneId = types.StringValue(value.String())
+	} else {
+		data.SecurityZoneId = types.StringNull()
+	}
+	if value := res.Get("MTU"); value.Exists() && !data.Mtu.IsNull() {
+		data.Mtu = types.Int64Value(value.Int())
+	} else {
+		data.Mtu = types.Int64Null()
+	}
+	if value := res.Get("priority"); value.Exists() && !data.Priority.IsNull() {
+		data.Priority = types.Int64Value(value.Int())
+	} else {
+		data.Priority = types.Int64Null()
+	}
+	if value := res.Get("vlanId"); value.Exists() && !data.VlanId.IsNull() {
+		data.VlanId = types.Int64Value(value.Int())
+	} else {
+		data.VlanId = types.Int64Null()
+	}
+	if value := res.Get("disablePortForwardOnVlan.id"); value.Exists() && !data.DisableForwardingOnInterfaceId.IsNull() {
+		data.DisableForwardingOnInterfaceId = types.StringValue(value.String())
+	} else {
+		data.DisableForwardingOnInterfaceId = types.StringNull()
+	}
+	if value := res.Get("disablePortForwardOnVlan.name"); value.Exists() && !data.DisableForwardingOnInterfaceName.IsNull() {
+		data.DisableForwardingOnInterfaceName = types.StringValue(value.String())
+	} else {
+		data.DisableForwardingOnInterfaceName = types.StringNull()
+	}
+	if value := res.Get("disablePortForwardOnVlan.type"); value.Exists() && !data.DisableForwardingOnInterfaceType.IsNull() {
+		data.DisableForwardingOnInterfaceType = types.StringValue(value.String())
+	} else {
+		data.DisableForwardingOnInterfaceType = types.StringNull()
+	}
+	if value := res.Get("ipv4.static.address"); value.Exists() && !data.Ipv4StaticAddress.IsNull() {
+		data.Ipv4StaticAddress = types.StringValue(value.String())
+	} else {
+		data.Ipv4StaticAddress = types.StringNull()
+	}
+	if value := res.Get("ipv4.static.netmask"); value.Exists() && !data.Ipv4StaticNetmask.IsNull() {
+		data.Ipv4StaticNetmask = types.StringValue(value.String())
+	} else {
+		data.Ipv4StaticNetmask = types.StringNull()
+	}
+	if value := res.Get("ipv4.static.pool.id"); value.Exists() && !data.Ipv4AddressPoolId.IsNull() {
+		data.Ipv4AddressPoolId = types.StringValue(value.String())
+	} else {
+		data.Ipv4AddressPoolId = types.StringNull()
+	}
+	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() && !data.Ipv4DhcpObtainDefaultRoute.IsNull() {
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
+	}
+	if value := res.Get("ipv4.dhcp.dhcpRouteMetric"); value.Exists() && !data.Ipv4DhcpDefaultRouteMetric.IsNull() {
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Value(value.Int())
+	} else {
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Null()
+	}
+	if value := res.Get("ipv4.pppoe.vpdnGroupName"); value.Exists() && !data.Ipv4PppoeVpdnGroupName.IsNull() {
+		data.Ipv4PppoeVpdnGroupName = types.StringValue(value.String())
+	} else {
+		data.Ipv4PppoeVpdnGroupName = types.StringNull()
+	}
+	if value := res.Get("ipv4.pppoe.pppoeUser"); value.Exists() && !data.Ipv4PppoeUser.IsNull() {
+		data.Ipv4PppoeUser = types.StringValue(value.String())
+	} else {
+		data.Ipv4PppoeUser = types.StringNull()
+	}
+	if value := res.Get("ipv4.pppoe.pppoePassword"); value.Exists() && !data.Ipv4PppoePassword.IsNull() {
+		data.Ipv4PppoePassword = types.StringValue(value.String())
+	} else {
+		data.Ipv4PppoePassword = types.StringNull()
+	}
+	if value := res.Get("ipv4.pppoe.pppAuth"); value.Exists() && !data.Ipv4PppoeAuthentication.IsNull() {
+		data.Ipv4PppoeAuthentication = types.StringValue(value.String())
+	} else {
+		data.Ipv4PppoeAuthentication = types.StringNull()
+	}
+	if value := res.Get("ipv4.pppoe.pppoeRouteMetric"); value.Exists() && !data.Ipv4PppoeRouteMetric.IsNull() {
+		data.Ipv4PppoeRouteMetric = types.Int64Value(value.Int())
+	} else {
+		data.Ipv4PppoeRouteMetric = types.Int64Null()
+	}
+	if value := res.Get("ipv4.pppoe.enableRouteSettings"); value.Exists() && !data.Ipv4PppoeRouteSettings.IsNull() {
+		data.Ipv4PppoeRouteSettings = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv4PppoeRouteSettings = types.BoolNull()
+	}
+	if value := res.Get("ipv4.pppoe.storeCredsInFlash"); value.Exists() && !data.Ipv4PppoeStoreCredentialsInFlash.IsNull() {
+		data.Ipv4PppoeStoreCredentialsInFlash = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv4PppoeStoreCredentialsInFlash = types.BoolNull()
+	}
+	if value := res.Get("ipv6.enableIPV6"); value.Exists() && !data.Ipv6.IsNull() {
+		data.Ipv6 = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6 = types.BoolNull()
+	}
+	if value := res.Get("ipv6.enforceEUI64"); value.Exists() && !data.Ipv6EnforceEui.IsNull() {
+		data.Ipv6EnforceEui = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6EnforceEui = types.BoolNull()
+	}
+	if value := res.Get("ipv6.linkLocalAddress"); value.Exists() && !data.Ipv6LinkLocalAddress.IsNull() {
+		data.Ipv6LinkLocalAddress = types.StringValue(value.String())
+	} else {
+		data.Ipv6LinkLocalAddress = types.StringNull()
+	}
+	if value := res.Get("ipv6.enableAutoConfig"); value.Exists() && !data.Ipv6AutoConfig.IsNull() {
+		data.Ipv6AutoConfig = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6AutoConfig = types.BoolNull()
+	}
+	ipv6AddressesArray := res.Get("ipv6.addresses")
+	for i := 0; i < len(data.Ipv6Addresses); i++ {
+		keys := [...]string{"address", "prefix"}
+		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString(), data.Ipv6Addresses[i].Prefix.ValueString()}
+
+		parent := &data
+		data := (*parent).Ipv6Addresses[i]
+		var res gjson.Result
+
+		ipv6AddressesArray.ForEach(
+			func(_, v gjson.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
+					}
+					found = true
+				}
+				if found {
+					res = v
+					return false
+				}
+				return true
+			},
+		)
+		if !res.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing Ipv6Addresses[%d] = %+v",
+				i,
+				(*parent).Ipv6Addresses[i],
+			))
+			(*parent).Ipv6Addresses = slices.Delete((*parent).Ipv6Addresses, i, i+1)
+			i--
+
+			continue
+		}
+		if value := res.Get("address"); value.Exists() && !data.Address.IsNull() {
+			data.Address = types.StringValue(value.String())
+		} else {
+			data.Address = types.StringNull()
+		}
+		if value := res.Get("prefix"); value.Exists() && !data.Prefix.IsNull() {
+			data.Prefix = types.StringValue(value.String())
+		} else {
+			data.Prefix = types.StringNull()
+		}
+		if value := res.Get("enforceEUI64"); value.Exists() && !data.EnforceEui.IsNull() {
+			data.EnforceEui = types.BoolValue(value.Bool())
+		} else {
+			data.EnforceEui = types.BoolNull()
+		}
+		(*parent).Ipv6Addresses[i] = data
+	}
+	if value := res.Get("ipv6.pool.id"); value.Exists() && !data.Ipv6AddressPoolId.IsNull() {
+		data.Ipv6AddressPoolId = types.StringValue(value.String())
+	} else {
+		data.Ipv6AddressPoolId = types.StringNull()
+	}
+	ipv6PrefixesArray := res.Get("ipv6.prefixes")
+	for i := 0; i < len(data.Ipv6Prefixes); i++ {
+		keys := [...]string{"address"}
+		keyValues := [...]string{data.Ipv6Prefixes[i].Address.ValueString()}
+
+		parent := &data
+		data := (*parent).Ipv6Prefixes[i]
+		var res gjson.Result
+
+		ipv6PrefixesArray.ForEach(
+			func(_, v gjson.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
+					}
+					found = true
+				}
+				if found {
+					res = v
+					return false
+				}
+				return true
+			},
+		)
+		if !res.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing Ipv6Prefixes[%d] = %+v",
+				i,
+				(*parent).Ipv6Prefixes[i],
+			))
+			(*parent).Ipv6Prefixes = slices.Delete((*parent).Ipv6Prefixes, i, i+1)
+			i--
+
+			continue
+		}
+		if value := res.Get("address"); value.Exists() && !data.Address.IsNull() {
+			data.Address = types.StringValue(value.String())
+		} else {
+			data.Address = types.StringNull()
+		}
+		if value := res.Get("default"); value.Exists() && !data.Default.IsNull() {
+			data.Default = types.BoolValue(value.Bool())
+		} else {
+			data.Default = types.BoolNull()
+		}
+		(*parent).Ipv6Prefixes[i] = data
+	}
+	if value := res.Get("ipv6.enableDADLoopback"); value.Exists() && !data.Ipv6Dad.IsNull() {
+		data.Ipv6Dad = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6Dad = types.BoolNull()
+	}
+	if value := res.Get("ipv6.dadAttempts"); value.Exists() && !data.Ipv6DadAttempts.IsNull() {
+		data.Ipv6DadAttempts = types.Int64Value(value.Int())
+	} else {
+		data.Ipv6DadAttempts = types.Int64Null()
+	}
+	if value := res.Get("ipv6.nsInterval"); value.Exists() && !data.Ipv6NsInterval.IsNull() {
+		data.Ipv6NsInterval = types.Int64Value(value.Int())
+	} else {
+		data.Ipv6NsInterval = types.Int64Null()
+	}
+	if value := res.Get("ipv6.reachableTime"); value.Exists() && !data.Ipv6ReachableTime.IsNull() {
+		data.Ipv6ReachableTime = types.Int64Value(value.Int())
+	} else {
+		data.Ipv6ReachableTime = types.Int64Null()
+	}
+	if value := res.Get("ipv6.enableRA"); value.Exists() && !data.Ipv6Ra.IsNull() {
+		data.Ipv6Ra = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6Ra = types.BoolNull()
+	}
+	if value := res.Get("ipv6.raLifeTime"); value.Exists() && !data.Ipv6RaLifeTime.IsNull() {
+		data.Ipv6RaLifeTime = types.Int64Value(value.Int())
+	} else {
+		data.Ipv6RaLifeTime = types.Int64Null()
+	}
+	if value := res.Get("ipv6.raInterval"); value.Exists() && !data.Ipv6RaInterval.IsNull() {
+		data.Ipv6RaInterval = types.Int64Value(value.Int())
+	} else {
+		data.Ipv6RaInterval = types.Int64Null()
+	}
+	if value := res.Get("ipv6.DHCP.enableDHCPClient"); value.Exists() && !data.Ipv6Dhcp.IsNull() {
+		data.Ipv6Dhcp = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6Dhcp = types.BoolNull()
+	}
+	if value := res.Get("ipv6.DHCP.obtainIPV6DefaultRouteDHCP"); value.Exists() && !data.Ipv6DhcpObtainDefaultRoute.IsNull() {
+		data.Ipv6DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6DhcpObtainDefaultRoute = types.BoolNull()
+	}
+	if value := res.Get("ipv6.ipv6DHCPPool.id"); value.Exists() && !data.Ipv6DhcpPoolId.IsNull() {
+		data.Ipv6DhcpPoolId = types.StringValue(value.String())
+	} else {
+		data.Ipv6DhcpPoolId = types.StringNull()
+	}
+	if value := res.Get("ipv6.ipv6DHCPPool.type"); value.Exists() && !data.Ipv6DhcpPoolType.IsNull() {
+		data.Ipv6DhcpPoolType = types.StringValue(value.String())
+	} else {
+		data.Ipv6DhcpPoolType = types.StringNull()
+	}
+	if value := res.Get("ipv6.enableDHCPAddrConfig"); value.Exists() && !data.Ipv6DhcpAddressConfig.IsNull() {
+		data.Ipv6DhcpAddressConfig = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6DhcpAddressConfig = types.BoolNull()
+	}
+	if value := res.Get("ipv6.enableDHCPNonAddrConfig"); value.Exists() && !data.Ipv6DhcpNonaddressConfig.IsNull() {
+		data.Ipv6DhcpNonaddressConfig = types.BoolValue(value.Bool())
+	} else {
+		data.Ipv6DhcpNonaddressConfig = types.BoolNull()
+	}
+	if value := res.Get("ipv6.DHCP.clientPd.prefixName"); value.Exists() && !data.Ipv6DhcpClientPdPrefixName.IsNull() {
+		data.Ipv6DhcpClientPdPrefixName = types.StringValue(value.String())
+	} else {
+		data.Ipv6DhcpClientPdPrefixName = types.StringNull()
+	}
+	if value := res.Get("ipv6.DHCP.clientPd.hintPrefixes"); value.Exists() && !data.Ipv6DhcpClientPdHintPrefixes.IsNull() {
+		data.Ipv6DhcpClientPdHintPrefixes = types.StringValue(value.String())
+	} else {
+		data.Ipv6DhcpClientPdHintPrefixes = types.StringNull()
+	}
+	if value := res.Get("activeMACAddress"); value.Exists() && !data.ActiveMacAddress.IsNull() {
+		data.ActiveMacAddress = types.StringValue(value.String())
+	} else {
+		data.ActiveMacAddress = types.StringNull()
+	}
+	if value := res.Get("standbyMACAddress"); value.Exists() && !data.StandbyMacAddress.IsNull() {
+		data.StandbyMacAddress = types.StringValue(value.String())
+	} else {
+		data.StandbyMacAddress = types.StringNull()
+	}
+	arpTableEntriesArray := res.Get("arpConfig")
+	for i := 0; i < len(data.ArpTableEntries); i++ {
+		keys := [...]string{"macAddress", "ipAddress", "enableAlias"}
+		keyValues := [...]string{data.ArpTableEntries[i].MacAddress.ValueString(), data.ArpTableEntries[i].IpAddress.ValueString(), strconv.FormatBool(data.ArpTableEntries[i].Enabled.ValueBool())}
+
+		parent := &data
+		data := (*parent).ArpTableEntries[i]
+		var res gjson.Result
+
+		arpTableEntriesArray.ForEach(
+			func(_, v gjson.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
+					}
+					found = true
+				}
+				if found {
+					res = v
+					return false
+				}
+				return true
+			},
+		)
+		if !res.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing ArpTableEntries[%d] = %+v",
+				i,
+				(*parent).ArpTableEntries[i],
+			))
+			(*parent).ArpTableEntries = slices.Delete((*parent).ArpTableEntries, i, i+1)
+			i--
+
+			continue
+		}
+		if value := res.Get("macAddress"); value.Exists() && !data.MacAddress.IsNull() {
+			data.MacAddress = types.StringValue(value.String())
+		} else {
+			data.MacAddress = types.StringNull()
+		}
+		if value := res.Get("ipAddress"); value.Exists() && !data.IpAddress.IsNull() {
+			data.IpAddress = types.StringValue(value.String())
+		} else {
+			data.IpAddress = types.StringNull()
+		}
+		if value := res.Get("enableAlias"); value.Exists() && !data.Enabled.IsNull() {
+			data.Enabled = types.BoolValue(value.Bool())
+		} else if data.Enabled.ValueBool() != true {
+			data.Enabled = types.BoolNull()
+		}
+		(*parent).ArpTableEntries[i] = data
+	}
+	if value := res.Get("enableAntiSpoofing"); value.Exists() && !data.AntiSpoofing.IsNull() {
+		data.AntiSpoofing = types.BoolValue(value.Bool())
+	} else {
+		data.AntiSpoofing = types.BoolNull()
+	}
+	if value := res.Get("fragmentReassembly"); value.Exists() && !data.AllowFullFragmentReassembly.IsNull() {
+		data.AllowFullFragmentReassembly = types.BoolValue(value.Bool())
+	} else {
+		data.AllowFullFragmentReassembly = types.BoolNull()
+	}
+	if value := res.Get("overrideDefaultFragmentSetting.chain"); value.Exists() && !data.OverrideDefaultFragmentSettingChain.IsNull() {
+		data.OverrideDefaultFragmentSettingChain = types.Int64Value(value.Int())
+	} else {
+		data.OverrideDefaultFragmentSettingChain = types.Int64Null()
+	}
+	if value := res.Get("overrideDefaultFragmentSetting.size"); value.Exists() && !data.OverrideDefaultFragmentSettingSize.IsNull() {
+		data.OverrideDefaultFragmentSettingSize = types.Int64Value(value.Int())
+	} else {
+		data.OverrideDefaultFragmentSettingSize = types.Int64Null()
+	}
+	if value := res.Get("overrideDefaultFragmentSetting.timeout"); value.Exists() && !data.OverrideDefaultFragmentSettingTimeout.IsNull() {
+		data.OverrideDefaultFragmentSettingTimeout = types.Int64Value(value.Int())
+	} else {
+		data.OverrideDefaultFragmentSettingTimeout = types.Int64Null()
+	}
+}
+
+// End of section. //template:end fromBodyPartial
+
+// Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
+
+// fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
+// Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
+func (data *DeviceVLANInterface) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
+	if data.Name.IsUnknown() {
+		if value := res.Get("name"); value.Exists() {
+			data.Name = types.StringValue(value.String())
+		} else {
+			data.Name = types.StringNull()
+		}
+	}
+}
+
+// End of section. //template:end fromBodyUnknowns
+
+// Section below is generated&owned by "gen/generator.go". //template:begin Clone
+
+// End of section. //template:end Clone
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
+
+// End of section. //template:end toBodyNonBulk
+
+// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
+
+// End of section. //template:end findObjectsToBeReplaced
+
+// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
+
+// End of section. //template:end clearItemIds
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
+
+// End of section. //template:end toBodyPutDelete
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
+
+// End of section. //template:end adjustBody
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
+
+// End of section. //template:end adjustBodyBulk
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyOverrides
+
+// End of section. //template:end toBodyOverrides
+
+// Section below is generated&owned by "gen/generator.go". //template:begin synthesizeOverrides
+
+// End of section. //template:end synthesizeOverrides

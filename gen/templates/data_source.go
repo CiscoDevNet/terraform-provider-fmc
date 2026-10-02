@@ -23,15 +23,22 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
+	"time"
 
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
+	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
-	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -100,7 +107,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 			{{- range .Attributes}}
 			{{- if not .Value}}
 			"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
-				MarkdownDescription: "{{.Description}}",
+				MarkdownDescription: "{{if .DsDescription}}{{.DsDescription}}{{else}}{{.Description}}{{end}}",
 				{{- if isListSet .}}
 				ElementType:         types.{{.ElementType}}Type,
 				{{- end}}
@@ -125,7 +132,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 						{{- range .Attributes}}
 						{{- if not .Value}}
 						"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
-							MarkdownDescription: "{{.Description}}",
+							MarkdownDescription: "{{if .DsDescription}}{{.DsDescription}}{{else}}{{.Description}}{{end}}",
 							{{- if isListSet .}}
 							ElementType:         types.{{.ElementType}}Type,
 							{{- end}}
@@ -143,7 +150,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 									{{- range .Attributes}}
 									{{- if not .Value}}
 									"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
-										MarkdownDescription: "{{.Description}}",
+										MarkdownDescription: "{{if .DsDescription}}{{.DsDescription}}{{else}}{{.Description}}{{end}}",
 										{{- if isListSet .}}
 										ElementType:         types.{{.ElementType}}Type,
 										{{- end}}
@@ -157,7 +164,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 												{{- range .Attributes}}
 												{{- if not .Value}}
 												"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
-													MarkdownDescription: "{{.Description}}",
+													MarkdownDescription: "{{if .DsDescription}}{{.DsDescription}}{{else}}{{.Description}}{{end}}",
 													{{- if isListSet .}}
 													ElementType:         types.{{.ElementType}}Type,
 													{{- end}}

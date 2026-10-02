@@ -40,7 +40,8 @@ import (
 
 // Run the docs generation tool, check its repository for more information on how it works and how docs
 // can be customized.
-//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+// --provider-name/--rendered-provider-name are pinned since the directory name (e.g. a git worktree) may not match "terraform-provider-fmc".
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate --provider-name fmc --rendered-provider-name terraform-provider-fmc
 
 // Update documentation categories.
 //go:generate go run gen/doc_category.go

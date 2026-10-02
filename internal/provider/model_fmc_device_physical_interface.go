@@ -52,6 +52,11 @@ type DevicePhysicalInterface struct {
 	Priority                              types.Int64                                             `tfsdk:"priority"`
 	SgtPropagate                          types.Bool                                              `tfsdk:"sgt_propagate"`
 	NveOnly                               types.Bool                                              `tfsdk:"nve_only"`
+	SwitchportMode                        types.String                                            `tfsdk:"switchport_mode"`
+	SwitchportAccessVlanId                types.Int64                                             `tfsdk:"switchport_access_vlan_id"`
+	SwitchportTrunkNativeVlanId           types.Int64                                             `tfsdk:"switchport_trunk_native_vlan_id"`
+	SwitchportTrunkAllowedVlanIds         types.String                                            `tfsdk:"switchport_trunk_allowed_vlan_ids"`
+	SwitchportProtected                   types.Bool                                              `tfsdk:"switchport_protected"`
 	Ipv4StaticAddress                     types.String                                            `tfsdk:"ipv4_static_address"`
 	Ipv4StaticNetmask                     types.String                                            `tfsdk:"ipv4_static_netmask"`
 	Ipv4AddressPoolId                     types.String                                            `tfsdk:"ipv4_address_pool_id"`
@@ -163,7 +168,7 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
-	if !data.Mode.IsNull() {
+	if !data.Mode.IsNull() && !data.Mode.IsUnknown() {
 		body, _ = sjson.Set(body, "mode", data.Mode.ValueString())
 	}
 	if !data.SecurityZoneId.IsNull() {
@@ -184,6 +189,21 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 	}
 	if !data.NveOnly.IsNull() {
 		body, _ = sjson.Set(body, "nveOnly", data.NveOnly.ValueBool())
+	}
+	if !data.SwitchportMode.IsNull() {
+		body, _ = sjson.Set(body, "switchPortConfig.portMode", data.SwitchportMode.ValueString())
+	}
+	if !data.SwitchportAccessVlanId.IsNull() {
+		body, _ = sjson.Set(body, "switchPortConfig.accessModeVlanId", data.SwitchportAccessVlanId.ValueInt64())
+	}
+	if !data.SwitchportTrunkNativeVlanId.IsNull() {
+		body, _ = sjson.Set(body, "switchPortConfig.trunkModeNativeVlanId", data.SwitchportTrunkNativeVlanId.ValueInt64())
+	}
+	if !data.SwitchportTrunkAllowedVlanIds.IsNull() {
+		body, _ = sjson.Set(body, "switchPortConfig.trunkModeAllowedVlanIds", data.SwitchportTrunkAllowedVlanIds.ValueString())
+	}
+	if !data.SwitchportProtected.IsNull() {
+		body, _ = sjson.Set(body, "switchPortConfig.protectedEnabled", data.SwitchportProtected.ValueBool())
 	}
 	if !data.Ipv4StaticAddress.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.static.address", data.Ipv4StaticAddress.ValueString())
@@ -492,6 +512,31 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.NveOnly = types.BoolValue(value.Bool())
 	} else {
 		data.NveOnly = types.BoolNull()
+	}
+	if value := res.Get("switchPortConfig.portMode"); value.Exists() {
+		data.SwitchportMode = types.StringValue(value.String())
+	} else {
+		data.SwitchportMode = types.StringNull()
+	}
+	if value := res.Get("switchPortConfig.accessModeVlanId"); value.Exists() {
+		data.SwitchportAccessVlanId = types.Int64Value(value.Int())
+	} else {
+		data.SwitchportAccessVlanId = types.Int64Null()
+	}
+	if value := res.Get("switchPortConfig.trunkModeNativeVlanId"); value.Exists() {
+		data.SwitchportTrunkNativeVlanId = types.Int64Value(value.Int())
+	} else {
+		data.SwitchportTrunkNativeVlanId = types.Int64Null()
+	}
+	if value := res.Get("switchPortConfig.trunkModeAllowedVlanIds"); value.Exists() {
+		data.SwitchportTrunkAllowedVlanIds = types.StringValue(value.String())
+	} else {
+		data.SwitchportTrunkAllowedVlanIds = types.StringNull()
+	}
+	if value := res.Get("switchPortConfig.protectedEnabled"); value.Exists() {
+		data.SwitchportProtected = types.BoolValue(value.Bool())
+	} else {
+		data.SwitchportProtected = types.BoolNull()
 	}
 	if value := res.Get("ipv4.static.address"); value.Exists() {
 		data.Ipv4StaticAddress = types.StringValue(value.String())
@@ -899,6 +944,31 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 		data.NveOnly = types.BoolValue(value.Bool())
 	} else {
 		data.NveOnly = types.BoolNull()
+	}
+	if value := res.Get("switchPortConfig.portMode"); value.Exists() && !data.SwitchportMode.IsNull() {
+		data.SwitchportMode = types.StringValue(value.String())
+	} else {
+		data.SwitchportMode = types.StringNull()
+	}
+	if value := res.Get("switchPortConfig.accessModeVlanId"); value.Exists() && !data.SwitchportAccessVlanId.IsNull() {
+		data.SwitchportAccessVlanId = types.Int64Value(value.Int())
+	} else {
+		data.SwitchportAccessVlanId = types.Int64Null()
+	}
+	if value := res.Get("switchPortConfig.trunkModeNativeVlanId"); value.Exists() && !data.SwitchportTrunkNativeVlanId.IsNull() {
+		data.SwitchportTrunkNativeVlanId = types.Int64Value(value.Int())
+	} else {
+		data.SwitchportTrunkNativeVlanId = types.Int64Null()
+	}
+	if value := res.Get("switchPortConfig.trunkModeAllowedVlanIds"); value.Exists() && !data.SwitchportTrunkAllowedVlanIds.IsNull() {
+		data.SwitchportTrunkAllowedVlanIds = types.StringValue(value.String())
+	} else {
+		data.SwitchportTrunkAllowedVlanIds = types.StringNull()
+	}
+	if value := res.Get("switchPortConfig.protectedEnabled"); value.Exists() && !data.SwitchportProtected.IsNull() {
+		data.SwitchportProtected = types.BoolValue(value.Bool())
+	} else {
+		data.SwitchportProtected = types.BoolNull()
 	}
 	if value := res.Get("ipv4.static.address"); value.Exists() && !data.Ipv4StaticAddress.IsNull() {
 		data.Ipv4StaticAddress = types.StringValue(value.String())
@@ -1368,6 +1438,13 @@ func (data *DevicePhysicalInterface) fromBodyUnknowns(ctx context.Context, res g
 			data.Type = types.StringNull()
 		}
 	}
+	if data.Mode.IsUnknown() {
+		if value := res.Get("mode"); value.Exists() {
+			data.Mode = types.StringValue(value.String())
+		} else {
+			data.Mode = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns
@@ -1387,4 +1464,16 @@ func (data DevicePhysicalInterface) toBodyPutDelete(ctx context.Context) string 
 	}
 
 	return body
+}
+
+// adjustBody makes sure `mode` is always present in the request body.
+// FMC rejects a payload without it ("Interface mode is mandatory, it needs to be provided."),
+// but `mode` is optional in the schema, so on create its planned value is unknown and toBody
+// skips it. NONE is the mode FMC would assign anyway; INLINE/TAP cannot be requested here, as
+// FMC sets those on its own once the interface becomes a member of an inline set.
+func (data DevicePhysicalInterface) adjustBody(ctx context.Context, req string) string {
+	if data.Mode.IsUnknown() {
+		req, _ = sjson.Set(req, "mode", "NONE")
+	}
+	return req
 }

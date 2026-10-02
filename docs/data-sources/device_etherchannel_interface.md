@@ -89,7 +89,7 @@ data "fmc_device_etherchannel_interface" "example" {
 - `management_access` (Boolean) Enable Management Access.
 - `management_access_network_objects` (Attributes Set) (see [below for nested schema](#nestedatt--management_access_network_objects))
 - `management_only` (Boolean) Whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
-- `mode` (String) Mode of the interface. Use INLINE if, and only if, the interface is part of fmc_inline_set with tap_mode=false or tap_mode unset. Use TAP if, and only if, the interface is part of fmc_inline_set with tap_mode = true. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.
+- `mode` (String) Mode of the interface. Leave unset for interfaces that are (or are about to become) members of fmc_device_inline_set - FMC assigns INLINE (or TAP, when the inline set has tap_mode = true) on its own and rejects any attempt to set those values on an interface that is not a member yet. Set INLINE or TAP explicitly only to adopt an interface that already is a member. Defaults to NONE when not set on creation. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.
 - `mtu` (Number) Maximum transmission unit. Can only be used when `logical_name` is set.
 - `nve_only` (Boolean) Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.
 - `override_default_fragment_setting_chain` (Number) Override Default Fragment Setting - Chain value.

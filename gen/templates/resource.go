@@ -22,27 +22,45 @@ package provider
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/url"
+	"regexp"
+	"slices"
+	"sort"
 	"strings"
 	"sync"
+	"time"
 
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
+	"github.com/google/uuid"
+	"github.com/hashicorp/go-version"
+	"github.com/hashicorp/terraform-plugin-framework-validators/float64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/resourcevalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/hashicorp/terraform-plugin-framework/resource/identityschema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
-	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
-	"github.com/hashicorp/go-version"
-	"github.com/google/uuid"
+	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -155,7 +173,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 				{{- end}}
 				{{- if or .Reference .Mandatory}}
 				Required:            true,
-				{{- else if and (not .ResourceId) (not .Computed)}}
+				{{- else if and (not .ResourceId) (or (not .Computed) .Optional)}}
 				Optional:            true,
 				{{- end}}
 				{{- if or (len .DefaultValue) .ResourceId .Computed}}
@@ -240,7 +258,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 							{{- end}}
 							{{- if or .Reference .Mandatory}}
 							Required:            true,
-							{{- else if and (not .ResourceId) (not .Computed)}}
+							{{- else if and (not .ResourceId) (or (not .Computed) .Optional)}}
 							Optional:            true,
 							{{- end}}
 							{{- if or (len .DefaultValue) .ResourceId .Computed}}
@@ -332,7 +350,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 										{{- end}}
 										{{- if or .Reference .Mandatory}}
 										Required:            true,
-										{{- else if and (not .ResourceId) (not .Computed)}}
+										{{- else if and (not .ResourceId) (or (not .Computed) .Optional)}}
 										Optional:            true,
 										{{- end}}
 										{{- if or (len .DefaultValue) .ResourceId .Computed}}
@@ -415,7 +433,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 													{{- end}}
 													{{- if or .Reference .Mandatory}}
 													Required:            true,
-													{{- else if and (not .ResourceId) (not .Computed)}}
+													{{- else if and (not .ResourceId) (or (not .Computed) .Optional)}}
 													Optional:            true,
 													{{- end}}
 													{{- if or (len .DefaultValue) .ResourceId .Computed}}

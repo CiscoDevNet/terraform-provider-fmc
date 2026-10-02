@@ -97,7 +97,7 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"mode": schema.StringAttribute{
-				MarkdownDescription: "Mode of the interface. Use INLINE if, and only if, the interface is part of fmc_inline_set with tap_mode=false or tap_mode unset. Use TAP if, and only if, the interface is part of fmc_inline_set with tap_mode = true. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.",
+				MarkdownDescription: "Mode of the interface. Leave unset for interfaces that are (or are about to become) members of fmc_device_inline_set - FMC assigns INLINE (or TAP, when the inline set has tap_mode = true) on its own and rejects any attempt to set those values on an interface that is not a member yet. Set INLINE or TAP explicitly only to adopt an interface that already is a member. Defaults to NONE when not set on creation. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.",
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
@@ -123,6 +123,26 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 			},
 			"nve_only": schema.BoolAttribute{
 				MarkdownDescription: "Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.",
+				Computed:            true,
+			},
+			"switchport_mode": schema.StringAttribute{
+				MarkdownDescription: "Switch port mode. Can only be used when `mode` is SWITCHPORT.",
+				Computed:            true,
+			},
+			"switchport_access_vlan_id": schema.Int64Attribute{
+				MarkdownDescription: "VLAN Id assigned to the switch port in ACCESS mode (switchport_mode).",
+				Computed:            true,
+			},
+			"switchport_trunk_native_vlan_id": schema.Int64Attribute{
+				MarkdownDescription: "Native VLAN Id of the switch port in TRUNK mode (switchport_mode).",
+				Computed:            true,
+			},
+			"switchport_trunk_allowed_vlan_ids": schema.StringAttribute{
+				MarkdownDescription: "Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode (switchport_mode), for example `2,4-6`.",
+				Computed:            true,
+			},
+			"switchport_protected": schema.BoolAttribute{
+				MarkdownDescription: "Prevent the switch port from communicating with other protected switch ports on the same VLAN.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{

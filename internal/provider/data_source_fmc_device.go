@@ -117,16 +117,32 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Enables Object Group Search",
 				Computed:            true,
 			},
+			"deploy_on_destroy": schema.BoolAttribute{
+				MarkdownDescription: "Ignored for Data Source.",
+				Computed:            true,
+			},
 			"access_control_policy_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the assigned Access Control Policy.",
 				Computed:            true,
 			},
+			"access_control_policy_domain": schema.StringAttribute{
+				MarkdownDescription: "Not populated by this data source; Device's domain is assumed implicitly.",
+				Computed:            true,
+			},
 			"nat_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned FTD NAT policy.",
+				MarkdownDescription: "Id of the assigned FTD NAT policy. Only populated if the NAT policy resides in the same FMC domain as the device.",
+				Computed:            true,
+			},
+			"nat_policy_domain": schema.StringAttribute{
+				MarkdownDescription: "Not populated by this data source; Device's domain is assumed implicitly.",
 				Computed:            true,
 			},
 			"health_policy_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.",
+				Computed:            true,
+			},
+			"health_policy_domain": schema.StringAttribute{
+				MarkdownDescription: "Not populated by this data source; Device's domain is assumed implicitly.",
 				Computed:            true,
 			},
 			"container_id": schema.StringAttribute{
@@ -241,7 +257,12 @@ func (d *DeviceDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	res = config.fromBodyPolicy(ctx, res, policies)
+	// Data source has no per-policy domain attributes, hence all policies are looked up in the domain of the device
+	res = config.fromBodyPolicy(ctx, res, map[string]gjson.Result{
+		"AccessPolicy": policies,
+		"FTDNatPolicy": policies,
+		"HealthPolicy": policies,
+	})
 	config.fromBody(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))

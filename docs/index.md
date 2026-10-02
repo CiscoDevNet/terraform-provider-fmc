@@ -1,10 +1,7 @@
-
 ---
-layout: ""
 page_title: "Provider: FMC"
 description: |-
   The FMC provider provides resources to interact with a Cisco Secure Firewall Management Center (FMC) and Cloud-Delivered FMC (cdFMC) instances.
-
 ---
 
 # FMC Provider
