@@ -34,6 +34,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -136,7 +137,41 @@ func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.C
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
-	plan.Id = types.StringValue(res.Get("id").String())
+
+	if retrievedId := res.Get("id"); retrievedId.Exists() {
+		// FMC returned the id directly in the POST response (documented/expected behavior)
+		plan.Id = types.StringValue(retrievedId.String())
+	} else {
+		// Some FMC/cdFMC deployments (observed via the Security Cloud Control API gateway) omit
+		// the `id` field from the POST response for this endpoint. Fall back to looking up the
+		// newly created object by its (unique) name, to avoid ending up with an empty id in
+		// state (which would make subsequent Update/Delete calls target the collection endpoint
+		// instead of a specific object).
+		tflog.Debug(ctx, fmt.Sprintf("%s: id missing from POST response, looking up object by name %q", plan.Id.ValueString(), plan.Name.ValueString()))
+		resList, err := r.client.Get(plan.getPath(), reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object after create, got error: %s", err))
+			return
+		}
+		resList.Get("items").ForEach(func(k, v gjson.Result) bool {
+			if v.Get("name").String() == plan.Name.ValueString() {
+				plan.Id = types.StringValue(v.Get("id").String())
+				return false
+			}
+			return true
+		})
+		if plan.Id.ValueString() == "" {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find created object with name: %s", plan.Name.ValueString()))
+			return
+		}
+
+		// Fetch the full object, since the POST response body did not include all fields either.
+		res, err = r.client.Get(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+			return
+		}
+	}
 	plan.fromBodyUnknowns(ctx, res)
 
 	// CSCwr13011 FMC API: policy/ftdplatformsettingspolicies returns incorrect type
@@ -224,6 +259,11 @@ func (r *FTDPlatformSettingsResource) Update(ctx context.Context, req resource.U
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
 
+	if plan.Id.ValueString() == "" {
+		resp.Diagnostics.AddError("Client Error", "Cannot update object: id is empty, refusing to send request to the collection endpoint")
+		return
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
@@ -256,6 +296,11 @@ func (r *FTDPlatformSettingsResource) Delete(ctx context.Context, req resource.D
 	reqMods := [](func(*fmc.Req)){}
 	if !state.Domain.IsNull() && state.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
+	}
+
+	if state.Id.ValueString() == "" {
+		resp.Diagnostics.AddError("Client Error", "Cannot delete object: id is empty, refusing to send request to the collection endpoint")
+		return
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
