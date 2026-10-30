@@ -206,3 +206,60 @@ func TestAccFmcHosts_Sequential(t *testing.T) {
 // 		Steps:                    steps,
 // 	})
 // }
+
+func TestAccFmcHosts_IPv6(t *testing.T) {
+
+	// Lowercase compressed (canonical form), uppercase, uncompressed
+	step_01 := `resource "fmc_hosts" "test" {` + "\n" +
+		`	items = {` + "\n" +
+		`		"hosts_ipv6_1" = {` + "\n" +
+		`			ip = "2001:db8::1",` + "\n" +
+		`		},` + "\n" +
+		`		"hosts_ipv6_2" = {` + "\n" +
+		`			ip = "2001:DB8::ABCD",` + "\n" +
+		`		},` + "\n" +
+		`		"hosts_ipv6_3" = {` + "\n" +
+		`			ip = "2001:0db8:0000:0000:0000:0000:0000:0010",` + "\n" +
+		`		},` + "\n" +
+		`	} ` + "\n" +
+		`}` + "\n"
+
+	var checks_step01 []resource.TestCheckFunc
+	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_ipv6_1.ip", "2001:db8::1"))
+	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_ipv6_2.ip", "2001:DB8::ABCD"))
+	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_ipv6_3.ip", "2001:0db8:0000:0000:0000:0000:0000:0010"))
+
+	// Change only the notation of the IPs, FMC keeps the same canonical value
+	step_02 := `resource "fmc_hosts" "test" {` + "\n" +
+		`	items = {` + "\n" +
+		`		"hosts_ipv6_1" = {` + "\n" +
+		`			ip = "2001:DB8:0:0::1",` + "\n" +
+		`		},` + "\n" +
+		`		"hosts_ipv6_2" = {` + "\n" +
+		`			ip = "2001:db8::abcd",` + "\n" +
+		`		},` + "\n" +
+		`		"hosts_ipv6_3" = {` + "\n" +
+		`			ip = "2001:db8::10",` + "\n" +
+		`		},` + "\n" +
+		`	} ` + "\n" +
+		`}` + "\n"
+
+	var checks_step02 []resource.TestCheckFunc
+	checks_step02 = append(checks_step02, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_ipv6_1.ip", "2001:DB8:0:0::1"))
+	checks_step02 = append(checks_step02, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_ipv6_2.ip", "2001:db8::abcd"))
+	checks_step02 = append(checks_step02, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_ipv6_3.ip", "2001:db8::10"))
+
+	steps := []resource.TestStep{{
+		Config: step_01,
+		Check:  resource.ComposeTestCheckFunc(checks_step01...),
+	}, {
+		Config: step_02,
+		Check:  resource.ComposeTestCheckFunc(checks_step02...),
+	}}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps:                    steps,
+	})
+}

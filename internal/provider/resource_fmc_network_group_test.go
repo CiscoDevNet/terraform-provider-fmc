@@ -166,3 +166,44 @@ func TestAccFmcNetworkGroup_Extended(t *testing.T) {
 		Steps:                    steps,
 	})
 }
+
+func TestAccFmcNetworkGroup_IPv6(t *testing.T) {
+	configUpperCase := `resource "fmc_network_group" "test" {` + "\n"
+	configUpperCase += `  name = "ng_ipv6"` + "\n"
+	configUpperCase += `  literals = [` + "\n"
+	configUpperCase += `    { value = "2001:db8::1" },` + "\n"
+	configUpperCase += `    { value = "2001:DB8::ABCD" },` + "\n"
+	configUpperCase += `    { value = "2001:DB8:FF::/48" }` + "\n"
+	configUpperCase += `  ]` + "\n"
+	configUpperCase += `}` + "\n"
+
+	configUncompressed := `resource "fmc_network_group" "test" {` + "\n"
+	configUncompressed += `  name = "ng_ipv6"` + "\n"
+	configUncompressed += `  literals = [` + "\n"
+	configUncompressed += `    { value = "2001:db8::1" },` + "\n"
+	configUncompressed += `    { value = "2001:DB8::ABCD" },` + "\n"
+	configUncompressed += `    { value = "2001:DB8:FF::/48" },` + "\n"
+	configUncompressed += `    { value = "2001:0db8:0000:0000:0000:0000:0000:0010" }` + "\n"
+	configUncompressed += `  ]` + "\n"
+	configUncompressed += `}` + "\n"
+
+	steps := []resource.TestStep{{
+		Config: configUpperCase,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckTypeSetElemNestedAttrs("fmc_network_group.test", "literals.*", map[string]string{"value": "2001:db8::1"}),
+			resource.TestCheckTypeSetElemNestedAttrs("fmc_network_group.test", "literals.*", map[string]string{"value": "2001:DB8::ABCD"}),
+			resource.TestCheckTypeSetElemNestedAttrs("fmc_network_group.test", "literals.*", map[string]string{"value": "2001:DB8:FF::/48"}),
+		),
+	}, {
+		Config: configUncompressed,
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckTypeSetElemNestedAttrs("fmc_network_group.test", "literals.*", map[string]string{"value": "2001:0db8:0000:0000:0000:0000:0000:0010"}),
+		),
+	}}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps:                    steps,
+	})
+}

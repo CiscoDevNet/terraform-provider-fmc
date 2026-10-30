@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
@@ -137,7 +138,10 @@ func (data *Host) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 	}
 	if value := res.Get("value"); value.Exists() && !data.Ip.IsNull() {
-		data.Ip = types.StringValue(value.String())
+		// Keep the configured value if the API returned the same IP address in canonical form
+		if helpers.NormalizeIP(data.Ip.ValueString()) != helpers.NormalizeIP(value.String()) {
+			data.Ip = types.StringValue(value.String())
+		}
 	} else {
 		data.Ip = types.StringNull()
 	}

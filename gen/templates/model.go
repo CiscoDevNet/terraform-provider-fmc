@@ -433,7 +433,14 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 	if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists(){{if not .ResourceId}}{{if not .ComputedRefreshValue}} && !data.{{toGoName .TfName}}.IsNull(){{end}}{{end}} {
+		{{- if .NormalizeIp}}
+		// Keep the configured value if the API returned the same IP address in canonical form
+		if helpers.NormalizeIP(data.{{toGoName .TfName}}.ValueString()) != helpers.NormalizeIP(value.String()) {
+			data.{{toGoName .TfName}} = types.{{.Type}}Value(value.{{.Type}}())
+		}
+		{{- else}}
 		data.{{toGoName .TfName}} = types.{{.Type}}Value(value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}())
+		{{- end}}
 	} else {{if .DefaultValue}}if data.{{toGoName .TfName}}.Value{{.Type}}() != {{if eq .Type "String"}}"{{end}}{{.DefaultValue}}{{if eq .Type "String"}}"{{end}} {{end}}{
 		{{- if .MissingInResponseIfSetToEmptyString}}
 		if !data.{{toGoName .TfName}}.IsNull() && data.{{toGoName .TfName}}.ValueString() == "" {
@@ -490,8 +497,8 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	{{- $arrayVar := printf "%sArray" (lowerFirst (toGoName .TfName))}}
 	{{if .ModelName}}{{$arrayVar}} := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}
 	for i := 0; i < len(data.{{toGoName .TfName}}); i++ {
-		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
-		keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}(), {{end}}{{end}}{{end}} }
+		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}{{if .NormalizeIp}}|@normalize_ip{{end}}", {{end}}{{end}}{{end}} }
+		keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}{{if .NormalizeIp}}helpers.NormalizeIP(data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}()){{else}}data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}(){{end}}, {{end}}{{end}}{{end}} }
 
 		parent := &data
 		data := (*parent).{{toGoName .TfName}}[i]
@@ -583,8 +590,8 @@ func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson
 	{{- $arrayVar := printf "%sArray" (lowerFirst (toGoName .TfName))}}
 	{{if .ModelName}}{{$arrayVar}} := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}
 	for i := range data.{{toGoName .TfName}} {
-		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
-		keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}(), {{end}}{{end}}{{end}} }
+		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}{{if .NormalizeIp}}|@normalize_ip{{end}}", {{end}}{{end}}{{end}} }
+		keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}{{if .NormalizeIp}}helpers.NormalizeIP(data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}()){{else}}data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}(){{end}}, {{end}}{{end}}{{end}} }
 
 		var r gjson.Result
 		{{if .ModelName}}{{$arrayVar}}{{else}}res{{end}}.ForEach(

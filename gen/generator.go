@@ -173,6 +173,7 @@ type YamlConfigAttribute struct {
 	DataSourceOptionalParameter         bool                  `yaml:"data_source_optional_parameter"`
 	Sensitive                           bool                  `yaml:"sensitive"`
 	MissingInResponseIfSetToEmptyString bool                  `yaml:"missing_in_response_if_set_to_empty_string"`
+	NormalizeIp                         bool                  `yaml:"normalize_ip"`
 	Attributes                          []YamlConfigAttribute `yaml:"attributes"`
 	TfOnly                              bool                  `yaml:"tf_only"`
 	GoTypeName                          string
@@ -530,6 +531,11 @@ func (attr *YamlConfigAttribute) init(parentGoTypeName string) error {
 	if attr.Type == "Map" && HasId(attr.Attributes) {
 		return fmt.Errorf("Map %q cannot contain sub-attributes with `id: true`, as it treats map key ([k]) as the only unique id",
 			attr.TfName)
+	}
+
+	if attr.NormalizeIp && attr.Type != "String" {
+		return fmt.Errorf("%q has type %q which cannot use `normalize_ip`: instead use type String",
+			attr.TfName, attr.Type)
 	}
 
 	if attr.ComputedRefreshValue && !attr.Computed {

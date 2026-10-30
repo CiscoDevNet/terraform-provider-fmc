@@ -24,7 +24,6 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
@@ -47,9 +46,6 @@ import (
 )
 
 // End of section. //template:end imports
-
-// Mutex to protect policy assignment changes
-var policyMu sync.Mutex
 
 // Section below is generated&owned by "gen/generator.go". //template:begin model
 
