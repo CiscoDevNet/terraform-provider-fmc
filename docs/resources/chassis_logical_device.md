@@ -61,7 +61,7 @@ resource "fmc_chassis_logical_device" "example" {
 
 ### Required
 
-- `access_control_policy_id` (String) Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.
+- `access_control_policy_id` (String) Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.
 - `assigned_interfaces` (Attributes Set) Interface assignment for the device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `chassis_id` (String) Id of the parent chassis.
 - `device_password` (String, Sensitive) Admin password for the device.
@@ -87,11 +87,11 @@ resource "fmc_chassis_logical_device" "example" {
 - `ipv6_address` (String) Management IPv6 address of the device.
 - `ipv6_gateway` (String) Gateway for Management IPv6 address.
 - `ipv6_prefix` (Number) Prefix length of Management IPv6 address.
-- `licenses` (Set of String) License capabilities to be assigned to the device. This is used only as bootstrap configuration.
+- `licenses` (Set of String) License capabilities to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.
   - Choices: `MALWARE`, `URLFilter`, `CARRIER`, `PROTECT`, `THREAT`
 - `permit_expert_mode` (String) Permit expert mode for the device.
   - Choices: `yes`, `no`
-- `platform_settings_id` (String) Id of the platform settings.
+- `platform_settings_id` (String) Id of the platform settings to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.
 - `search_domain` (String) Search domain for the device.
 
 ### Read-Only

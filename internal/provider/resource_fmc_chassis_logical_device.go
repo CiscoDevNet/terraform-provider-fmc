@@ -249,15 +249,15 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				Optional:            true,
 			},
 			"access_control_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.").String,
 				Required:            true,
 			},
 			"platform_settings_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the platform settings.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the platform settings to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.").String,
 				Optional:            true,
 			},
 			"licenses": schema.SetAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("License capabilities to be assigned to the device. This is used only as bootstrap configuration.").AddStringEnumDescription("MALWARE", "URLFilter", "CARRIER", "PROTECT", "THREAT").String,
+				MarkdownDescription: helpers.NewAttributeDescription("License capabilities to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.").AddStringEnumDescription("MALWARE", "URLFilter", "CARRIER", "PROTECT", "THREAT").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 				Validators: []validator.Set{
@@ -470,11 +470,11 @@ func (r *ChassisLogicalDeviceResource) Update(ctx context.Context, req resource.
 	}
 
 	// If interfaces are updated, trigger chassis deployment
-	changed, diags := helpers.IsConfigUpdatingAt(ctx, req.Plan, req.State, path.Root("assigned_interfaces"))
+	changedInterfaces, diags := helpers.IsConfigUpdatingAt(ctx, req.Plan, req.State, path.Root("assigned_interfaces"))
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
-	if changed {
+	if changedInterfaces {
 		// Trigger chassis deployment
 		deploy := DeviceDeploy{
 			Id:            plan.Id,

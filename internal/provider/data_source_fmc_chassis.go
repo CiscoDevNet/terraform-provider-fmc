@@ -96,6 +96,10 @@ func (d *ChassisDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				MarkdownDescription: "(used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.",
 				Computed:            true,
 			},
+			"deploy_on_destroy": schema.BoolAttribute{
+				MarkdownDescription: "Ignored for Data Source.",
+				Computed:            true,
+			},
 		},
 	}
 }
