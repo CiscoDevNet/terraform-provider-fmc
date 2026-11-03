@@ -26,7 +26,7 @@ attributes:
     mandatory: true
     example: 0050568A-2561-0ed3-0000-004294972836
     data_path: ["policy"]
-    test_value: fmc_ftd_nat_policy.example.id
+    test_value: fmc_ftd_nat_policy.test.id
   - model_name: type
     tf_name: policy_type
     data_path: ["policy"]
@@ -76,7 +76,7 @@ attributes:
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
-  resource "fmc_ftd_nat_policy" "example" {
+  resource "fmc_ftd_nat_policy" "test" {
     name = "policy_assignment_nat_policy"
   }
 

@@ -41,21 +41,28 @@ func TestAccFmcDevice(t *testing.T) {
 	// Prepare Terraform's var.registration_key
 	os.Setenv("TF_VAR_device_registration_key", ftd.MustRandomizeKey())
 
-	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device.test", "id"))
-
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			PreConfig: ftd.MustInitFromEnv,
-			Config:    testAccFmcDevicePrerequisitesConfig + testAccFmcDeviceConfig_minimum(),
+			Config: testAccFmcDevicePrerequisitesConfig + testAccFmcDeviceConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		PreConfig: ftd.MustInitFromEnv,
-		Config:    testAccFmcDevicePrerequisitesConfig + testAccFmcDeviceConfig_all(),
-		Check:     resource.ComposeTestCheckFunc(checks...),
+		Config: testAccFmcDevicePrerequisitesConfig + testAccFmcDeviceConfig_all(),
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckResourceAttrSet("fmc_device.test", "type"),
+			resource.TestCheckResourceAttrSet("fmc_device.test", "id"),
+			resource.TestCheckResourceAttrPair("fmc_device.test", "access_control_policy_id", "fmc_access_control_policy.test", "id"),
+			resource.TestCheckResourceAttrPair("fmc_device.test", "nat_policy_id", "fmc_ftd_nat_policy.test", "id"),
+		),
+	})
+	// Re-assign the device to different policies
+	steps = append(steps, resource.TestStep{
+		Config: testAccFmcDevicePrerequisitesConfig + testAccFmcDeviceConfig_policyReassignment(),
+		Check: resource.ComposeTestCheckFunc(
+			resource.TestCheckResourceAttrPair("fmc_device.test", "access_control_policy_id", "fmc_access_control_policy.test2", "id"),
+			resource.TestCheckResourceAttrPair("fmc_device.test", "nat_policy_id", "fmc_ftd_nat_policy.test2", "id"),
+		),
 	})
 	steps = append(steps, resource.TestStep{
 		ResourceName: "fmc_device.test",
@@ -65,6 +72,7 @@ func TestAccFmcDevice(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
+			ftd.MustInitFromEnv()
 		},
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps:                    steps,
@@ -76,15 +84,24 @@ func TestAccFmcDevice(t *testing.T) {
 const testAccFmcDevicePrerequisitesConfig = `
 variable "ftd_addr" { default = null } // tests will set $TF_VAR_ftd_addr
 variable "device_registration_key" {} // tests will set $TF_VAR_device_registration_key
-variable "licenses" { default = "BASE" } // tests will set $TF_VAR_licenses
+variable "licenses" { default = "ESSENTIALS" } // tests will set $TF_VAR_licenses
 
 resource "fmc_access_control_policy" "test" {
   name = "fmc_device_access_control_policy"
   default_action = "BLOCK"
 }
 
+resource "fmc_access_control_policy" "test2" {
+  name = "fmc_device_access_control_policy2"
+  default_action = "BLOCK"
+}
+
 resource "fmc_ftd_nat_policy" "test" {
   name        = "fmc_device_nat_policy"
+}
+
+resource "fmc_ftd_nat_policy" "test2" {
+  name        = "fmc_device_nat_policy2"
 }
 `
 
@@ -122,3 +139,17 @@ func testAccFmcDeviceConfig_all() string {
 }
 
 // End of section. //template:end testAccConfigAll
+
+func testAccFmcDeviceConfig_policyReassignment() string {
+	config := `resource "fmc_device" "test" {` + "\n"
+	config += `	name = "my_device"` + "\n"
+	config += `	host = var.ftd_addr` + "\n"
+	config += `	licenses = [var.licenses]` + "\n"
+	config += `	registration_key = var.device_registration_key` + "\n"
+	config += `	performance_tier = "FTDv5"` + "\n"
+	config += `	snort_engine = "SNORT3"` + "\n"
+	config += `	access_control_policy_id = fmc_access_control_policy.test2.id` + "\n"
+	config += `	nat_policy_id = fmc_ftd_nat_policy.test2.id` + "\n"
+	config += `}` + "\n"
+	return config
+}

@@ -303,11 +303,6 @@ func (data *ChassisLogicalDevice) fromBody(ctx context.Context, res gjson.Result
 	} else {
 		data.DeviceGroupId = types.StringNull()
 	}
-	if value := res.Get("deviceRegistration.platformSettings.id"); value.Exists() {
-		data.PlatformSettingsId = types.StringValue(value.String())
-	} else {
-		data.PlatformSettingsId = types.StringNull()
-	}
 	if value := res.Get("deviceRegistration.licenseCaps"); value.Exists() {
 		data.Licenses = helpers.GetStringSet(value.Array())
 	} else {
@@ -491,11 +486,6 @@ func (data *ChassisLogicalDevice) fromBodyPartial(ctx context.Context, res gjson
 		data.DeviceGroupId = types.StringValue(value.String())
 	} else {
 		data.DeviceGroupId = types.StringNull()
-	}
-	if value := res.Get("deviceRegistration.platformSettings.id"); value.Exists() && !data.PlatformSettingsId.IsNull() {
-		data.PlatformSettingsId = types.StringValue(value.String())
-	} else {
-		data.PlatformSettingsId = types.StringNull()
 	}
 	if value := res.Get("deviceRegistration.licenseCaps"); value.Exists() && !data.Licenses.IsNull() {
 		data.Licenses = helpers.GetStringSet(value.Array())

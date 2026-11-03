@@ -174,15 +174,15 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				Computed:            true,
 			},
 			"access_control_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.",
+				MarkdownDescription: "Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.",
 				Computed:            true,
 			},
 			"platform_settings_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the platform settings.",
+				MarkdownDescription: "Id of the platform settings to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.",
 				Computed:            true,
 			},
 			"licenses": schema.SetAttribute{
-				MarkdownDescription: "License capabilities to be assigned to the device. This is used only as bootstrap configuration.",
+				MarkdownDescription: "License capabilities to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},

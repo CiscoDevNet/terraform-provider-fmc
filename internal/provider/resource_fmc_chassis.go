@@ -30,6 +30,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -114,6 +115,12 @@ func (r *ChassisResource) Schema(ctx context.Context, req resource.SchemaRequest
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
+			},
+			"deploy_on_destroy": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Trigger deployment of the chassis right before it is removed from FMC.").AddDefaultValueDescription("false").String,
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(false),
 			},
 		},
 	}
@@ -293,8 +300,6 @@ func (r *ChassisResource) Update(ctx context.Context, req resource.UpdateRequest
 	resp.Diagnostics.Append(diags...)
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin delete
-
 func (r *ChassisResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state Chassis
 
@@ -310,6 +315,22 @@ func (r *ChassisResource) Delete(ctx context.Context, req resource.DeleteRequest
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
 	}
 
+	// Trigger deployment before the chassis is removed, if requested.
+	if state.DeployOnDestroy.ValueBool() {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Triggering deployment before chassis removal", state.Id.ValueString()))
+		deployPlan := DeviceDeploy{
+			Id:             state.Id,
+			Domain:         state.Domain,
+			IgnoreWarning:  types.BoolValue(true),
+			DeviceIdList:   helpers.GetStringListFromStringSlice([]string{state.Id.ValueString()}),
+			DeploymentNote: types.StringValue("Deployment triggered by Terraform before chassis removal"),
+		}
+		diags := FMCDeviceDeploy(ctx, r.client, deployPlan, reqMods)
+		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+			return
+		}
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
 	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
@@ -321,8 +342,6 @@ func (r *ChassisResource) Delete(ctx context.Context, req resource.DeleteRequest
 
 	resp.State.RemoveResource(ctx)
 }
-
-// End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *ChassisResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
