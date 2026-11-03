@@ -38,17 +38,11 @@ import (
 	"github.com/tidwall/sjson"
 )
 
-// Mutex to protect deployments
+// deploymentMu makes sure that a single deployment is in progress at a time
 var deploymentMu sync.Mutex
 
-func init() {
-	gjson.AddModifier("case", func(json, arg string) string {
-		if arg == "lower" {
-			return strings.ToLower(json)
-		}
-		return json
-	})
-}
+// policyMu makes sure that a single policy assignment change is in progress at a time
+var policyMu sync.Mutex
 
 func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string, reqMods [](func(*fmc.Req))) diag.Diagnostics {
 	var diags diag.Diagnostics

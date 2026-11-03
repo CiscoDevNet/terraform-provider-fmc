@@ -120,3 +120,53 @@ func testAccFmcHostConfig_all() string {
 // 		Steps:                    steps,
 // 	})
 // }
+
+func TestAccFmcHost_IPv6(t *testing.T) {
+	config := func(ip string) string {
+		return `resource "fmc_host" "test" {` + "\n" +
+			`	name = "host_ipv6"` + "\n" +
+			`	ip = "` + ip + `"` + "\n" +
+			`}` + "\n"
+	}
+
+	// Lowercase, compressed (canonical form), uppercase, uncompressed
+	ips := []string{
+		"2001:db8::1",
+		"2001:DB8::ABCD",
+		"2001:0db8:0000:0000:0000:0000:0000:0010",
+	}
+
+	var steps []resource.TestStep
+	for _, ip := range ips {
+		steps = append(steps, resource.TestStep{
+			Config: config(ip),
+			Check:  resource.TestCheckResourceAttr("fmc_host.test", "ip", ip),
+		})
+	}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps:                    steps,
+	})
+}
+
+// Shows how FMC treats IPv4 octets with leading zeros:
+// decimal (192.168.10.20), octal (192.168.8.16), kept as is, or rejected.
+func TestAccFmcHost_IPv4LeadingZeros(t *testing.T) {
+	config := `resource "fmc_host" "test" {` + "\n" +
+		`	name = "host_ipv4_leading_zeros"` + "\n" +
+		`	ip = "192.168.010.020"` + "\n" +
+		`}` + "\n"
+
+	steps := []resource.TestStep{{
+		Config: config,
+		Check:  resource.TestCheckResourceAttr("fmc_host.test", "ip", "192.168.010.020"),
+	}}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps:                    steps,
+	})
+}

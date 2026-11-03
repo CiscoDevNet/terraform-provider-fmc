@@ -48,6 +48,7 @@ attributes:
     attributes:
       - model_name: value
         type: String
+        normalize_ip: true
         description: IP address or network in CIDR format. Please do not use /32 mask for host.
         id: true
         example: 10.1.1.0/24
