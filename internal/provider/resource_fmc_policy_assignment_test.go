@@ -63,7 +63,7 @@ func TestAccFmcPolicyAssignment(t *testing.T) {
 const testAccFmcPolicyAssignmentPrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
-resource "fmc_ftd_nat_policy" "example" {
+resource "fmc_ftd_nat_policy" "test" {
   name = "policy_assignment_nat_policy"
 }
 
@@ -81,7 +81,7 @@ data "fmc_device" "test" {
 
 func testAccFmcPolicyAssignmentConfig_all() string {
 	config := `resource "fmc_policy_assignment" "test" {` + "\n"
-	config += `	policy_id = fmc_ftd_nat_policy.example.id` + "\n"
+	config += `	policy_id = fmc_ftd_nat_policy.test.id` + "\n"
 	config += `	policy_type = "FTDNatPolicy"` + "\n"
 	config += `	targets = [{` + "\n"
 	config += `		id = data.fmc_device.test.id` + "\n"

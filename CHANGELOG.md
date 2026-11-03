@@ -1,3 +1,7 @@
+## Unreleased
+
+- (Enhancement) `fmc_chassis`: Add `deploy_on_destroy` attribute to trigger chassis deployment just before the chassis is removed from FMC
+
 ## 2.6.1
 
 - (Fix) `fmc_policy_assignment`: Do not re-assign targets that no longer exist

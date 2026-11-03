@@ -30,6 +30,8 @@ resource "fmc_chassis" "example" {
 
 ### Optional
 
+- `deploy_on_destroy` (Boolean) Trigger deployment of the chassis right before it is removed from FMC.
+  - Default value: `false`
 - `device_group_id` (String) Id of the device group the chassis should belong to.
 - `domain` (String) Name of the FMC domain
 - `host` (String) Hostname or IP address of the chassis. Either `host` or `nat_id` must be provided.
