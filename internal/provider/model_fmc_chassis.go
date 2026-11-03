@@ -39,6 +39,7 @@ type Chassis struct {
 	RegistrationKey types.String `tfsdk:"registration_key"`
 	DeviceGroupId   types.String `tfsdk:"device_group_id"`
 	NatId           types.String `tfsdk:"nat_id"`
+	DeployOnDestroy types.Bool   `tfsdk:"deploy_on_destroy"`
 }
 
 // End of section. //template:end types
@@ -106,6 +107,7 @@ func (data *Chassis) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.DeviceGroupId = types.StringNull()
 	}
+	data.DeployOnDestroy = types.BoolValue(false)
 }
 
 // End of section. //template:end fromBody

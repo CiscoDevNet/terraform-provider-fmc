@@ -1,3 +1,4 @@
+# Manual resource - Update, Delete
 ---
 name: Chassis Logical Device
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/chassis/fmcmanagedchassis/%v/logicaldevices
@@ -181,7 +182,7 @@ attributes:
     data_path: [deviceRegistration, accessPolicy]
     tf_name: access_control_policy_id
     type: String
-    description: Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.
+    description: Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     mandatory: true
     write_only: true
@@ -189,15 +190,16 @@ attributes:
     data_path: [deviceRegistration, platformSettings]
     tf_name: platform_settings_id
     type: String
-    description: Id of the platform settings.
+    description: Id of the platform settings to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    write_only: true
   - model_name: licenseCaps
     data_path: [deviceRegistration]
     tf_name: licenses
     type: Set
     element_type: String
     enum_values: [MALWARE, URLFilter, CARRIER, PROTECT, THREAT]
-    description: License capabilities to be assigned to the device. This is used only as bootstrap configuration.
+    description: License capabilities to be assigned to the device. This is used only as bootstrap configuration and will not take effect after initial deployment.
     example: MALWARE
   # Container Details
   - model_name: id

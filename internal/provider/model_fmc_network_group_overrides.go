@@ -24,6 +24,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
@@ -347,8 +348,8 @@ func (data *NetworkGroupOverrides) fromBodyPartial(ctx context.Context, res gjso
 		}
 		literalsArray := res.Get("literals")
 		for i := 0; i < len(data.Literals); i++ {
-			keys := [...]string{"value"}
-			keyValues := [...]string{data.Literals[i].Value.ValueString()}
+			keys := [...]string{"value|@normalize_ip"}
+			keyValues := [...]string{helpers.NormalizeIP(data.Literals[i].Value.ValueString())}
 
 			parent := &data
 			data := (*parent).Literals[i]
@@ -382,7 +383,10 @@ func (data *NetworkGroupOverrides) fromBodyPartial(ctx context.Context, res gjso
 				continue
 			}
 			if value := res.Get("value"); value.Exists() && !data.Value.IsNull() {
-				data.Value = types.StringValue(value.String())
+				// Keep the configured value if the API returned the same IP address in canonical form
+				if helpers.NormalizeIP(data.Value.ValueString()) != helpers.NormalizeIP(value.String()) {
+					data.Value = types.StringValue(value.String())
+				}
 			} else {
 				data.Value = types.StringNull()
 			}

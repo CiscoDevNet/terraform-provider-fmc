@@ -55,7 +55,6 @@ func TestAccFmcChassisLogicalDevice(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "resource_profile_name", "my_resource_profile"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "assigned_interfaces.0.id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "device_group_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "platform_settings_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_chassis_logical_device.test", "container_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_chassis_logical_device.test", "container_type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_chassis_logical_device.test", "container_name"))
