@@ -1,0 +1,526 @@
+---
+name: Device EIGRP
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/eigrproutes
+rest_endpoint_vrf: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/eigrproutes
+doc_category: Devices
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+attributes:
+  - model_name: device_id
+    type: String
+    reference: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'EigrpRoute'.
+    computed: true
+  - model_name: asNumber
+    tf_name: as_number
+    type: String
+    description: Autonomous System (AS) number of the EIGRP process.
+    mandatory: true
+    data_source_query: true
+    example: "100"
+
+  # Basic - General
+  - model_name: networks
+    data_path: [basicConfiguration]
+    tf_name: networks
+    type: List
+    description: Networks or Hosts that participate in the EIGRP routing process.
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        description: Network object ID.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        mandatory: true
+        id: true
+        test_value: fmc_networks.test.items.eigrp_network_1.id
+  - model_name: autoSummary
+    data_path: [basicConfiguration]
+    tf_name: auto_summary
+    type: Bool
+    description: Advertise summary routes to other EIGRP routers.
+    example: false
+    default_value: false
+  - model_name: allInterfaces
+    data_path: [basicConfiguration, passiveInterfaces]
+    tf_name: passive_interfaces_all
+    type: Bool
+    description: Set all interfaces as passive (do not send or receive routing updates).
+    exclude_example: true
+    test_value: "false"
+  - model_name: selectedInterfaces
+    data_path: [basicConfiguration, passiveInterfaces]
+    tf_name: passive_interfaces
+    type: List
+    description: Interfaces as passive (do not send or receive routing updates). Applicable only when `passive_interfaces_all` is not set to true.
+    attributes:
+      - model_name: id
+        type: String
+        description: Interface ID.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        mandatory: true
+        id: true
+        test_value: fmc_device_physical_interface.test.id
+
+  # Neighbors
+  - model_name: neighbors
+    tf_name: neighbors
+    type: List
+    description: EIGRP neighbors.
+    attributes:
+      - model_name: id
+        data_path: [neighborInterface]
+        tf_name: interface_id
+        type: String
+        description: Id of interface through which the neighbor is reachable.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        mandatory: true
+        test_value: fmc_device_physical_interface.test.id
+      - model_name: id
+        data_path: [neighborAddress]
+        tf_name: host_id
+        type: String
+        description: Id of Host object representing the neighbor.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        mandatory: true
+        id: true
+        test_value: fmc_hosts.test.items.eigrp_neighbor.id
+
+  # Filter Rules
+  - model_name: distributionList
+    tf_name: filter_rules
+    type: List
+    description: Filter rules (distribute lists) for EIGRP routing updates.
+    attributes:
+      - model_name: filterDirection
+        tf_name: filter_direction
+        type: String
+        description: Filter direction.
+        enum_values: [INBOUND, OUTBOUND]
+        mandatory: true
+        example: INBOUND
+      - model_name: id
+        data_path: [accessList]
+        tf_name: standard_access_list_id
+        type: String
+        description: Standard Access List ID, that defines the networks that are to be received and suppressed in routing updates.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        mandatory: true
+        test_value: fmc_standard_access_list.test.id
+      - model_name: id
+        data_path: [deviceInterface]
+        tf_name: interface_id
+        type: String
+        description: Id of interface to which the filter rule applies.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: fmc_device_physical_interface.test.id
+      - model_name: protocol
+        tf_name: routing_process
+        type: String
+        description: Routing process whose routes are filtered. Applicable only for `OUTBOUND` direction.
+        enum_values: [CONNECTED, BGP, OSPF, RIP, STATIC]
+        exclude_example: true
+        exclude_test: true
+      - model_name: processId
+        tf_name: routing_process_id
+        type: String
+        description: OSPF process ID or BGP AS number.
+        exclude_example: true
+        exclude_test: true
+
+  # Redistribution
+  - model_name: redistributeProtocols
+    tf_name: redistributions
+    type: List
+    description: Redistributions to the EIGRP routing process.
+    attributes:
+      - model_name: protocol
+        tf_name: redistribute_protocol
+        type: String
+        description: Protocol to redistribute.
+        enum_values: [CONNECTED, BGP, OSPF, RIP, STATIC]
+        mandatory: true
+        id: true
+        example: STATIC
+      - model_name: processId
+        tf_name: process_id
+        type: String
+        description: OSPF process ID or BGP AS number.
+        id: true
+        exclude_example: true
+        exclude_test: true
+      - model_name: id
+        data_path: [routeMap]
+        tf_name: route_map_id
+        type: String
+        description: Route map ID for route filtering.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: fmc_route_map.test.id
+      - model_name: matchInternal
+        tf_name: match_internal
+        type: Bool
+        description: Whether to match OSPF internal routes.
+        exclude_example: true
+        exclude_test: true
+      - model_name: matchExternal1
+        tf_name: match_external_1
+        type: Bool
+        description: Whether to match OSPF external type 1 routes.
+        exclude_example: true
+        exclude_test: true
+      - model_name: matchExternal2
+        tf_name: match_external_2
+        type: Bool
+        description: Whether to match OSPF external type 2 routes.
+        exclude_example: true
+        exclude_test: true
+      - model_name: matchNssaExternal1
+        tf_name: match_nssa_external_1
+        type: Bool
+        description: Whether to match OSPF NSSA external type 1 routes.
+        exclude_example: true
+        exclude_test: true
+      - model_name: matchNssaExternal2
+        tf_name: match_nssa_external_2
+        type: Bool
+        description: Whether to match OSPF NSSA external type 2 routes.
+        exclude_example: true
+        exclude_test: true
+      - model_name: bandwidth
+        data_path: [routeMetric]
+        tf_name: metric_bandwidth
+        type: Int64
+        description: Metric bandwidth (in Kbps).
+        min_int: 1
+        max_int: 4294967295
+        example: 1000
+      - model_name: delay
+        data_path: [routeMetric]
+        tf_name: metric_delay
+        type: Int64
+        description: Metric delay (in tens of microseconds).
+        min_int: 0
+        max_int: 4294967295
+        example: 100
+      - model_name: reliability
+        data_path: [routeMetric]
+        tf_name: metric_reliability
+        type: Int64
+        description: Metric reliability. The value 255 indicates 100 percent reliability; 0 means no reliability.
+        min_int: 0
+        max_int: 255
+        example: 255
+      - model_name: effectiveBandwidth
+        data_path: [routeMetric]
+        tf_name: metric_loading
+        type: Int64
+        description: Metric effective bandwidth (loading). 255 indicates 100 percent loading.
+        min_int: 1
+        max_int: 255
+        example: 1
+      - model_name: pathMTU
+        data_path: [routeMetric]
+        tf_name: metric_mtu
+        type: Int64
+        description: Metric path MTU (in bytes).
+        min_int: 1
+        max_int: 65535
+        example: 1500
+
+  # Summary Addresses
+  - model_name: summaryAddressList
+    tf_name: summary_addresses
+    type: List
+    description: Summary addresses advertised on interfaces.
+    attributes:
+      - model_name: id
+        data_path: [deviceInterface]
+        tf_name: interface_id
+        type: String
+        description: Id of interface on which the summary address is advertised.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        mandatory: true
+        id: true
+        test_value: fmc_device_physical_interface.test.id
+      - model_name: id
+        data_path: [summaryAddress]
+        tf_name: network_id
+        type: String
+        description: Network object ID of the summary address.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        mandatory: true
+        id: true
+        test_value: fmc_networks.test.items.eigrp_network_2.id
+      - model_name: adminDistance
+        tf_name: administrative_distance
+        type: Int64
+        description: Administrative distance of the summary route.
+        min_int: 1
+        max_int: 255
+        example: 5
+
+  # Interfaces
+  - model_name: eigrpInterfaces
+    tf_name: interfaces
+    type: List
+    description: EIGRP interface settings.
+    attributes:
+      - model_name: id
+        data_path: [deviceInterface]
+        tf_name: interface_id
+        type: String
+        description: Interface ID.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        mandatory: true
+        id: true
+        test_value: fmc_device_physical_interface.test.id
+      - model_name: type
+        data_path: [deviceInterface]
+        tf_name: interface_type
+        type: String
+        description: Interface type.
+        mandatory: true
+        example: PhysicalInterface
+        test_value: fmc_device_physical_interface.test.type
+      - model_name: helloInterval
+        data_path: [eigrpProtocolConfiguration, timers]
+        tf_name: hello_interval
+        type: Int64
+        description: Interval (in seconds) between hello transmissions.
+        min_int: 1
+        max_int: 65535
+        example: 10
+        default_value: 5
+      - model_name: holdTime
+        data_path: [eigrpProtocolConfiguration, timers]
+        tf_name: hold_time
+        type: Int64
+        description: Time (in seconds) before the neighbor is considered down.
+        min_int: 1
+        max_int: 65535
+        example: 30
+        default_value: 15
+      - model_name: splitHorizon
+        data_path: [eigrpProtocolConfiguration]
+        tf_name: split_horizon
+        type: Bool
+        description: Enable split horizon.
+        example: false
+      - model_name: delay
+        data_path: [eigrpProtocolConfiguration, timers]
+        tf_name: delay_time
+        type: Int64
+        description: Throughput delay (in tens of microseconds).
+        min_int: 1
+        max_int: 16777215
+        example: 20
+      - model_name: md5auth
+        data_path: [eigrpProtocolConfiguration, authentication]
+        tf_name: md5_authentication
+        type: Bool
+        description: Enable MD5 authentication.
+        example: true
+      - model_name: pwdEncryption
+        data_path: [eigrpProtocolConfiguration, authentication]
+        tf_name: authentication_key_type
+        type: String
+        description: Authentication key encryption.
+        enum_values: [UNENCRYPTED, ENCRYPTED, AUTHKEY]
+        example: UNENCRYPTED
+      - model_name: keyId
+        data_path: [eigrpProtocolConfiguration, authentication]
+        tf_name: authentication_key_id
+        type: Int64
+        description: Authentication key ID.
+        min_int: 0
+        max_int: 255
+        example: 2
+      - model_name: password
+        data_path: [eigrpProtocolConfiguration, authentication]
+        tf_name: authentication_key
+        type: String
+        description: Authentication key.
+        sensitive: true
+        write_only: true
+        example: my_secret
+
+  # Advanced
+  - model_name: routerId
+    data_path: [advancedConfiguration]
+    tf_name: router_id
+    type: String
+    description: IPv4 address used as the router ID. Do not configure for AUTOMATIC router ID selection.
+    example: 10.10.10.1
+  - model_name: id
+    data_path: [advancedConfiguration, defaultRouteDistributionIn]
+    tf_name: default_information_in_standard_access_list_id
+    type: String
+    description: Standard Access List ID used to accept exterior default routing information.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_standard_access_list.test.id
+  - model_name: id
+    data_path: [advancedConfiguration, defaultRouteDistributionOut]
+    tf_name: default_information_out_standard_access_list_id
+    type: String
+    description: Standard Access List ID used to advertise exterior default routing information.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_standard_access_list.test.id
+  - model_name: internal
+    data_path: [advancedConfiguration, administrativeDistance]
+    tf_name: administrative_distance_internal
+    type: Int64
+    description: Administrative distance for EIGRP internal routes.
+    min_int: 1
+    max_int: 255
+    example: 90
+  - model_name: external
+    data_path: [advancedConfiguration, administrativeDistance]
+    tf_name: administrative_distance_external
+    type: Int64
+    description: Administrative distance for EIGRP external routes.
+    min_int: 1
+    max_int: 255
+    example: 170
+  - model_name: logNeighborChanges
+    data_path: [advancedConfiguration]
+    tf_name: log_neighbor_changes
+    type: Bool
+    description: Enable logging of EIGRP neighbor adjacency changes.
+    example: true
+  - model_name: enableLogNeighborWarnings
+    data_path: [advancedConfiguration]
+    tf_name: log_neighbor_warnings
+    type: Bool
+    description: Enable logging of EIGRP neighbor warning messages.
+    example: true
+  - model_name: logNeighborWarningInterval
+    data_path: [advancedConfiguration]
+    tf_name: log_neighbor_warnings_interval
+    type: Int64
+    description: Interval (in seconds) between repeated neighbor warning messages.
+    min_int: 1
+    max_int: 65535
+    example: 15
+  - model_name: receiveOnly
+    data_path: [advancedConfiguration, stub]
+    tf_name: stub_receive_only
+    type: Bool
+    description: Configure the device as a receive-only EIGRP stub router.
+    example: false
+  - model_name: connected
+    data_path: [advancedConfiguration, stub, advertise]
+    tf_name: stub_advertise_connected
+    type: Bool
+    description: EIGRP stub router advertises connected routes.
+    example: true
+  - model_name: redistributed
+    data_path: [advancedConfiguration, stub, advertise]
+    tf_name: stub_advertise_redistributed
+    type: Bool
+    description: EIGRP stub router advertises redistributed routes.
+    example: false
+  - model_name: static
+    data_path: [advancedConfiguration, stub, advertise]
+    tf_name: stub_advertise_static
+    type: Bool
+    description: EIGRP stub router advertises static routes.
+    example: false
+  - model_name: summary
+    data_path: [advancedConfiguration, stub, advertise]
+    tf_name: stub_advertise_summary
+    type: Bool
+    description: EIGRP stub router advertises summary routes.
+    example: true
+  - model_name: bandwidth
+    data_path: [advancedConfiguration, routeMetric]
+    tf_name: default_metric_bandwidth
+    type: Int64
+    description: Default metric bandwidth (in Kbps) for redistributed routes.
+    min_int: 1
+    max_int: 4294967295
+    example: 1000
+  - model_name: delay
+    data_path: [advancedConfiguration, routeMetric]
+    tf_name: default_metric_delay_time
+    type: Int64
+    description: Default metric delay (in tens of microseconds) for redistributed routes.
+    min_int: 0
+    max_int: 4294967295
+    example: 100
+  - model_name: reliability
+    data_path: [advancedConfiguration, routeMetric]
+    tf_name: default_metric_reliability
+    type: Int64
+    description: Default metric reliability for redistributed routes.
+    min_int: 0
+    max_int: 255
+    example: 255
+  - model_name: effectiveBandwidth
+    data_path: [advancedConfiguration, routeMetric]
+    tf_name: default_metric_loading
+    type: Int64
+    description: Default metric effective bandwidth (loading) for redistributed routes.
+    min_int: 1
+    max_int: 255
+    example: 1
+  - model_name: pathMTU
+    data_path: [advancedConfiguration, routeMetric]
+    tf_name: default_metric_mtu
+    type: Int64
+    description: Default metric path MTU (in bytes) for redistributed routes.
+    min_int: 1
+    max_int: 65535
+    example: 1500
+  - model_name: id
+    data_path: [advancedConfiguration, clusterPool]
+    tf_name: cluster_ipv4_pool_id
+    type: String
+    description: IPv4 Address Pool ID used for router ID assignment on clustered devices.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
+    exclude_example: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" { default = null } // tests will set $TF_VAR_interface_name
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id           = var.device_id
+    name                = var.interface_name
+    logical_name        = "eigrp_interface"
+    mode                = "NONE"
+    enabled             = true
+    ipv4_static_address = "10.99.1.1"
+    ipv4_static_netmask = "24"
+  }
+
+  resource "fmc_networks" "test" {
+    items = {
+      "eigrp_network_1" = { prefix = "10.99.1.0/24" },
+      "eigrp_network_2" = { prefix = "10.99.0.0/16" },
+    }
+  }
+
+  resource "fmc_hosts" "test" {
+    items = {
+      "eigrp_neighbor" = { ip = "10.99.1.2" },
+    }
+  }
+
+  resource "fmc_standard_access_list" "test" {
+    name = "eigrp_std_acl"
+    entries = [
+      { action = "PERMIT", literals = [{ value = "10.1.1.0/24" }] }
+    ]
+  }
+
+  resource "fmc_route_map" "test" {
+    name    = "eigrp_route_map"
+    entries = [
+      { action = "PERMIT" }
+    ]
+  }
