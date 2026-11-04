@@ -38,7 +38,6 @@ import (
 type DeviceEIGRP struct {
 	Id                                        types.String                   `tfsdk:"id"`
 	Domain                                    types.String                   `tfsdk:"domain"`
-	VrfId                                     types.String                   `tfsdk:"vrf_id"`
 	DeviceId                                  types.String                   `tfsdk:"device_id"`
 	Type                                      types.String                   `tfsdk:"type"`
 	AsNumber                                  types.String                   `tfsdk:"as_number"`
@@ -137,11 +136,7 @@ type DeviceEIGRPInterfaces struct {
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data DeviceEIGRP) getPath() string {
-	if data.VrfId.ValueString() != "" {
-		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/eigrproutes", url.QueryEscape(data.DeviceId.ValueString()), url.QueryEscape(data.VrfId.ValueString()))
-	} else {
-		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/eigrproutes", url.QueryEscape(data.DeviceId.ValueString()))
-	}
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/eigrproutes", url.QueryEscape(data.DeviceId.ValueString()))
 }
 
 // End of section. //template:end getPath

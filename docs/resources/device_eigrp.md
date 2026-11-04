@@ -141,7 +141,6 @@ resource "fmc_device_eigrp" "example" {
 - `stub_advertise_summary` (Boolean) EIGRP stub router advertises summary routes.
 - `stub_receive_only` (Boolean) Configure the device as a receive-only EIGRP stub router.
 - `summary_addresses` (Attributes List) Summary addresses advertised on interfaces. (see [below for nested schema](#nestedatt--summary_addresses))
-- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 
@@ -267,6 +266,5 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 
 ```shell
 # <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
-# <vrf_id> is optional.
-terraform import fmc_device_eigrp.example "<domain>,<device_id>,<vrf_id>,<id>"
+terraform import fmc_device_eigrp.example "<domain>,<device_id>,<id>"
 ```

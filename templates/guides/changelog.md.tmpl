@@ -10,8 +10,8 @@ description: |-
 ## Unreleased
 
 - (Enhancement) Add support for `fmc_device_eigrp`
-- (Enhancement) Add IPv6 address normalization for Host(s) and Network Group(s)
 - (Enhancement) `fmc_chassis`: Add `deploy_on_destroy` attribute to trigger chassis deployment just before the chassis is removed from FMC
+- (Fix) `fmc_host*`, `fmc_network_group*`: Normalize IPv6 addresses to avoid plan differences
 
 ## 2.6.1
 

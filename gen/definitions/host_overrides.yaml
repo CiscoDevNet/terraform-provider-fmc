@@ -54,6 +54,7 @@ attributes:
     - model_name: value
       tf_name: ip
       type: String
+      normalize_ip: true
       mandatory: true
       description: Override IP
       example: 10.1.1.1

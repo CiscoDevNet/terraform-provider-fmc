@@ -31,7 +31,6 @@ data "fmc_device_eigrp" "example" {
 - `as_number` (String) Autonomous System (AS) number of the EIGRP process.
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 
