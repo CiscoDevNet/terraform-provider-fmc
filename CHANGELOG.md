@@ -1,4 +1,4 @@
-## Unreleased
+## 2.7.0
 
 - (Enhancement) Add support for `fmc_device_eigrp`
 - (Enhancement) `fmc_chassis`: Add `deploy_on_destroy` attribute to trigger chassis deployment just before the chassis is removed from FMC
