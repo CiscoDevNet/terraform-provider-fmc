@@ -76,7 +76,7 @@ Optional:
 - `interface_literals` (Set of String) List of interface literals to reach syslog server.
 - `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach syslog server. (see [below for nested schema](#nestedatt--servers--interface_objects))
 - `port` (Number) Port number used to send syslog messages to the server.
-  - Range: `1025`-`65535`
+  - Range: `514`-`65535`
   - Default value: `1470`
 - `protocol` (String) Protocol used to send syslog messages to the server.
   - Choices: `TCP`, `UDP`

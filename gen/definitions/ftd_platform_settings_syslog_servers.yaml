@@ -57,7 +57,7 @@ attributes:
       - model_name: port
         type: Int64
         description: Port number used to send syslog messages to the server.
-        min_int: 1025
+        min_int: 514
         max_int: 65535
         example: 1470
         default_value: 1470

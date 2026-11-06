@@ -1,3 +1,7 @@
+## Unreleased
+
+- (Fix) `ftd_platform_settings_syslog_servers`: `port` now can be set to 514
+
 ## 2.7.0
 
 - (Enhancement) Add support for `fmc_device_eigrp`

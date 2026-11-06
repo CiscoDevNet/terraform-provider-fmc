@@ -132,11 +132,11 @@ func (r *FTDPlatformSettingsSyslogServersResource) Schema(ctx context.Context, r
 							Default: stringdefault.StaticString("TCP"),
 						},
 						"port": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Port number used to send syslog messages to the server.").AddIntegerRangeDescription(1025, 65535).AddDefaultValueDescription("1470").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Port number used to send syslog messages to the server.").AddIntegerRangeDescription(514, 65535).AddDefaultValueDescription("1470").String,
 							Optional:            true,
 							Computed:            true,
 							Validators: []validator.Int64{
-								int64validator.Between(1025, 65535),
+								int64validator.Between(514, 65535),
 							},
 							Default: int64default.StaticInt64(1470),
 						},
