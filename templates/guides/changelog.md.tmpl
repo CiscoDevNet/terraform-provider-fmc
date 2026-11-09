@@ -9,6 +9,8 @@ description: |-
 
 ## Unreleased
 
+- (Enhancement) Add support for `fmc_access_control_policy_logging`
+- (Enhancement) Add support for `fmc_access_control_policy_advanced_logging`
 - (Fix) `ftd_platform_settings_syslog_servers`: `port` now can be set to 514
 
 ## 2.7.0

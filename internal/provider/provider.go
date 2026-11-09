@@ -326,7 +326,9 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 	return []func() resource.Resource{
 		NewAccessCategoryResource,
 		NewAccessControlPolicyResource,
+		NewAccessControlPolicyAdvancedLoggingResource,
 		NewAccessControlPolicyInheritanceResource,
+		NewAccessControlPolicyLoggingResource,
 		NewAccessRuleResource,
 		NewAccessRulesResource,
 		NewApplicationFilterResource,

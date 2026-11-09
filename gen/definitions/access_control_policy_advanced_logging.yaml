@@ -1,0 +1,58 @@
+# Manual resource - toBodyPutDelete
+---
+name: Access Control Policy Advanced Logging
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/advancedloggingsettings
+doc_category: Policies
+minimum_version: "10.0"
+res_description: This resource manages Access Control Policy Advanced Logging Settings.
+put_create: true
+retrieve_id: true
+put_delete: true
+no_data_source: true
+skip_minimum_test: true
+attributes:
+  - model_name: access_control_policy_id
+    type: String
+    description: Id of the Access Control Policy.
+    reference: true
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_access_control_policy.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'AdvancedLoggingSetting'.
+    computed: true
+  - model_name: enabled
+    type: Bool
+    description: Enable advanced logging.
+    mandatory: true
+    example: true
+  - model_name: logOption
+    tf_name: log_format
+    type: String
+    description: Format of the advanced logging events.
+    enum_values: [JSON, CSV, TSV]
+    mandatory: true
+    example: CSV
+  - model_name: useOverrideDestination
+    tf_name: send_to_other_destination
+    type: Bool
+    description: Send events to a destination other than the one configured in Access Control Policy logging settings.
+    example: true
+  - model_name: sendToSplunk
+    tf_name: send_to_splunk
+    type: Bool
+    description: Send events to all configured Splunk profiles. Can be set only when `send_to_other_destination` is true.
+    example: true
+  - model_name: id
+    data_path: [syslogConfig]
+    tf_name: syslog_alert_id
+    type: String
+    description: Id of the syslog alert to send events to. Can be set only when `send_to_other_destination` is true.
+    example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
+    exclude_test: true
+
+test_prerequisites: |-
+  resource "fmc_access_control_policy" "test" {
+    name           = "acp_advanced_logging"
+    default_action = "BLOCK"
+  }
