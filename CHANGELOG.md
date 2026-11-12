@@ -1,4 +1,4 @@
-## Unreleased
+## 2.8.0
 
 - (Enhancement) Add support for `fmc_access_control_policy_logging`
 - (Enhancement) Add support for `fmc_access_control_policy_advanced_logging`
