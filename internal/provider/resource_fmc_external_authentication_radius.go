@@ -180,6 +180,30 @@ func (r *ExternalAuthenticationRadiusResource) Schema(ctx context.Context, req r
 					},
 				},
 			},
+			"ui_access_role_mapping": schema.SetNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of user roles with corresponding map value of comma seperated usernames and/or attribute-value pairs.").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"map": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Map value of comma seperated usernames and/or attribute-value pairs.").String,
+							Optional:            true,
+						},
+						"user_role_name": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the user role.").String,
+							Required:            true,
+						},
+						"user_role_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Unique identifier of the role.").String,
+							Optional:            true,
+						},
+						"user_role_type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Response object associated with resource.").String,
+							Optional:            true,
+						},
+					},
+				},
+			},
 		},
 	}
 }

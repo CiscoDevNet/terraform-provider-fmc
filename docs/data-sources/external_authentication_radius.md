@@ -42,6 +42,7 @@ data "fmc_external_authentication_radius" "example" {
 - `server_port` (Number) Port number of the primary RADIUS server.
 - `timeout` (Number) Timeout (in seconds) before retrying the primary server.
 - `type` (String) Type of the object; this value is always 'RADIUSConfigObject'.
+- `ui_access_role_mapping` (Attributes Set) List of user roles with corresponding map value of comma seperated usernames and/or attribute-value pairs. (see [below for nested schema](#nestedatt--ui_access_role_mapping))
 
 <a id="nestedatt--custom_attributes"></a>
 ### Nested Schema for `custom_attributes`
@@ -51,3 +52,14 @@ Read-Only:
 - `id` (Number) Custom attribute ID.
 - `name` (String) Custom attribute name.
 - `type` (String) Custom attribute type.
+
+
+<a id="nestedatt--ui_access_role_mapping"></a>
+### Nested Schema for `ui_access_role_mapping`
+
+Read-Only:
+
+- `map` (String) Map value of comma seperated usernames and/or attribute-value pairs.
+- `user_role_id` (String) Unique identifier of the role.
+- `user_role_name` (String) Name of the user role.
+- `user_role_type` (String) Response object associated with resource.

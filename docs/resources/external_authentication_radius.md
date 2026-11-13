@@ -24,6 +24,14 @@ resource "fmc_external_authentication_radius" "example" {
   timeout                       = 30
   retries                       = 3
   message_authenticator_enabled = true
+  ui_access_role_mapping = [
+    {
+      map            = "User-Category=Analyst,jdoe"
+      user_role_name = "Administrator"
+      user_role_id   = "bee2eb18-e129-11df-a04a-42c66f0a3b36"
+      user_role_type = "AuthRole"
+    }
+  ]
 }
 ```
 
@@ -57,6 +65,7 @@ resource "fmc_external_authentication_radius" "example" {
 - `timeout` (Number) Timeout (in seconds) before retrying the primary server.
   - Range: `1`-`60`
   - Default value: `30`
+- `ui_access_role_mapping` (Attributes Set) List of user roles with corresponding map value of comma seperated usernames and/or attribute-value pairs. (see [below for nested schema](#nestedatt--ui_access_role_mapping))
 
 ### Read-Only
 
@@ -71,6 +80,20 @@ Required:
 - `id` (Number) Custom attribute ID.
 - `name` (String) Custom attribute name.
 - `type` (String) Custom attribute type.
+
+
+<a id="nestedatt--ui_access_role_mapping"></a>
+### Nested Schema for `ui_access_role_mapping`
+
+Required:
+
+- `user_role_name` (String) Name of the user role.
+
+Optional:
+
+- `map` (String) Map value of comma seperated usernames and/or attribute-value pairs.
+- `user_role_id` (String) Unique identifier of the role.
+- `user_role_type` (String) Response object associated with resource.
 
 ## Import
 

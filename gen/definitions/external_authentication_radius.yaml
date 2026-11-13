@@ -120,3 +120,37 @@ attributes:
         description: Custom attribute type.
         example: "string"
         mandatory: true
+
+    # UI Access
+  - model_name: attributeRoleMapping
+    data_path: [uiAccessUserList]
+    tf_name: ui_access_role_mapping
+    type: Set
+    description: List of user roles with corresponding map value of comma seperated usernames and/or attribute-value pairs.
+    attributes:
+      - model_name: map
+        tf_name: map
+        type: String
+        description: "Map value of comma seperated usernames and/or attribute-value pairs."
+        example: "User-Category=Analyst,jdoe"
+
+        # User Role
+      - model_name: name
+        data_path: [userRole]
+        tf_name: user_role_name
+        type: String
+        mandatory: true
+        description: Name of the user role.
+        example: "Administrator"
+      - model_name: id
+        data_path: [userRole]
+        tf_name: user_role_id
+        type: String
+        description: Unique identifier of the role.
+        example: "bee2eb18-e129-11df-a04a-42c66f0a3b36"
+      - model_name: type
+        data_path: [userRole]
+        tf_name: user_role_type
+        type: String
+        description: Response object associated with resource.
+        example: "AuthRole"

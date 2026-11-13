@@ -39,6 +39,10 @@ func TestAccFmcExternalAuthenticationRadius(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "timeout", "30"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "retries", "3"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "message_authenticator_enabled", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "ui_access_role_mapping.0.map", "User-Category=Analyst,jdoe"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "ui_access_role_mapping.0.user_role_name", "Administrator"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "ui_access_role_mapping.0.user_role_id", "bee2eb18-e129-11df-a04a-42c66f0a3b36"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_external_authentication_radius.test", "ui_access_role_mapping.0.user_role_type", "AuthRole"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -93,6 +97,12 @@ func testAccFmcExternalAuthenticationRadiusConfig_all() string {
 	config += `	timeout = 30` + "\n"
 	config += `	retries = 3` + "\n"
 	config += `	message_authenticator_enabled = true` + "\n"
+	config += `	ui_access_role_mapping = [{` + "\n"
+	config += `		map = "User-Category=Analyst,jdoe"` + "\n"
+	config += `		user_role_name = "Administrator"` + "\n"
+	config += `		user_role_id = "bee2eb18-e129-11df-a04a-42c66f0a3b36"` + "\n"
+	config += `		user_role_type = "AuthRole"` + "\n"
+	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config
 }

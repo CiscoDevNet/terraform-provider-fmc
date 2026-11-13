@@ -36,28 +36,36 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type ExternalAuthenticationRadius struct {
-	Id                          types.String                                   `tfsdk:"id"`
-	Domain                      types.String                                   `tfsdk:"domain"`
-	Name                        types.String                                   `tfsdk:"name"`
-	Type                        types.String                                   `tfsdk:"type"`
-	Description                 types.String                                   `tfsdk:"description"`
-	ServerHostname              types.String                                   `tfsdk:"server_hostname"`
-	ServerPort                  types.Int64                                    `tfsdk:"server_port"`
-	ServerKey                   types.String                                   `tfsdk:"server_key"`
-	BackupServerHostname        types.String                                   `tfsdk:"backup_server_hostname"`
-	BackupServerPort            types.Int64                                    `tfsdk:"backup_server_port"`
-	BackupServerKey             types.String                                   `tfsdk:"backup_server_key"`
-	Timeout                     types.Int64                                    `tfsdk:"timeout"`
-	Retries                     types.Int64                                    `tfsdk:"retries"`
-	MessageAuthenticatorEnabled types.Bool                                     `tfsdk:"message_authenticator_enabled"`
-	CliAccessUsers              types.String                                   `tfsdk:"cli_access_users"`
-	CustomAttributes            []ExternalAuthenticationRadiusCustomAttributes `tfsdk:"custom_attributes"`
+	Id                          types.String                                      `tfsdk:"id"`
+	Domain                      types.String                                      `tfsdk:"domain"`
+	Name                        types.String                                      `tfsdk:"name"`
+	Type                        types.String                                      `tfsdk:"type"`
+	Description                 types.String                                      `tfsdk:"description"`
+	ServerHostname              types.String                                      `tfsdk:"server_hostname"`
+	ServerPort                  types.Int64                                       `tfsdk:"server_port"`
+	ServerKey                   types.String                                      `tfsdk:"server_key"`
+	BackupServerHostname        types.String                                      `tfsdk:"backup_server_hostname"`
+	BackupServerPort            types.Int64                                       `tfsdk:"backup_server_port"`
+	BackupServerKey             types.String                                      `tfsdk:"backup_server_key"`
+	Timeout                     types.Int64                                       `tfsdk:"timeout"`
+	Retries                     types.Int64                                       `tfsdk:"retries"`
+	MessageAuthenticatorEnabled types.Bool                                        `tfsdk:"message_authenticator_enabled"`
+	CliAccessUsers              types.String                                      `tfsdk:"cli_access_users"`
+	CustomAttributes            []ExternalAuthenticationRadiusCustomAttributes    `tfsdk:"custom_attributes"`
+	UiAccessRoleMapping         []ExternalAuthenticationRadiusUiAccessRoleMapping `tfsdk:"ui_access_role_mapping"`
 }
 
 type ExternalAuthenticationRadiusCustomAttributes struct {
 	Id   types.Int64  `tfsdk:"id"`
 	Name types.String `tfsdk:"name"`
 	Type types.String `tfsdk:"type"`
+}
+
+type ExternalAuthenticationRadiusUiAccessRoleMapping struct {
+	Map          types.String `tfsdk:"map"`
+	UserRoleName types.String `tfsdk:"user_role_name"`
+	UserRoleId   types.String `tfsdk:"user_role_id"`
+	UserRoleType types.String `tfsdk:"user_role_type"`
 }
 
 // End of section. //template:end types
@@ -141,6 +149,33 @@ func (data ExternalAuthenticationRadius) toBody(ctx context.Context, state Exter
 		}
 		customAttributesBody.WriteString("]")
 		body, _ = sjson.SetRaw(body, "customAttributes", customAttributesBody.String())
+	}
+	if len(data.UiAccessRoleMapping) > 0 {
+		var uiAccessRoleMappingBody strings.Builder
+		uiAccessRoleMappingBody.WriteString("[")
+		for _, item := range data.UiAccessRoleMapping {
+			itemBody := ""
+			if !item.Map.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "map", item.Map.ValueString())
+			}
+			if !item.UserRoleName.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "userRole.name", item.UserRoleName.ValueString())
+			}
+			if !item.UserRoleId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "userRole.id", item.UserRoleId.ValueString())
+			}
+			if !item.UserRoleType.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "userRole.type", item.UserRoleType.ValueString())
+			}
+			if itemBody != "" {
+				if uiAccessRoleMappingBody.Len() > 1 {
+					uiAccessRoleMappingBody.WriteString(",")
+				}
+				uiAccessRoleMappingBody.WriteString(itemBody)
+			}
+		}
+		uiAccessRoleMappingBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "uiAccessUserList.attributeRoleMapping", uiAccessRoleMappingBody.String())
 	}
 	return body
 }
@@ -226,6 +261,35 @@ func (data *ExternalAuthenticationRadius) fromBody(ctx context.Context, res gjso
 				data.Type = types.StringNull()
 			}
 			(*parent).CustomAttributes = append((*parent).CustomAttributes, data)
+			return true
+		})
+	}
+	if value := res.Get("uiAccessUserList.attributeRoleMapping"); value.Exists() {
+		data.UiAccessRoleMapping = make([]ExternalAuthenticationRadiusUiAccessRoleMapping, 0, int(value.Get("#").Int()))
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := ExternalAuthenticationRadiusUiAccessRoleMapping{}
+			if value := res.Get("map"); value.Exists() {
+				data.Map = types.StringValue(value.String())
+			} else {
+				data.Map = types.StringNull()
+			}
+			if value := res.Get("userRole.name"); value.Exists() {
+				data.UserRoleName = types.StringValue(value.String())
+			} else {
+				data.UserRoleName = types.StringNull()
+			}
+			if value := res.Get("userRole.id"); value.Exists() {
+				data.UserRoleId = types.StringValue(value.String())
+			} else {
+				data.UserRoleId = types.StringNull()
+			}
+			if value := res.Get("userRole.type"); value.Exists() {
+				data.UserRoleType = types.StringValue(value.String())
+			} else {
+				data.UserRoleType = types.StringNull()
+			}
+			(*parent).UiAccessRoleMapping = append((*parent).UiAccessRoleMapping, data)
 			return true
 		})
 	}
@@ -347,6 +411,64 @@ func (data *ExternalAuthenticationRadius) fromBodyPartial(ctx context.Context, r
 			data.Type = types.StringNull()
 		}
 		(*parent).CustomAttributes[i] = data
+	}
+	uiAccessRoleMappingArray := res.Get("uiAccessUserList.attributeRoleMapping")
+	for i := 0; i < len(data.UiAccessRoleMapping); i++ {
+		keys := [...]string{"map", "userRole.name", "userRole.id", "userRole.type"}
+		keyValues := [...]string{data.UiAccessRoleMapping[i].Map.ValueString(), data.UiAccessRoleMapping[i].UserRoleName.ValueString(), data.UiAccessRoleMapping[i].UserRoleId.ValueString(), data.UiAccessRoleMapping[i].UserRoleType.ValueString()}
+
+		parent := &data
+		data := (*parent).UiAccessRoleMapping[i]
+		var res gjson.Result
+
+		uiAccessRoleMappingArray.ForEach(
+			func(_, v gjson.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
+					}
+					found = true
+				}
+				if found {
+					res = v
+					return false
+				}
+				return true
+			},
+		)
+		if !res.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing UiAccessRoleMapping[%d] = %+v",
+				i,
+				(*parent).UiAccessRoleMapping[i],
+			))
+			(*parent).UiAccessRoleMapping = slices.Delete((*parent).UiAccessRoleMapping, i, i+1)
+			i--
+
+			continue
+		}
+		if value := res.Get("map"); value.Exists() && !data.Map.IsNull() {
+			data.Map = types.StringValue(value.String())
+		} else {
+			data.Map = types.StringNull()
+		}
+		if value := res.Get("userRole.name"); value.Exists() && !data.UserRoleName.IsNull() {
+			data.UserRoleName = types.StringValue(value.String())
+		} else {
+			data.UserRoleName = types.StringNull()
+		}
+		if value := res.Get("userRole.id"); value.Exists() && !data.UserRoleId.IsNull() {
+			data.UserRoleId = types.StringValue(value.String())
+		} else {
+			data.UserRoleId = types.StringNull()
+		}
+		if value := res.Get("userRole.type"); value.Exists() && !data.UserRoleType.IsNull() {
+			data.UserRoleType = types.StringValue(value.String())
+		} else {
+			data.UserRoleType = types.StringNull()
+		}
+		(*parent).UiAccessRoleMapping[i] = data
 	}
 }
 
